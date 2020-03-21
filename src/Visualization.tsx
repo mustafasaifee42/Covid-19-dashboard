@@ -245,7 +245,7 @@ const Visualization: React.FunctionComponent<{width:number,height:number}> = (pr
           <div>
             <Map
               width={props.width - 20 }
-              height={props.height - 60}
+              height={props.width <= 800 ? props.height - 330 : props.height - 60}
               data={data}
               country={country}
               selectedKey={selectedKey}

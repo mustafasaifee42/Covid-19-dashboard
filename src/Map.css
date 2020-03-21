@@ -103,3 +103,24 @@
 .rightOptions{
     display: flex;
 }
+
+@media only screen and (max-width: 800px) {
+    .mapHeader {
+      flex-wrap: wrap;
+      height:auto;
+      justify-content: space-around;
+    }
+    .dateContainer{
+        margin: 20px 0;
+    }
+    .title{
+        flex-wrap: wrap;
+        height:auto;
+        justify-content: center;
+        margin-top: 20px;
+    }
+    .titleCountry, .confirmedTitleMap , .deathTitleMap{
+        width:100%;
+        margin:10px 0;
+    }
+  }
