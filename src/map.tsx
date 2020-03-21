@@ -253,7 +253,7 @@ const Map: React.FunctionComponent<{width:number , height:number , windowWidth:n
             className= {props.selectedKey[0] === 'valuePer1000' ? 'buttonTab disabled' : props.highlightNew ? 'buttonTab selectedButtonTab' : 'buttonTab'}
             onClick={() => props.selectedKey[0] !== 'valuePer1000' ? props.highlightNew ? props.highlightNewClick(false) : props.highlightNewClick(true) : null}
           >
-            {props.selectedKey[0] === 'valuePer1000' ? 'buttonTab disabled' : props.highlightNew ? 'Unhighlight last 24 Hrs' : 'Highlight last 24 Hrs'}
+            {props.selectedKey[0] === 'valuePer1000' ? 'Highlight last 24 Hrs' : props.highlightNew ? 'Unhighlight last 24 Hrs' : 'Highlight last 24 Hrs'}
           </div>
         </div>
       </div>
