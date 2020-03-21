@@ -1,7 +1,7 @@
 .mapHeader{
     display:flex;
     justify-content: space-between;
-    padding: 0 40px;
+    padding: 0 20px;
     height: 80px;
     align-items: center;
 }
@@ -23,10 +23,22 @@
     border-radius: 4px;
     font-size: 14px;
     cursor: pointer;
+    display: flex;
+    align-items: center;
+}
+
+.disabled{
+    opacity: 0.2;
+}
+.playIcon{
+    margin-right:10px;
+    width:20px;
+    height:20px;
 }
 
 .tabContainer{
     display: flex;
+    margin-right: 10px;
 }
 
 .tab{
@@ -44,6 +56,17 @@
     border-radius: 0 4px 4px 0;
 }
 
+.buttonTab{
+    padding: 10px;
+    font-size: 14px;
+    border: 1px solid #f1f1f1;
+    background-color: #eaeaea;
+    color:rgba(65,65,65,1);
+    border-radius: 4px;
+    cursor: pointer;
+
+}
+
 .selected{
     font-weight: bold;
     color:rgba(65,65,65,1);
@@ -56,7 +79,7 @@
     background-color: #fafafa;
     border: 1px solid #f1f1f1;
     display: flex;
-    margin:10px 40px 0 40px;
+    margin:10px 20px 0 20px;
     font-size: 16px;
     align-items: center;
     justify-content: space-between;
@@ -75,4 +98,8 @@
 
 .confirmedTitleMap{
     margin: 0 40px;
+}
+
+.rightOptions{
+    display: flex;
 }

@@ -3,14 +3,16 @@ import * as d3GeoProjection from 'd3-geo-projection';
 import './Map.css';
 import * as topojson from 'topojson';
 import * as d3 from 'd3';
+import Play from './play.svg';
 
 let mapNode!: SVGSVGElement | null;
-const Map: React.FunctionComponent<{width:number , height:number , index:any , replay:()=> void, data:any , selectedKey:[string,number] , onToggleClick:(e:[string,number]) => void ,onCountryClick:(e:string) => void , country:string}> = (props) => {
+const Map: React.FunctionComponent<{width:number , height:number , index:any ,highlightNew:boolean,highlightNewClick:(e:boolean) => void, replay:()=> void, data:any , selectedKey:[string,number] , onToggleClick:(e:[string,number]) => void ,onCountryClick:(e:string) => void , country:string}> = (props) => {
   const {
     height,
     width
   } = props
   useEffect(() => {
+    d3.select(mapNode).selectAll('g').remove();
     const mapShape:any = require('./topo.json');
     const projection = d3GeoProjection.geoRobinson()
       .scale(409 * (width + 30) / 2048)
@@ -29,6 +31,7 @@ const Map: React.FunctionComponent<{width:number , height:number , index:any , r
       .attr('height', height)
       .attr('opacity', 0)
       .on('click',(d:any) => {
+        mapSVG.transition().duration(500).call(Zoom.transform, d3.zoomIdentity);
         props.onCountryClick('World')
       });
 
@@ -70,9 +73,9 @@ const Map: React.FunctionComponent<{width:number , height:number , index:any , r
       .attr('cx',(d:any) => path.centroid(d)[0])
       .attr('cy',(d:any) => path.centroid(d)[1])
       .attr('fill','#414141')
-      .attr('fill-opacity',0.75)
+      .attr('fill-opacity',0.5)
       .attr('stroke','#414141')
-      .attr('stroke-width',0.25)
+      .attr('stroke-width',0.5)
       .attr('r', 0)
       
     d3.selectAll('.countryG')
@@ -106,6 +109,26 @@ const Map: React.FunctionComponent<{width:number , height:number , index:any , r
           .style('display','none')
       })
       .on('click',(d:any) => {
+        let bounds = path.bounds(d),
+          dx = bounds[1][0] - bounds[0][0],
+          dy = bounds[1][1] - bounds[0][1],
+          x = (bounds[0][0] + bounds[1][0]) / 2,
+          y = (bounds[0][1] + bounds[1][1]) / 2,
+          zoomScale = Math.max(
+            1,
+            Math.min(8, 0.9 / Math.max(dx / width, dy / height)),
+          ),
+          translate = [width / 2 - zoomScale * x, height / 2 - zoomScale * y];
+
+        mapSVG
+          .transition()
+          .duration(500)
+          .call(
+            Zoom.transform,
+            d3.zoomIdentity
+              .translate(translate[0], translate[1])
+              .scale(zoomScale),
+          );
         props.onCountryClick(d.properties.NAME_EN)
       });
     // eslint-disable-next-line
@@ -141,9 +164,23 @@ const Map: React.FunctionComponent<{width:number , height:number , index:any , r
       .duration(100)
       .attr('r', (d:any) => {
         if(props.data[d.properties.NAME_EN]){
+          if(props.highlightNew)
+            return rScale(props.data[d.properties.NAME_EN]['confirmedData'][props.index - 1][props.selectedKey[0]]) - rScale(props.data[d.properties.NAME_EN]['confirmedData'][props.index - 1]['new']) / 2
           return rScale(props.data[d.properties.NAME_EN]['confirmedData'][props.index - 1][props.selectedKey[0]])
         }
         return 0
+      })
+      .attr('stroke-width',(d:any) => {
+        if(props.data[d.properties.NAME_EN]){
+          if(props.highlightNew)
+            return rScale(props.data[d.properties.NAME_EN]['confirmedData'][props.index - 1]['new']) 
+          return 0.25
+        }
+        return 0
+      })
+      .attr('stroke-opacity',(d:any) => {
+          if(props.highlightNew) return 0.5
+          return 1
       })
       .attr('opacity',(d:any) => {
         if(props.country === 'World') return 1
@@ -154,8 +191,19 @@ const Map: React.FunctionComponent<{width:number , height:number , index:any , r
       .transition()
       .duration(100)
       .attr('r', (d:any) => {
-        if(props.data[d.properties.NAME_EN])
+        if(props.data[d.properties.NAME_EN]){
+          if(props.highlightNew)
+            return rScale(props.data[d.properties.NAME_EN]['deathData'][props.index - 1][props.selectedKey[0]]) - rScale(props.data[d.properties.NAME_EN]['deathData'][props.index - 1]['new']) / 2
           return rScale(props.data[d.properties.NAME_EN]['deathData'][props.index - 1][props.selectedKey[0]])
+        }
+        return 0
+      })
+      .attr('stroke-width',(d:any) => {
+        if(props.data[d.properties.NAME_EN]){
+          if(props.highlightNew)
+            return rScale(props.data[d.properties.NAME_EN]['deathData'][props.index - 1]['new']) 
+          return 0.25
+        }
         return 0
       })
       .attr('opacity',(d:any) => {
@@ -164,37 +212,45 @@ const Map: React.FunctionComponent<{width:number , height:number , index:any , r
         return 0.2
       })
 
-  },[props.index, props.selectedKey, props.data, props.country])
+  },[props.index, props.selectedKey, props.data, props.country, props.highlightNew, width, height])
   
   return ( 
     <div>
       <div className='mapHeader'>
         <div className='dateContainer'>
-          <div className='date'>{d3.timeFormat("%B %d")(props.data[Object.keys(props.data)[0]]['confirmedData'][props.index - 1]['date'])}</div>
-          <div className='replay'
-            onClick={props.replay}
+          <div className='date'>{d3.timeFormat("%b. %d")(props.data[Object.keys(props.data)[0]]['confirmedData'][props.index - 1]['date'])}</div>
+          <div className={props.index === props.data[Object.keys(props.data)[0]]['confirmedData'].length ? 'replay' : 'replay disabled'}
+            onClick={() => {
+              if(props.index === props.data[Object.keys(props.data)[0]]['confirmedData'].length) 
+                props.replay()
+            }}
           >
-            ⭮ Replay
+            <img src={Play} alt='play-icon' className='playIcon'/> Play Timelapse
           </div>
         </div>
-        <div className='tabContainer'>
-          <div 
-            className= {props.selectedKey[0] === 'value' ? 'tab selected' : 'tab'}
-            onClick={() => props.onToggleClick(['value',100000])}
-          >
-            Total Cases
+        <div className='rightOptions'>
+          <div className='tabContainer'>
+            <div 
+              className= {props.selectedKey[0] === 'value' ? 'tab selected' : 'tab'}
+              onClick={() => props.onToggleClick(['value',100000])}
+            >
+              Total Cases
+            </div>
+            <div 
+              className= {props.selectedKey[0] === 'valuePer1000' ? 'tab selected' : 'tab'}
+              onClick={() => {
+                props.onToggleClick(['valuePer1000',1000]);
+                props.highlightNewClick(false);
+              }}
+            >
+              Total Cases Per 100K
+            </div>
           </div>
           <div 
-            className= {props.selectedKey[0] === 'valuePer1000' ? 'tab selected' : 'tab'}
-            onClick={() => props.onToggleClick(['valuePer1000',1000])}
+            className= {props.selectedKey[0] === 'valuePer1000' ? 'buttonTab disabled' : props.highlightNew ? 'buttonTab selected' : 'buttonTab'}
+            onClick={() => props.selectedKey[0] !== 'valuePer1000' ? props.highlightNew ? props.highlightNewClick(false) : props.highlightNewClick(true) : null}
           >
-            Total Cases Per 100K
-          </div>
-          <div 
-            className= {props.selectedKey[0] === 'new' ? 'tab selected' : 'tab'}
-            onClick={() => props.onToggleClick(['new',10000])}
-          >
-            New Cases
+            Highlight last 24 Hrs
           </div>
         </div>
       </div>

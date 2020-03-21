@@ -31,11 +31,13 @@ const dataManipulation = (confirmed:any) =>{
   return dataCombined
 }
 
-const Visualization: React.FunctionComponent<{}> = (props) => {
+const Visualization: React.FunctionComponent<{width:number,height:number}> = (props) => {
   const [data, setData] = useState<any>(undefined)
   const [country, setCountry] = useState('World')
   const [selectedCountry, setSelectedCountry] = useState('World')
   const [index, setIndex] = useState(0)
+  const [sorted, setSorted] = useState('confirmed')
+  const [highlightNew, setHighlightNew] = useState(false)
   let indexToUpdate = 1;
   const [selectedKey, setSelectedKey] = useState<[string,number]>(['value',100000])
   useEffect(() => {
@@ -98,6 +100,9 @@ const Visualization: React.FunctionComponent<{}> = (props) => {
     return null
   }
   else{
+    let sidebarRightWidth = 430
+    if(props.width > 1420 && props.width < 1600)
+      sidebarRightWidth = 320
     return ( 
       <div>
         <div className='tooltip'>
@@ -108,12 +113,12 @@ const Visualization: React.FunctionComponent<{}> = (props) => {
         <div className='barGraphtooltip'>
           <span className='tooltipDate'>Country</span>: <span className='tooltipCases bold'>0</span>
         </div>
-        {window.innerWidth > 1440 ? (
+        {props.width > 1420 ? (
           <div  className='viz-area'>
             <div style={{'flex':`0 0 320px`, "height":'calc(100vh - 40px)','borderRight':'1px solid #f1f1f1','backgroundColor':'#fafafa', 'padding':'0 10px','overflow':'auto','overflowX':'hidden'}}>
               <Sidebar
                 width={320}
-                height={window.innerHeight}
+                height={props.height}
                 graphHeight={200}
                 data={data}
                 country={country}
@@ -121,12 +126,14 @@ const Visualization: React.FunctionComponent<{}> = (props) => {
               />
             </div>
             <Map
-              width={window.innerWidth - 810}
-              height={window.innerHeight - 60}
+              width={props.width - 360 - sidebarRightWidth}
+              height={props.height - 60}
               data={data}
               country={country}
               selectedKey={selectedKey}
               index={index}
+              highlightNew={highlightNew}
+              highlightNewClick = {(e) => {setHighlightNew(e)}}
               onToggleClick={(value) => {
                 setSelectedKey(value) 
               }}
@@ -151,10 +158,10 @@ const Visualization: React.FunctionComponent<{}> = (props) => {
                 }
               }}
             />
-            <div style={{'flex':`0 0 430px`, "height":'calc(100vh - 50px)','borderRight':'1px solid #f1f1f1','backgroundColor':'#fafafa', 'padding':'10px 10px 0 10px','overflow':'auto','overflowX':'hidden'}}>
+            <div style={{'flex':`0 0 ${sidebarRightWidth}px`, "height":'calc(100vh - 50px)','borderRight':'1px solid #f1f1f1','backgroundColor':'#fafafa', 'padding':'10px 10px 0 10px','overflow':'auto','overflowX':'hidden'}}>
               <SidebarRight
-                width={430}
-                height={window.innerHeight}
+                width={sidebarRightWidth}
+                height={props.height}
                 graphHeight={200}
                 data={data}
                 selectedCountry={selectedCountry}
@@ -166,6 +173,8 @@ const Visualization: React.FunctionComponent<{}> = (props) => {
                   setSelectedCountry(country)
                   setCountry(country)            
                 }}
+                sorted={sorted}
+                sortClick={ (d) => {setSorted(d)} }
               />
             </div>
           </div>
@@ -174,7 +183,7 @@ const Visualization: React.FunctionComponent<{}> = (props) => {
             <div style={{'flex':`0 0 430px`, "height":'calc(100vh - 40px)','borderRight':'1px solid #f1f1f1','backgroundColor':'#fafafa', 'padding':'0 10px','overflow':'auto','overflowX':'hidden'}}>
               <Sidebar
                 width={420}
-                height={window.innerHeight}
+                height={props.height}
                 graphHeight={200}
                 data={data}
                 country={country}
@@ -182,7 +191,7 @@ const Visualization: React.FunctionComponent<{}> = (props) => {
               />
               <SidebarRight
                 width={430}
-                height={window.innerHeight}
+                height={props.height}
                 graphHeight={200}
                 data={data}
                 selectedCountry={selectedCountry}
@@ -194,15 +203,19 @@ const Visualization: React.FunctionComponent<{}> = (props) => {
                   setSelectedCountry(country)
                   setCountry(country)            
                 }}
+                sorted={sorted}
+                sortClick={ (d) => {setSorted(d)} }
               />
             </div>
             <Map
-              width={window.innerWidth - 810 + 320}
-              height={window.innerHeight - 60}
+              width={props.width - 810 + 360 }
+              height={props.height - 60}
               data={data}
               country={country}
               selectedKey={selectedKey}
               index={index}
+              highlightNew={highlightNew}
+              highlightNewClick = {(e) => {setHighlightNew(e)}}
               onToggleClick={(value) => {
                 setSelectedKey(value) 
               }}

@@ -11,6 +11,7 @@ const Sidebar: React.FunctionComponent<{width:number , height:number, graphHeigh
   useEffect(() => {
     d3.select(graphNode).selectAll('g').remove()
     d3.select(dailyCasesGraphNode).selectAll('g').remove()
+    d3.select(dailyDeathGraphNode).selectAll('g').remove()
     if(props.data[props.country]) {
       let margin = {top: 10, right: 10, bottom: 20, left: 10},
         width = props.width - 15 - margin.left - margin.right,
@@ -84,9 +85,9 @@ const Sidebar: React.FunctionComponent<{width:number , height:number, graphHeigh
         .attr("fill", "#7BCFA9")
         .attr("stroke-width", 1)
         .attr("d", d3.area()
-          .x((d:any,i:number) => x(d.date))
+          .x((d:any) => x(d.date))
           .y0(y(0))
-          .y1((d:any) =>  y(d.value))
+          .y1((d:any,i:number) =>  y(d.value + props.data[props.country].deathData[i].value))
         )
       g.append("path")
         .datum(props.data[props.country].deathData)
@@ -292,7 +293,7 @@ const Sidebar: React.FunctionComponent<{width:number , height:number, graphHeigh
         color='#7BCFA9' 
       />
       <div className="graphContainer">
-        <div className='cardTitle'>Cummulative Cases</div>
+        <div className='cardTitle'>Total Cases</div>
         <svg width={props.width - 5} height={props.graphHeight} ref={node => graphNode = node}/>
       </div>
       <div className="graphContainer">
