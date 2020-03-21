@@ -59,11 +59,18 @@
 .buttonTab{
     padding: 10px;
     font-size: 14px;
-    border: 1px solid #f1f1f1;
-    background-color: #eaeaea;
+    border: 1px solid #aaa;
     color:rgba(65,65,65,1);
     border-radius: 4px;
     cursor: pointer;
+}
+.buttonTab:hover{
+    background-color: #eaeaea;
+}
+
+.selectedButtonTab{
+    background-color: #eaeaea;
+    font-weight: bold;
 
 }
 
