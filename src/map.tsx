@@ -6,17 +6,19 @@ import * as d3 from 'd3';
 import Play from './play.svg';
 
 let mapNode!: SVGSVGElement | null;
-const Map: React.FunctionComponent<{width:number , height:number , index:any ,highlightNew:boolean,highlightNewClick:(e:boolean) => void, replay:()=> void, data:any , selectedKey:[string,number] , onToggleClick:(e:[string,number]) => void ,onCountryClick:(e:string) => void , country:string}> = (props) => {
+const Map: React.FunctionComponent<{width:number , height:number , windowWidth:number , index:any ,highlightNew:boolean,highlightNewClick:(e:boolean) => void, replay:()=> void, data:any , selectedKey:[string,number] , onToggleClick:(e:[string,number]) => void ,onCountryClick:(e:string) => void , country:string}> = (props) => {
   const {
     height,
-    width
+    width,
+    windowWidth
   } = props
   useEffect(() => {
+    let scaleFactor = (windowWidth < 800) ? 0.35 : 0.45
     d3.select(mapNode).selectAll('g').remove();
     const mapShape:any = require('./topo.json');
     const projection = d3GeoProjection.geoRobinson()
-      .scale(409 * (width + 30) / 2048)
-      .translate([0.41 * (width + 30), 0.46 * (height + 40)]);
+      .scale(409 * (width) / 2048)
+      .translate([0.41 * (width), scaleFactor * (height)]);
     const path:any = d3.geoPath().projection(projection);
     const mapShapeData:any = topojson.feature(mapShape, mapShape.objects.countries)
     let Zoom:any = d3.zoom().scaleExtent([0.6, 10]).on('zoom', zoomed);
@@ -133,7 +135,7 @@ const Map: React.FunctionComponent<{width:number , height:number , index:any ,hi
         props.onCountryClick(d.properties.NAME_EN)
       });
     // eslint-disable-next-line
-  },[height, width , props.data])
+  },[height, width , props.data, windowWidth])
   
   useEffect(() => {
     const rScale = d3.scaleSqrt()

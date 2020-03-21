@@ -130,6 +130,7 @@ const Visualization: React.FunctionComponent<{width:number,height:number}> = (pr
               width={props.width - 360 - sidebarRightWidth}
               height={props.height - 60}
               data={data}
+              windowWidth = {props.width}
               country={country}
               selectedKey={selectedKey}
               index={index}
@@ -211,6 +212,7 @@ const Visualization: React.FunctionComponent<{width:number,height:number}> = (pr
             <Map
               width={props.width - sidebarLeftWidth - 30 }
               height={props.height - 60}
+              windowWidth = {props.width}
               data={data}
               country={country}
               selectedKey={selectedKey}
@@ -245,8 +247,9 @@ const Visualization: React.FunctionComponent<{width:number,height:number}> = (pr
           <div>
             <Map
               width={props.width - 20 }
-              height={props.width <= 800 ? props.height - 330 : props.height - 60}
+              height={props.width < 800 ? props.height - 300 : props.height - 60}
               data={data}
+              windowWidth = {props.width}
               country={country}
               selectedKey={selectedKey}
               index={index}

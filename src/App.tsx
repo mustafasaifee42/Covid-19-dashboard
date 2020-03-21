@@ -13,7 +13,7 @@ function App() {
   const [ windowHeightValue, setWindowHeightValue ] = useState(window.innerHeight)
   window.onresize = () => {
     setWindowWidthValue(window.innerWidth)
-    setWindowHeightValue(window.innerHeight)
+    if(window.innerWidth > 760) setWindowHeightValue(window.innerHeight)
   };
   return (
     <div className="App">
