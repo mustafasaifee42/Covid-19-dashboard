@@ -1,0 +1,23 @@
+.tooltip {	
+    position: absolute;
+    font-size: 14px;
+    border: 1px solid #f1f1f1;
+    background-color: #fafafa;
+    opacity: 0.9;
+    border-radius: 4px;
+    display:none;
+}
+
+.tooltipCountry{
+    background-color: #eaeaea;
+    font-weight: bold;
+    padding:10px
+}
+.tooltipConfirmedTitle{
+    padding:10px;
+    border-bottom: 1px solid #f1f1f1; 
+}
+.tooltipDeathTitle{
+    padding:10px;
+    border-bottom: 1px solid #f1f1f1; 
+}

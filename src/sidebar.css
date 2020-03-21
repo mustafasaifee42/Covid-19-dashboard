@@ -1,0 +1,18 @@
+.dataCardsContainer{
+    display: flex;
+}
+
+.graphContainer{
+    background-color: white;
+    border:1px solid #f1f1f1;
+    margin-bottom: 10px;
+}
+
+.countryShow{
+    background-color: #fff;
+    font-weight: bold;
+    font-size: 18px;
+    padding: 10px;
+    text-align: center;
+    margin: 10px 0;
+}

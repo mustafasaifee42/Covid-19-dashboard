@@ -1,0 +1,37 @@
+.dataCard{
+    background-color:#fff;
+    border:1px solid #f1f1f1;
+    margin-bottom:10px;
+    padding-bottom:20px;
+}
+
+.cardTitle{
+    text-transform: uppercase;
+    font-family: 'IBM Plex Sans', sans-serif;
+    color:'#aaa';
+    font-size: 14px;
+    text-align: center;
+    background-color: #eee;
+    padding: 7px 0;
+    font-weight: bold;
+}
+
+
+.cardValue{
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-size: 30px;
+    margin: 20px 0 0 0;
+    text-align: center;
+    font-weight: bold;
+}
+
+.percent{
+    font-size: 16px;
+}
+
+.subNote{
+    margin-top:5px;
+    color:#aaa;
+    font-size:16px;
+    font-weight: normal;
+}
