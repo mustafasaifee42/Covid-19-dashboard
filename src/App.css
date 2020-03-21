@@ -17,13 +17,26 @@ body{
   display:flex;
   flex-shrink: 0;
   justify-content: space-between;
+  align-items: top;
+}
+
+.appHeader{
+  display: flex;
+  font-size:20px;
+  width:100%;
+  align-items: center;
+  font-weight: bold;
+  height: 50px;
+  background-color: #333;
+  color:#fff;
+  justify-content: space-between;
   align-items: center;
 }
 
 .footer{
   position: fixed;
   bottom: 0;
-  background-color: #fafafa;
+  background-color: #e7ebf0;
   display: flex;
   justify-content: center;
   font-size:14px;
@@ -31,7 +44,9 @@ body{
   align-items: center;
   height: 40px;
 }
-
+.headerTitle{
+  padding:0 20px
+}
 .icons{
   display:flex;
   height:24px;

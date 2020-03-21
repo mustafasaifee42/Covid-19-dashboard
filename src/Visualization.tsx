@@ -101,8 +101,9 @@ const Visualization: React.FunctionComponent<{width:number,height:number}> = (pr
   }
   else{
     let sidebarRightWidth = 430
-    if(props.width > 1420 && props.width < 1600)
-      sidebarRightWidth = 320
+    if(props.width > 1420 && props.width < 1600) sidebarRightWidth = 320
+    let sidebarLeftWidth = 430
+    if(props.width < 1180) sidebarLeftWidth = 320
     return ( 
       <div>
         <div className='tooltip'>
@@ -115,7 +116,7 @@ const Visualization: React.FunctionComponent<{width:number,height:number}> = (pr
         </div>
         {props.width > 1420 ? (
           <div  className='viz-area'>
-            <div style={{'flex':`0 0 320px`, "height":'calc(100vh - 40px)','borderRight':'1px solid #f1f1f1','backgroundColor':'#fafafa', 'padding':'0 10px','overflow':'auto','overflowX':'hidden'}}>
+            <div style={{'flex':`0 0 320px`, "height":'calc(100vh - 90px)','borderRight':'1px solid #f1f1f1','backgroundColor':'#fafafa', 'padding':'0 10px','overflow':'auto','overflowX':'hidden'}}>
               <Sidebar
                 width={320}
                 height={props.height}
@@ -158,7 +159,7 @@ const Visualization: React.FunctionComponent<{width:number,height:number}> = (pr
                 }
               }}
             />
-            <div style={{'flex':`0 0 ${sidebarRightWidth}px`, "height":'calc(100vh - 50px)','borderRight':'1px solid #f1f1f1','backgroundColor':'#fafafa', 'padding':'10px 10px 0 10px','overflow':'auto','overflowX':'hidden'}}>
+            <div style={{'flex':`0 0 ${sidebarRightWidth}px`, "height":'calc(100vh - 100px)','borderRight':'1px solid #f1f1f1','backgroundColor':'#fafafa', 'padding':'10px 10px 0 10px','overflow':'auto','overflowX':'hidden'}}>
               <SidebarRight
                 width={sidebarRightWidth}
                 height={props.height}
@@ -178,11 +179,11 @@ const Visualization: React.FunctionComponent<{width:number,height:number}> = (pr
               />
             </div>
           </div>
-        ) : (
+        ) : props.width > 1024 ? (
           <div  className='viz-area'>
-            <div style={{'flex':`0 0 430px`, "height":'calc(100vh - 40px)','borderRight':'1px solid #f1f1f1','backgroundColor':'#fafafa', 'padding':'0 10px','overflow':'auto','overflowX':'hidden'}}>
+            <div style={{'flex':`0 0 ${sidebarLeftWidth}px`, "height":'calc(100vh - 90px)','borderRight':'1px solid #f1f1f1','backgroundColor':'#fafafa', 'padding':'0 10px','overflow':'auto','overflowX':'hidden'}}>
               <Sidebar
-                width={420}
+                width={sidebarLeftWidth - 10}
                 height={props.height}
                 graphHeight={200}
                 data={data}
@@ -190,7 +191,7 @@ const Visualization: React.FunctionComponent<{width:number,height:number}> = (pr
 
               />
               <SidebarRight
-                width={430}
+                width={sidebarLeftWidth}
                 height={props.height}
                 graphHeight={200}
                 data={data}
@@ -208,7 +209,7 @@ const Visualization: React.FunctionComponent<{width:number,height:number}> = (pr
               />
             </div>
             <Map
-              width={props.width - 810 + 360 }
+              width={props.width - sidebarLeftWidth - 30 }
               height={props.height - 60}
               data={data}
               country={country}
@@ -240,7 +241,70 @@ const Visualization: React.FunctionComponent<{width:number,height:number}> = (pr
               }}
             />
           </div>
-        )}
+        ) : (
+          <div>
+            <Map
+              width={props.width - 20 }
+              height={props.height - 60}
+              data={data}
+              country={country}
+              selectedKey={selectedKey}
+              index={index}
+              highlightNew={highlightNew}
+              highlightNewClick = {(e) => {setHighlightNew(e)}}
+              onToggleClick={(value) => {
+                setSelectedKey(value) 
+              }}
+              onCountryClick={(country) => {
+                setCountry(country)            
+              }}
+              replay={()=> {
+                let replay  = setInterval(() => {
+                  if(indexToUpdate  === data[Object.keys(data)[0]]['confirmedData'].length){
+                    stopReplay();  
+                    setIndex(data[Object.keys(data)[0]]['confirmedData'].length)
+                  }
+                  else {
+                    indexToUpdate++;
+                    setIndex(indexToUpdate);
+                  }
+                } , 500)
+                function stopReplay(){
+                  indexToUpdate = 1
+                  clearInterval(replay)
+                }
+              }}
+            />
+            <div style={{'borderTop':'1px solid #f1f1f1','backgroundColor':'#fafafa', 'padding':'0 10px'}}>
+              <Sidebar
+                width={props.width - 30}
+                height={props.height}
+                graphHeight={320}
+                data={data}
+                country={country}
+
+              />
+              <SidebarRight
+                width={props.width - 20}
+                height={props.height}
+                graphHeight={320}
+                data={data}
+                selectedCountry={selectedCountry}
+                country={country}
+                hover={(country) => {
+                  setCountry(country)            
+                }}
+                click={(country) => {
+                  setSelectedCountry(country)
+                  setCountry(country)            
+                }}
+                sorted={sorted}
+                sortClick={ (d) => {setSorted(d)} }
+              />
+            </div>
+          </div>
+        )
+      }
       </div>
     )
   }

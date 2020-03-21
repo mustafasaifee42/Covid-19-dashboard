@@ -17,6 +17,17 @@ function App() {
   };
   return (
     <div className="App">
+      <div className='appHeader'>
+        <div className='headerTitle'>COVID 19 Dashboard</div>
+          <div className='icons'>
+            <FacebookShareButton className="fbIcon" url={'https://coronavirus-dashboard.netlify.com/'} quote={'Live dashboard visualizing the spread of coronavirus COVID-19'}>
+              <FacebookIcon size={28} round={true} />
+            </FacebookShareButton>
+            <TwitterShareButton url={'https://coronavirus-dashboard.netlify.com/'} title={'Live dashboard visualizing the spread of coronavirus COVID-19 https://coronavirus-dashboard.netlify.com/ via @mustafasaifee42'}>
+              <TwitterIcon size={28} round={true} />
+            </TwitterShareButton>
+          </div>
+      </div>
       <Visualization
         width={windowWidthValue}
         height={windowHeightValue}

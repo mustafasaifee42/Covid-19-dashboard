@@ -19,7 +19,7 @@ const Map: React.FunctionComponent<{width:number , height:number , index:any ,hi
       .translate([0.41 * (width + 30), 0.46 * (height + 40)]);
     const path:any = d3.geoPath().projection(projection);
     const mapShapeData:any = topojson.feature(mapShape, mapShape.objects.countries)
-    let Zoom:any = d3.zoom().scaleExtent([0.8, 10]).on('zoom', zoomed);
+    let Zoom:any = d3.zoom().scaleExtent([0.6, 10]).on('zoom', zoomed);
     let mapSVG = d3.select(mapNode).call(Zoom);
     let zoomGroup = mapSVG.append('g');
 
@@ -49,6 +49,7 @@ const Map: React.FunctionComponent<{width:number , height:number , index:any ,hi
       .attr('fill', '#aaa')
       .attr('fill-opacity', 0.1)
       .attr('stroke','#999')
+      .attr('stroke-width',0.25)
 
     //for adding bubbles or circle on the map
     zoomGroup
