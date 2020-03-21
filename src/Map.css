@@ -21,6 +21,8 @@
     background-color: #eaeaea;
     border: 1px solid #f1f1f1;
     border-radius: 4px;
+    font-size: 14px;
+    cursor: pointer;
 }
 
 .tabContainer{
@@ -29,6 +31,7 @@
 
 .tab{
     padding: 10px;
+    font-size: 14px;
     border: 1px solid #f1f1f1;
     background-color: #fafafa;
     color:rgba(65,65,65,0.5);
@@ -60,6 +63,12 @@
     text-align: center;
 }
 
+.small{
+    font-size:14px;
+}
+.titleCountry{
+    font-size: 20px;
+}
 .red{
     color:#e01a25;
 }

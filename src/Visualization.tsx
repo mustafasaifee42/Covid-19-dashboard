@@ -40,9 +40,9 @@ const Visualization: React.FunctionComponent<{}> = (props) => {
   const [selectedKey, setSelectedKey] = useState<[string,number]>(['value',100000])
   useEffect(() => {
     Promise.all([
-        d3.csv("/data/time_series_19-covid-Confirmed.csv"),
-        d3.csv("/data/time_series_19-covid-Deaths.csv"),
-        d3.csv("/data/time_series_19-covid-Recovered.csv")
+        d3.csv("https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_19-covid-Confirmed.csv"),
+        d3.csv("https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_19-covid-Deaths.csv"),
+        d3.csv("https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_19-covid-Recovered.csv")
       ])
       .then(([confirmed,death , recovered]) => {
         let confirmedDataCombined = dataManipulation(confirmed);
@@ -105,6 +105,9 @@ const Visualization: React.FunctionComponent<{}> = (props) => {
           <div className='tooltipConfirmedTitle'>Confirmed Cases: <span className='tooltipConfirmed'>0</span></div>
           <div className='tooltipDeathTitle'>Deaths:<span className='tooltipDeath'>0</span></div>
         </div>
+        <div className='barGraphtooltip'>
+          <span className='tooltipDate'>Country</span>: <span className='tooltipCases bold'>0</span>
+        </div>
         {window.innerWidth > 1440 ? (
           <div  className='viz-area'>
             <div style={{'flex':`0 0 320px`, "height":'calc(100vh - 40px)','borderRight':'1px solid #f1f1f1','backgroundColor':'#fafafa', 'padding':'0 10px','overflow':'auto','overflowX':'hidden'}}>
@@ -120,8 +123,6 @@ const Visualization: React.FunctionComponent<{}> = (props) => {
             <Map
               width={window.innerWidth - 810}
               height={window.innerHeight - 60}
-              scale={409 * (window.innerWidth - 780) / 2048}
-              translate={[0.41 * (window.innerWidth - 780), 0.46 * (window.innerHeight - 20)]}
               data={data}
               country={country}
               selectedKey={selectedKey}
@@ -130,6 +131,7 @@ const Visualization: React.FunctionComponent<{}> = (props) => {
                 setSelectedKey(value) 
               }}
               onCountryClick={(country) => {
+                setSelectedCountry(country)
                 setCountry(country)            
               }}
               replay={()=> {
@@ -197,8 +199,6 @@ const Visualization: React.FunctionComponent<{}> = (props) => {
             <Map
               width={window.innerWidth - 810 + 320}
               height={window.innerHeight - 60}
-              scale={409 * (window.innerWidth - 780 + 320) / 2048}
-              translate={[0.41 * (window.innerWidth - 780 + 320), 0.46 * (window.innerHeight - 20)]}
               data={data}
               country={country}
               selectedKey={selectedKey}

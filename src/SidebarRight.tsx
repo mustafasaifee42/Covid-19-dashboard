@@ -10,6 +10,7 @@ const Sidebar: React.FunctionComponent<{width:number , height:number, graphHeigh
   })
   dataArr.sort((x:any, y:any) => d3.descending(x.confirmed, y.confirmed))
   let tableRow = dataArr.map((d:any, i:number) => {
+    let country = d.countryName === 'World' ? `🌎 ${d.countryName}` : d.countryName
     return (
     <div className="countryRow" key={i}
       onClick={() => {
@@ -23,7 +24,7 @@ const Sidebar: React.FunctionComponent<{width:number , height:number, graphHeigh
         props.hover(props.selectedCountry)
       }}
     >
-      <div className='countryName'>{d.countryName}</div>
+      <div className='countryName'>{country}</div>
       <div className='countryConfirmed numbers'>{d.confirmed}</div>
       <div className='countryDeath numbers'>{d.death} ({(d.death * 100 / d.confirmed).toFixed(1)}%)</div>
       <div className='countryRecovery numbers'>{d.recovery} ({(d.recovery * 100 / d.confirmed).toFixed(1)}%)</div>

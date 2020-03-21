@@ -12,14 +12,14 @@
 }
 
 .countryName{
-    width:25%;
+    flex-basis:25%;
     font-weight: bold;
 }
 
 .numbers{
-    width:25%;
+    flex-basis:25%;
     text-align: right;
-    padding:0 5px;
+    padding:0 7px;
 }
 
 .header{

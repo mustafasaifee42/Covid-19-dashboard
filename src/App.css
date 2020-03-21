@@ -9,6 +9,10 @@ body{
   font-weight: bold;
 }
 
+.italics{
+  font-style: italic;
+}
+
 .viz-area{
   display:flex;
   flex-shrink: 0;
