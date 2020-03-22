@@ -43,9 +43,9 @@ const Visualization: React.FunctionComponent<{width:number,height:number}> = (pr
   const [selectedKey, setSelectedKey] = useState<[string,number]>(['confirmedData',100000])
   useEffect(() => {
     Promise.all([
-        d3.csv("./data/time_series_19-covid-Confirmed.csv"),
-        d3.csv("./data/time_series_19-covid-Deaths.csv"),
-        d3.csv("./data/time_series_19-covid-Recovered.csv")
+        d3.csv("https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_19-covid-Confirmed.csv"),
+        d3.csv("https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_19-covid-Deaths.csv"),
+        d3.csv("https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_19-covid-Recovered.csv")
       ])
       .then(([confirmed,death , recovered]) => {
         let confirmedDataCombined = dataManipulation(confirmed);
@@ -95,7 +95,7 @@ const Visualization: React.FunctionComponent<{width:number,height:number}> = (pr
 
         })
         setIndex(combinedDataObj[Object.keys(combinedDataObj)[0]]['confirmedData'].length)
-        console.log(combinedDataObj)
+        console.log(Object.keys(combinedDataObj).length)
         setData(combinedDataObj)
 
       })
@@ -113,7 +113,8 @@ const Visualization: React.FunctionComponent<{width:number,height:number}> = (pr
         <div className='tooltip'>
           <div className='tooltipCountry'>Country</div>
           <div className='tooltipConfirmedTitle'>Confirmed Cases: <span className='tooltipConfirmed'>0</span></div>
-          <div className='tooltipDeathTitle'>Deaths:<span className='tooltipDeath'>0</span></div>
+          <div className='tooltipDeathTitle'>Active Cases: <span className='tooltipActive'>0</span></div>
+          <div className='tooltipDeathTitle'>Deaths: <span className='tooltipDeath'>0</span></div>
         </div>
         <div className='barGraphtooltip'>
           <span className='tooltipDate'>Country</span>: <span className='tooltipCases bold'>0</span>

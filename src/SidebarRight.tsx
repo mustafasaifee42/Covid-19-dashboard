@@ -39,7 +39,7 @@ const Sidebar: React.FunctionComponent<{width:number , height:number, graphHeigh
     <div>
       <DataCards
         title="Total Countrys Infected"
-        data={Object.keys(props.data).length}
+        data={Object.keys(props.data).length - 2}
         color='#e01a25' 
       />
       <div className="countryTable">

@@ -100,12 +100,16 @@ const Map: React.FunctionComponent<{width:number , height:number , value:string,
         if(props.data[d.properties.NAME_EN]) {
           d3.select('.tooltipConfirmed')
             .html(`<span class="bold red">${props.data[d.properties.NAME_EN]['confirmedData'][props.data[d.properties.NAME_EN]['confirmedData'].length - 1]['value']}</span> (<span class="bold red">${(props.data[d.properties.NAME_EN]['confirmedData'][props.data[d.properties.NAME_EN]['confirmedData'].length - 1]['valuePer1000']).toFixed(1)}</span> per 100K)`)
+          d3.select('.tooltipActive')
+            .html(`<span class="bold red">${props.data[d.properties.NAME_EN]['activeData'][props.data[d.properties.NAME_EN]['activeData'].length - 1]['value']}</span>`)
           d3.select('.tooltipDeath')
             .html(`<span class="bold">${props.data[d.properties.NAME_EN]['deathData'][props.data[d.properties.NAME_EN]['deathData'].length - 1]['value']}</span> (<span class="bold">${(props.data[d.properties.NAME_EN]['deathData'][props.data[d.properties.NAME_EN]['deathData'].length - 1]['value'] * 100 / props.data[d.properties.NAME_EN]['confirmedData'][props.data[d.properties.NAME_EN]['confirmedData'].length - 1]['value']).toFixed(1)}%</span> Mortality rate)`)
         } else {
           d3.select('.tooltipConfirmed')
             .html(`<span class="bold red">0</span>`)
           d3.select('.tooltipDeath')
+            .html(`<span class="bold red">0</span>`)
+          d3.select('.tooltipActive')
             .html(`<span class="bold red">0</span>`)
         }
       })
