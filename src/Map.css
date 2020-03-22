@@ -44,10 +44,17 @@
 .tab{
     padding: 10px;
     font-size: 14px;
-    border: 1px solid #f1f1f1;
-    background-color: #fafafa;
-    color:rgba(65,65,65,0.5);
+    border: 1px solid #eaeaea;
+    background-color: #fff;
+    color:rgba(65,65,65,1);
     cursor: pointer;
+}
+
+.selectedTab{
+    font-weight: bold;
+    background-color: #eaeaea;
+    color: rgb(224, 26, 37)
+
 }
 .tab:first-of-type{
     border-radius: 4px 0 0 4px;
@@ -57,28 +64,35 @@
 }
 
 .buttonTab{
-    padding: 10px;
     font-size: 14px;
-    border: 1px solid #aaa;
     color:rgba(65,65,65,1);
-    border-radius: 4px;
-    margin:0 5px;
     cursor: pointer;
-}
-.buttonTab:hover{
-    background-color: #eaeaea;
+    display: flex;
+    align-items: center;
+    margin:0 10px;
 }
 
 .selectedButtonTab{
-    background-color: #eaeaea;
     font-weight: bold;
-
 }
-
+.checkBox{
+    width:16px;
+    height:16px;
+    border:1px solid #aaa;
+    border-radius: 2px;
+    margin-right:5px;
+    background-color: #fff;
+}
+.selected > .checkBox{
+    background-color: #414141 ;
+}
 .selected{
     font-weight: bold;
-    color:rgba(65,65,65,1);
-    background-color: #eaeaea;
+    color: rgb(224, 26, 37)
+}
+.tickIcon{
+    width: 16px;
+    height:16px;
 }
 
 .title{
@@ -118,6 +132,7 @@
     display: flex;
 }
 
+
 @media only screen and (max-width: 800px) {
     .mapHeader {
       flex-wrap: wrap;
@@ -139,3 +154,12 @@
         text-align: center;
     }
   }
+
+  
+.buttonTab:hover{
+    color: rgb(224, 26, 37)
+}
+
+.disabled:hover{
+    color: #414141
+}

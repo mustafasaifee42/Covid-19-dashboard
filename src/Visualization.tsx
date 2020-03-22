@@ -1,6 +1,7 @@
 import React,{ useState, useEffect} from 'react';
 import * as d3 from 'd3';
 import Map from  './map';
+import 'whatwg-fetch'; 
 import './App.css';
 import './tooltip.css';
 import Sidebar from './Sidebar'

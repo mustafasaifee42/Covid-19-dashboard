@@ -4,6 +4,7 @@ import './Map.css';
 import * as topojson from 'topojson';
 import * as d3 from 'd3';
 import Play from './play.svg';
+import Tick from './tick.svg';
 
 let mapNode!: SVGSVGElement | null;
 const Map: React.FunctionComponent<{width:number , height:number , value:string, onValueToggle:(e:string) => void, windowWidth:number , index:any ,highlightNew:boolean,highlightNewClick:(e:boolean) => void, replay:()=> void, data:any , selectedKey:[string,number] , onToggleClick:(e:[string,number]) => void ,onCountryClick:(e:string) => void , country:string}> = (props) => {
@@ -248,13 +249,13 @@ const Map: React.FunctionComponent<{width:number , height:number , value:string,
         <div className='rightOptions'>
           <div className='tabContainer'>
             <div 
-              className= {props.selectedKey[0] === 'confirmedData' ? 'tab selected' : 'tab'}
+              className= {props.selectedKey[0] === 'confirmedData' ? 'tab selectedTab' : 'tab'}
               onClick={() => props.onToggleClick(['confirmedData',100000])}
             >
               Total Cases
             </div>
             <div 
-              className= {props.selectedKey[0] === 'activeData' ? 'tab selected' : 'tab'}
+              className= {props.selectedKey[0] === 'activeData' ? 'tab selectedTab' : 'tab'}
               onClick={() => {
                 props.onToggleClick(['activeData',100000]);
                 props.highlightNewClick(false);
@@ -270,13 +271,15 @@ const Map: React.FunctionComponent<{width:number , height:number , value:string,
               props.highlightNewClick(false);
             }}
           >
+            <div className='checkBox'><img src={Tick} alt='tick-icon' className='tickIcon'/></div>
             Per 100K
           </div>
           <div 
             className= {props.selectedKey[0] === 'confirmedData' ? props.value === 'valuePer1000' ? 'buttonTab disabled' : props.highlightNew ? 'buttonTab selected' : 'buttonTab' : 'buttonTab disabled'}
             onClick={() => props.value !== 'valuePer1000' && props.selectedKey[0] === 'confirmedData' ? props.highlightNew ? props.highlightNewClick(false) : props.highlightNewClick(true) : null}
           >
-            {props.value === 'valuePer1000' || props.selectedKey[0] !== 'confirmedData' ? 'Highlight last 24 Hrs' : props.highlightNew ? 'Unhighlight last 24 Hrs' : 'Highlight last 24 Hrs'}
+          <div className='checkBox'><img src={Tick} alt='tick-icon' className='tickIcon'/></div>
+            Highlight last 24 Hrs
           </div>
         </div>
       </div>
