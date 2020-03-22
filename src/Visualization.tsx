@@ -169,7 +169,7 @@ const Visualization: React.FunctionComponent<{width:number,height:number}> = (pr
                 }
               }}
             />
-            <div style={{'flex':`0 0 ${sidebarRightWidth}px`, "height":'calc(100vh - 100px)','borderRight':'1px solid #f1f1f1','backgroundColor':'#fafafa', 'padding':'10px 10px 0 10px','overflow':'hidden'}}>
+            <div style={{'flex':`0 0 ${sidebarRightWidth}px`, "height":'calc(100vh - 100px)','borderRight':'1px solid #f1f1f1','backgroundColor':'#fafafa', 'padding':'10px 10px 0 10px','overflow':'auto','overflowX':'hidden'}}>
               <SidebarRight
                 width={sidebarRightWidth}
                 height={props.height}

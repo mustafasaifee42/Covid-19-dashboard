@@ -25,7 +25,9 @@ const Map: React.FunctionComponent<{width:number , height:number , value:string,
     let Zoom:any = d3.zoom().scaleExtent([0.6, 10]).on('zoom', zoomed);
     let mapSVG = d3.select(mapNode).call(Zoom);
     let zoomGroup = mapSVG.append('g');
-
+    zoomGroup.append('g')
+      .attr('class','mapKey')
+      .attr('transform',`translate(${projection([-15, -45])[0]},${projection([-15, -45])[1]})`)
     zoomGroup.append('rect')
       .attr('class', 'bg')
       .attr('x',0)
@@ -150,11 +152,46 @@ const Map: React.FunctionComponent<{width:number , height:number , value:string,
   },[height, width , props.data, windowWidth])
   
   useEffect(() => {
-
+    let maxRadius = (windowWidth < 800) ? 30 : 50
     let rad = props.value === 'valuePer1000' ? 1000 : 100000
     const rScale = d3.scaleSqrt()
       .domain([0,rad])
-      .range([0,50])
+      .range([0,maxRadius])
+    let keyVal = props.value === 'valuePer1000' ? (windowWidth < 800) ? [100,500] : [10,100,500] : (windowWidth < 800) ? [10000,50000] : [1000,10000,50000]
+    d3.selectAll('.keyCircle').remove();
+    let keyG = d3.select('.mapKey')
+      .selectAll('.keyCircle')
+      .data(keyVal)
+      .enter()
+      .append('g')
+      .attr('class', 'keyCircle')
+      .attr('transform',(d:number) => `translate(0,${rScale(keyVal[keyVal.length - 1]) - rScale(d)})`)
+    d3.select('.mapKey')
+      .append('text')
+      .attr('x',0)
+      .attr('y',(d:number) => rScale(keyVal[keyVal.length - 1]) + 15)
+      .attr('fill','#ccc')
+      .attr('font-size',12)
+      .attr('font-family','IBM Plex Sans')
+      .attr('font-weight','bold')
+      .attr('text-anchor','middle')
+      .text('Cases')
+    keyG.append('circle')
+      .attr('cx',0)
+      .attr('cy',0)
+      .attr('fill','none')
+      .attr('stroke-width', 1)
+      .attr('stroke','#ccc')
+      .attr('r',(d:number) => rScale(d))
+    keyG
+      .append('text')
+      .attr('x',0)
+      .attr('y',(d:number) => 0 - rScale(d) - 2)
+      .attr('fill','#ccc')
+      .attr('font-size',10)
+      .attr('font-family','IBM Plex Sans')
+      .attr('text-anchor','middle')
+      .text((d:number) => d)
     d3.select(mapNode).selectAll('.country')
       .transition()
       .duration(100)
@@ -229,7 +266,7 @@ const Map: React.FunctionComponent<{width:number , height:number , value:string,
         return props.deathVisibility * 0.2
       })
 
-  },[props.index, props.selectedKey, props.data, props.country, props.highlightNew, width, height, props.value, props.deathVisibility])
+  },[props.index, props.selectedKey, props.data, props.country, props.highlightNew, width, windowWidth, height, props.value, props.deathVisibility])
   
   return ( 
     <div>
