@@ -37,14 +37,15 @@ const Visualization: React.FunctionComponent<{width:number,height:number}> = (pr
   const [selectedCountry, setSelectedCountry] = useState('World')
   const [index, setIndex] = useState(0)
   const [sorted, setSorted] = useState('confirmed')
+  const [value, setValue] = useState('value')
   const [highlightNew, setHighlightNew] = useState(false)
   let indexToUpdate = 1;
-  const [selectedKey, setSelectedKey] = useState<[string,number]>(['value',100000])
+  const [selectedKey, setSelectedKey] = useState<[string,number]>(['confirmedData',100000])
   useEffect(() => {
     Promise.all([
-        d3.csv("https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_19-covid-Confirmed.csv"),
-        d3.csv("https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_19-covid-Deaths.csv"),
-        d3.csv("https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_19-covid-Recovered.csv")
+        d3.csv("./data/time_series_19-covid-Confirmed.csv"),
+        d3.csv("./data/time_series_19-covid-Deaths.csv"),
+        d3.csv("./data/time_series_19-covid-Recovered.csv")
       ])
       .then(([confirmed,death , recovered]) => {
         let confirmedDataCombined = dataManipulation(confirmed);
@@ -78,8 +79,10 @@ const Visualization: React.FunctionComponent<{width:number,height:number}> = (pr
         counntryList.forEach((country:string) => {
           let index = populationData.findIndex((obj:any) => obj.Country === country)
           if(index >= 0) combinedDataObj[country]['Population'] = populationData[index]['Population']
+          combinedDataObj[country]['activeData'] = []
           combinedDataObj[country]['confirmedData'].forEach((d:any,i:number) => {
             d['valuePer1000'] = +(d['value'] * 100000 / combinedDataObj[country]['Population'])
+            combinedDataObj[country]['activeData'].push({"value":d['value'] - combinedDataObj[country]['deathData'][i]['value']  - combinedDataObj[country]['recoveryData'][i]['value'],"valuePer1000": (d['value'] - combinedDataObj[country]['deathData'][i]['value']  - combinedDataObj[country]['recoveryData'][i]['value']) * 100000 / combinedDataObj[country]['Population']})
             d['new'] = i === 0 ? d['value'] : (d['value'] - combinedDataObj[country]['confirmedData'][i-1]['value'] < 0 ) ? 0 : d['value'] - combinedDataObj[country]['confirmedData'][i-1]['value']
           })
           combinedDataObj[country]['deathData'].forEach((d:any,i:number) => {
@@ -89,9 +92,10 @@ const Visualization: React.FunctionComponent<{width:number,height:number}> = (pr
           combinedDataObj[country]['recoveryData'].forEach((d:any,i:number) => {
             d['new'] = i === 0 ? d['value'] : (d['value'] - combinedDataObj[country]['recoveryData'][i-1]['value'] < 0 ) ? 0 : d['value'] - combinedDataObj[country]['recoveryData'][i-1]['value']
           })
+
         })
         setIndex(combinedDataObj[Object.keys(combinedDataObj)[0]]['confirmedData'].length)
-
+        console.log(combinedDataObj)
         setData(combinedDataObj)
 
       })
@@ -135,6 +139,8 @@ const Visualization: React.FunctionComponent<{width:number,height:number}> = (pr
               selectedKey={selectedKey}
               index={index}
               highlightNew={highlightNew}
+              value={value}
+              onValueToggle = {(e) => {setValue(e)} }
               highlightNewClick = {(e) => {setHighlightNew(e)}}
               onToggleClick={(value) => {
                 setSelectedKey(value) 
@@ -218,6 +224,8 @@ const Visualization: React.FunctionComponent<{width:number,height:number}> = (pr
               selectedKey={selectedKey}
               index={index}
               highlightNew={highlightNew}
+              value={value}
+              onValueToggle = {(e) => {setValue(e)} }
               highlightNewClick = {(e) => {setHighlightNew(e)}}
               onToggleClick={(value) => {
                 setSelectedKey(value) 
@@ -253,6 +261,8 @@ const Visualization: React.FunctionComponent<{width:number,height:number}> = (pr
               country={country}
               selectedKey={selectedKey}
               index={index}
+              value={value}
+              onValueToggle = {(e) => {setValue(e)} }
               highlightNew={highlightNew}
               highlightNewClick = {(e) => {setHighlightNew(e)}}
               onToggleClick={(value) => {

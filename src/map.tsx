@@ -6,7 +6,7 @@ import * as d3 from 'd3';
 import Play from './play.svg';
 
 let mapNode!: SVGSVGElement | null;
-const Map: React.FunctionComponent<{width:number , height:number , windowWidth:number , index:any ,highlightNew:boolean,highlightNewClick:(e:boolean) => void, replay:()=> void, data:any , selectedKey:[string,number] , onToggleClick:(e:[string,number]) => void ,onCountryClick:(e:string) => void , country:string}> = (props) => {
+const Map: React.FunctionComponent<{width:number , height:number , value:string, onValueToggle:(e:string) => void, windowWidth:number , index:any ,highlightNew:boolean,highlightNewClick:(e:boolean) => void, replay:()=> void, data:any , selectedKey:[string,number] , onToggleClick:(e:[string,number]) => void ,onCountryClick:(e:string) => void , country:string}> = (props) => {
   const {
     height,
     width,
@@ -80,7 +80,14 @@ const Map: React.FunctionComponent<{width:number , height:number , windowWidth:n
       .attr('stroke','#414141')
       .attr('stroke-width',0.5)
       .attr('r', 0)
-      
+    let countryinTopo = mapShapeData.features.map((d:any) => d.properties.NAME_EN)
+    let countryinData = Object.keys(props.data)
+    console.log(countryinData.length)
+    for (let i = 0; i < countryinData.length; i++){
+      if(countryinTopo.indexOf(countryinData[i]) < 0){
+        console.log(countryinData[i])
+      }
+    }
     d3.selectAll('.countryG')
       .on('mouseenter',(d:any) => {
         d3.select('.tooltip')
@@ -138,22 +145,25 @@ const Map: React.FunctionComponent<{width:number , height:number , windowWidth:n
   },[height, width , props.data, windowWidth])
   
   useEffect(() => {
+
+    let rad = props.value === 'valuePer1000' ? 1000 : 100000
     const rScale = d3.scaleSqrt()
-      .domain([0,props.selectedKey[1]])
+      .domain([0,rad])
       .range([0,50])
       
     d3.select(mapNode).selectAll('.country')
       .transition()
       .duration(100)
       .attr('fill', (d:any) => {
-        if(props.data[d.properties.NAME_EN])
-          if(props.data[d.properties.NAME_EN]['confirmedData'][props.index - 1][props.selectedKey[0]] > 0)
+        if(props.data[d.properties.NAME_EN]) {
+          if(props.data[d.properties.NAME_EN][props.selectedKey[0]][props.index - 1][props.value] > 0)
             return '#0aa5c2'
+        }
         return'#aaa'
       })
       .attr('stroke',(d:any) => {
         if(props.data[d.properties.NAME_EN])
-        if(props.data[d.properties.NAME_EN]['confirmedData'][props.index - 1][props.selectedKey[0]] > 0)
+        if(props.data[d.properties.NAME_EN][props.selectedKey[0]][props.index - 1][props.value] > 0)
             return '#0aa5c2'
         return'#999'
       })
@@ -168,15 +178,15 @@ const Map: React.FunctionComponent<{width:number , height:number , windowWidth:n
       .attr('r', (d:any) => {
         if(props.data[d.properties.NAME_EN]){
           if(props.highlightNew)
-            return rScale(props.data[d.properties.NAME_EN]['confirmedData'][props.index - 1][props.selectedKey[0]]) - rScale(props.data[d.properties.NAME_EN]['confirmedData'][props.index - 1]['new']) / 2
-          return rScale(props.data[d.properties.NAME_EN]['confirmedData'][props.index - 1][props.selectedKey[0]])
+            return rScale(props.data[d.properties.NAME_EN][props.selectedKey[0]][props.index - 1][props.value]) - rScale(props.data[d.properties.NAME_EN][props.selectedKey[0]][props.index - 1]['new']) / 2
+          return rScale(props.data[d.properties.NAME_EN][props.selectedKey[0]][props.index - 1][props.value])
         }
         return 0
       })
       .attr('stroke-width',(d:any) => {
         if(props.data[d.properties.NAME_EN]){
           if(props.highlightNew)
-            return rScale(props.data[d.properties.NAME_EN]['confirmedData'][props.index - 1]['new']) 
+            return rScale(props.data[d.properties.NAME_EN][props.selectedKey[0]][props.index - 1]['new']) 
           return 0.25
         }
         return 0
@@ -194,15 +204,15 @@ const Map: React.FunctionComponent<{width:number , height:number , windowWidth:n
       .transition()
       .duration(100)
       .attr('r', (d:any) => {
-        if(props.data[d.properties.NAME_EN]){
+        if(props.data[d.properties.NAME_EN] && props.selectedKey[0] === 'confirmedData'){
           if(props.highlightNew)
-            return rScale(props.data[d.properties.NAME_EN]['deathData'][props.index - 1][props.selectedKey[0]]) - rScale(props.data[d.properties.NAME_EN]['deathData'][props.index - 1]['new']) / 2
-          return rScale(props.data[d.properties.NAME_EN]['deathData'][props.index - 1][props.selectedKey[0]])
+            return rScale(props.data[d.properties.NAME_EN]['deathData'][props.index - 1][props.value]) - rScale(props.data[d.properties.NAME_EN]['deathData'][props.index - 1]['new']) / 2
+          return rScale(props.data[d.properties.NAME_EN]['deathData'][props.index - 1][props.value])
         }
         return 0
       })
       .attr('stroke-width',(d:any) => {
-        if(props.data[d.properties.NAME_EN]){
+        if(props.data[d.properties.NAME_EN] && props.selectedKey[0] === 'confirmedData'){
           if(props.highlightNew)
             return rScale(props.data[d.properties.NAME_EN]['deathData'][props.index - 1]['new']) 
           return 0.25
@@ -215,7 +225,7 @@ const Map: React.FunctionComponent<{width:number , height:number , windowWidth:n
         return 0.2
       })
 
-  },[props.index, props.selectedKey, props.data, props.country, props.highlightNew, width, height])
+  },[props.index, props.selectedKey, props.data, props.country, props.highlightNew, width, height, props.value])
   
   return ( 
     <div>
@@ -234,31 +244,40 @@ const Map: React.FunctionComponent<{width:number , height:number , windowWidth:n
         <div className='rightOptions'>
           <div className='tabContainer'>
             <div 
-              className= {props.selectedKey[0] === 'value' ? 'tab selected' : 'tab'}
-              onClick={() => props.onToggleClick(['value',100000])}
+              className= {props.selectedKey[0] === 'confirmedData' ? 'tab selected' : 'tab'}
+              onClick={() => props.onToggleClick(['confirmedData',100000])}
             >
               Total Cases
             </div>
             <div 
-              className= {props.selectedKey[0] === 'valuePer1000' ? 'tab selected' : 'tab'}
+              className= {props.selectedKey[0] === 'activeData' ? 'tab selected' : 'tab'}
               onClick={() => {
-                props.onToggleClick(['valuePer1000',1000]);
+                props.onToggleClick(['activeData',100000]);
                 props.highlightNewClick(false);
               }}
             >
-              Total Cases Per 100K
+              Active Cases
             </div>
           </div>
           <div 
-            className= {props.selectedKey[0] === 'valuePer1000' ? 'buttonTab disabled' : props.highlightNew ? 'buttonTab selectedButtonTab' : 'buttonTab'}
-            onClick={() => props.selectedKey[0] !== 'valuePer1000' ? props.highlightNew ? props.highlightNewClick(false) : props.highlightNewClick(true) : null}
+            className= {props.value === 'valuePer1000' ? 'buttonTab selected' : 'buttonTab'}
+            onClick={() => {
+              props.value === 'valuePer1000' ? props.onValueToggle('value') : props.onValueToggle('valuePer1000');
+              props.highlightNewClick(false);
+            }}
           >
-            {props.selectedKey[0] === 'valuePer1000' ? 'Highlight last 24 Hrs' : props.highlightNew ? 'Unhighlight last 24 Hrs' : 'Highlight last 24 Hrs'}
+            Per 100K
+          </div>
+          <div 
+            className= {props.selectedKey[0] === 'confirmedData' ? props.value === 'valuePer1000' ? 'buttonTab disabled' : props.highlightNew ? 'buttonTab selected' : 'buttonTab' : 'buttonTab disabled'}
+            onClick={() => props.value !== 'valuePer1000' && props.selectedKey[0] === 'confirmedData' ? props.highlightNew ? props.highlightNewClick(false) : props.highlightNewClick(true) : null}
+          >
+            {props.value === 'valuePer1000' || props.selectedKey[0] !== 'confirmedData' ? 'Highlight last 24 Hrs' : props.highlightNew ? 'Unhighlight last 24 Hrs' : 'Highlight last 24 Hrs'}
           </div>
         </div>
       </div>
       <div className='title'>
-        <div className='bold titleCountry'>{props.country}</div>
+        <div className='titleCountry'><span className='blue bold'>{props.country}</span><br />Active: <span className="bold red">{props.data[props.country] ? props.data[props.country]['activeData'][props.index - 1]['value'] : 0}</span></div>
         <div className='confirmedTitleMap'> Confirmed: <span className='bold red'>{props.data[props.country] ? props.data[props.country]['confirmedData'][props.index - 1]['value'] : 0}</span> (<span className='bold red'>{props.data[props.country] ? (props.data[props.country]['confirmedData'][props.index - 1]['valuePer1000']).toFixed(1) : 0}</span> per 100K)<br /><span className='italics small'>Last 24 hrs: <span className='bold red'>{props.data[props.country] ? props.data[props.country]['confirmedData'][props.index - 1]['new'] : 0}</span></span></div>
         <div className='deathTitleMap'> Deaths: <span className='deathTitle bold'>{props.data[props.country] ? props.data[props.country]['deathData'][props.index - 1]['value'] : 0}</span> (<span className='bold'>{props.data[props.country] ? (props.data[props.country]['deathData'][props.index - 1]['value'] * 100 / props.data[props.country]['confirmedData'][props.index - 1]['value'] ).toFixed(1) : 0}%</span> Mortality rate)<br /><span className='italics small'>Last 24 hrs: <span className='bold'>{props.data[props.country] ? props.data[props.country]['deathData'][props.index - 1]['new'] : 0}</span></span></div>
       </div>

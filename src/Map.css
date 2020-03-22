@@ -38,7 +38,7 @@
 
 .tabContainer{
     display: flex;
-    margin-right: 10px;
+    margin-right: 5px;
 }
 
 .tab{
@@ -62,6 +62,7 @@
     border: 1px solid #aaa;
     color:rgba(65,65,65,1);
     border-radius: 4px;
+    margin:0 5px;
     cursor: pointer;
 }
 .buttonTab:hover{
@@ -97,7 +98,13 @@
     font-size:14px;
 }
 .titleCountry{
-    font-size: 20px;
+    font-size: 16px;
+    text-align: left;
+}
+
+.blue{
+    color:#0aa5c2;
+    font-size:20px;
 }
 .red{
     color:#e01a25;
