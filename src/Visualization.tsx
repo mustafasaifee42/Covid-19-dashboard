@@ -162,7 +162,7 @@ const Visualization: React.FunctionComponent<{width:number,height:number}> = (pr
                     indexToUpdate++;
                     setIndex(indexToUpdate);
                   }
-                } , 500)
+                } , 400)
                 function stopReplay(){
                   indexToUpdate = 1
                   clearInterval(replay)
@@ -250,7 +250,7 @@ const Visualization: React.FunctionComponent<{width:number,height:number}> = (pr
                     indexToUpdate++;
                     setIndex(indexToUpdate);
                   }
-                } , 500)
+                } , 400)
                 function stopReplay(){
                   indexToUpdate = 1
                   clearInterval(replay)
@@ -290,7 +290,7 @@ const Visualization: React.FunctionComponent<{width:number,height:number}> = (pr
                     indexToUpdate++;
                     setIndex(indexToUpdate);
                   }
-                } , 500)
+                } , 400)
                 function stopReplay(){
                   indexToUpdate = 1
                   clearInterval(replay)

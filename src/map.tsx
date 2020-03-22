@@ -192,6 +192,14 @@ const Map: React.FunctionComponent<{width:number , height:number , value:string,
       .attr('font-family','IBM Plex Sans')
       .attr('text-anchor','middle')
       .text((d:number) => d)
+  },[windowWidth,props.value])
+
+  useEffect(() => {
+    let maxRadius = (windowWidth < 800) ? 30 : 50
+    let rad = props.value === 'valuePer1000' ? 1000 : 100000
+    const rScale = d3.scaleSqrt()
+      .domain([0,rad])
+      .range([0,maxRadius])
     d3.select(mapNode).selectAll('.country')
       .transition()
       .duration(100)
