@@ -40,6 +40,7 @@ const Visualization: React.FunctionComponent<{width:number,height:number}> = (pr
   const [sorted, setSorted] = useState('confirmed')
   const [value, setValue] = useState('value')
   const [highlightNew, setHighlightNew] = useState(false)
+  const [deathVisibility, setDeathVisibility] = useState(0)
   let indexToUpdate = 1;
   const [selectedKey, setSelectedKey] = useState<[string,number]>(['confirmedData',100000])
   useEffect(() => {
@@ -140,6 +141,8 @@ const Visualization: React.FunctionComponent<{width:number,height:number}> = (pr
               index={index}
               highlightNew={highlightNew}
               value={value}
+              deathVisibility = {deathVisibility}
+              toggleDeathVisibility = {(e) => { setDeathVisibility(e) } }
               onValueToggle = {(e) => {setValue(e)} }
               highlightNewClick = {(e) => {setHighlightNew(e)}}
               onToggleClick={(value) => {
@@ -227,6 +230,8 @@ const Visualization: React.FunctionComponent<{width:number,height:number}> = (pr
               index={index}
               highlightNew={highlightNew}
               value={value}
+              deathVisibility = {deathVisibility}
+              toggleDeathVisibility = {(e) => { setDeathVisibility(e) } }
               onValueToggle = {(e) => {setValue(e)} }
               highlightNewClick = {(e) => {setHighlightNew(e)}}
               onToggleClick={(value) => {
@@ -261,6 +266,8 @@ const Visualization: React.FunctionComponent<{width:number,height:number}> = (pr
               data={data}
               windowWidth = {props.width}
               country={country}
+              deathVisibility = {deathVisibility}
+              toggleDeathVisibility = {(e) => { setDeathVisibility(e) } }
               selectedKey={selectedKey}
               index={index}
               value={value}

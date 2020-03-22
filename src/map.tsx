@@ -7,7 +7,7 @@ import Play from './play.svg';
 import Tick from './tick.svg';
 
 let mapNode!: SVGSVGElement | null;
-const Map: React.FunctionComponent<{width:number , height:number , value:string, onValueToggle:(e:string) => void, windowWidth:number , index:any ,highlightNew:boolean,highlightNewClick:(e:boolean) => void, replay:()=> void, data:any , selectedKey:[string,number] , onToggleClick:(e:[string,number]) => void ,onCountryClick:(e:string) => void , country:string}> = (props) => {
+const Map: React.FunctionComponent<{width:number , height:number , value:string, deathVisibility:number , toggleDeathVisibility:(e:number) => void, onValueToggle:(e:string) => void, windowWidth:number , index:any ,highlightNew:boolean,highlightNewClick:(e:boolean) => void, replay:()=> void, data:any , selectedKey:[string,number] , onToggleClick:(e:[string,number]) => void ,onCountryClick:(e:string) => void , country:string}> = (props) => {
   const {
     height,
     width,
@@ -207,14 +207,6 @@ const Map: React.FunctionComponent<{width:number , height:number , value:string,
     d3.select(mapNode).selectAll('.deathBubble')
       .transition()
       .duration(100)
-      .attr('cy', (d:any) => {
-        if(props.data[d.properties.NAME_EN] && props.selectedKey[0] === 'confirmedData'){
-          if(props.highlightNew)
-            return rScale(props.data[d.properties.NAME_EN]['confirmedData'][props.index - 1][props.value]) - rScale(props.data[d.properties.NAME_EN]['deathData'][props.index - 1][props.value]) -  rScale(props.data[d.properties.NAME_EN]['confirmedData'][props.index - 1]['new'])
-          return rScale(props.data[d.properties.NAME_EN]['confirmedData'][props.index - 1][props.value]) - rScale(props.data[d.properties.NAME_EN]['deathData'][props.index - 1][props.value])
-        }
-        return 0
-      })
       .attr('r', (d:any) => {
         if(props.data[d.properties.NAME_EN] && props.selectedKey[0] === 'confirmedData'){
           if(props.highlightNew)
@@ -232,12 +224,12 @@ const Map: React.FunctionComponent<{width:number , height:number , value:string,
         return 0
       })
       .attr('opacity',(d:any) => {
-        if(props.country === 'World') return 1
-        if(d.properties.NAME_EN === props.country) return 1
-        return 0.2
+        if(props.country === 'World') return props.deathVisibility
+        if(d.properties.NAME_EN === props.country) return props.deathVisibility
+        return props.deathVisibility * 0.2
       })
 
-  },[props.index, props.selectedKey, props.data, props.country, props.highlightNew, width, height, props.value])
+  },[props.index, props.selectedKey, props.data, props.country, props.highlightNew, width, height, props.value, props.deathVisibility])
   
   return ( 
     <div>
@@ -266,10 +258,18 @@ const Map: React.FunctionComponent<{width:number , height:number , value:string,
               onClick={() => {
                 props.onToggleClick(['activeData',100000]);
                 props.highlightNewClick(false);
+                props.toggleDeathVisibility(0)
               }}
             >
               Active Cases
             </div>
+          </div>
+          <div 
+            className= {props.selectedKey[0] === 'confirmedData' ? props.deathVisibility === 1 ? 'buttonTab selected' : 'buttonTab' :  'buttonTab disabled'}
+            onClick={() => props.selectedKey[0] === 'confirmedData' ? props.deathVisibility === 1 ? props.toggleDeathVisibility(0) : props.toggleDeathVisibility(1) : null}
+          >
+            <div className='checkBox'><img src={Tick} alt='tick-icon' className='tickIcon'/></div>
+            Show Deaths
           </div>
           <div 
             className= {props.highlightNew ? 'buttonTab disabled' : props.value === 'valuePer1000' ? 'buttonTab selected' : 'buttonTab'}

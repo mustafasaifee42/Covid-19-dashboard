@@ -1,7 +1,7 @@
 import React from 'react';
 import './dataCard.css'
 
-const Sidebar: React.FunctionComponent<{title:string , outof100K?:number , data?:number, color:string , percent?:string}> = (props) => {
+const Sidebar: React.FunctionComponent<{title:string , outof100K?:number , data?:number | string, color:string , percent?:string}> = (props) => {
 
    
   return ( 

@@ -143,7 +143,6 @@ const Sidebar: React.FunctionComponent<{width:number , height:number, bigScreen:
       if(props.country !== 'World') {
         epidemicCurveDataFiltered = [epidemicCurveData[countryList.indexOf(props.country)],epidemicCurveData[0]]
         countryListFiltered = [props.country,'World']
-        console.log(epidemicCurveData[countryList.indexOf(props.country)])
       }
       if(epidemicCurveDataFiltered[0].length > 1) {
         epidemicCurveDataFiltered.forEach((el:any,k:number) => {
@@ -267,6 +266,7 @@ const Sidebar: React.FunctionComponent<{width:number , height:number, bigScreen:
       <DataCards
         title="Total Countrys Infected"
         data={Object.keys(props.data).length - 2}
+        percent={'out of 195'}
         color='#e01a25' 
       />
       <div className="graphContainer">

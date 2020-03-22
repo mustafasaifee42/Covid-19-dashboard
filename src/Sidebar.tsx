@@ -271,6 +271,17 @@ const Sidebar: React.FunctionComponent<{width:number , height:number, graphHeigh
     }
   })
 
+  let doublingTime = 'NA'
+
+  if(props.data[props.country]){
+    let confirmedDataFiltered = props.data[props.country]['confirmedData'].filter((d:any, i:number) => d.value >= 100)
+    if(confirmedDataFiltered.length > 1){
+      let rate = (Math.pow(confirmedDataFiltered[confirmedDataFiltered.length - 1].value / confirmedDataFiltered[0].value , 1 / (confirmedDataFiltered.length - 1)) - 1) * 100
+      doublingTime = `${(70 / rate).toFixed(1)} days`
+    }
+
+  }
+
   return ( 
     <div>
       <div className='countryShow'>{props.country}</div>
@@ -279,6 +290,11 @@ const Sidebar: React.FunctionComponent<{width:number , height:number, graphHeigh
         data={props.data[props.country] ? props.data[props.country]['confirmedData'][props.data[props.country]['confirmedData'].length - 1].value : 0}
         color='#e01a25' 
         outof100K= {props.data[props.country] ? props.data[props.country]['confirmedData'][props.data[props.country]['confirmedData'].length - 1]['valuePer1000'] : undefined}
+      />
+      <DataCards
+        title="Doubling Time"
+        data={doublingTime}
+        color='#414141' 
       />
       <DataCards
         title="Total Death"
