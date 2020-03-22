@@ -265,11 +265,8 @@ const Map: React.FunctionComponent<{width:number , height:number , value:string,
             </div>
           </div>
           <div 
-            className= {props.value === 'valuePer1000' ? 'buttonTab selected' : 'buttonTab'}
-            onClick={() => {
-              props.value === 'valuePer1000' ? props.onValueToggle('value') : props.onValueToggle('valuePer1000');
-              props.highlightNewClick(false);
-            }}
+            className= {props.highlightNew ? 'buttonTab disabled' : props.value === 'valuePer1000' ? 'buttonTab selected' : 'buttonTab'}
+            onClick={() => !props.highlightNew ? props.value === 'valuePer1000' ? props.onValueToggle('value') : props.onValueToggle('valuePer1000') : null}
           >
             <div className='checkBox'><img src={Tick} alt='tick-icon' className='tickIcon'/></div>
             Per 100K
