@@ -51,10 +51,10 @@ const Map: React.FunctionComponent<{width:number , height:number , value:string,
       .append('path')
       .attr('class', `country countryG`)
       .attr('d', path)
-      .attr('fill', '#aaa')
-      .attr('fill-opacity', 0.15)
+      .attr('fill', '#ddd')
+      .attr('fill-opacity', 0.25)
       .attr('stroke','#999')
-      .attr('stroke-width',0.25)
+      .attr('stroke-width',0.5)
 
     //for adding bubbles or circle on the map
     let bubbleG = zoomGroup
@@ -70,7 +70,7 @@ const Map: React.FunctionComponent<{width:number , height:number , value:string,
       .attr('cx',0)
       .attr('cy',0)
       .attr('fill','#e01a25')
-      .attr('fill-opacity',0.15)
+      .attr('fill-opacity',0.25)
       .attr('stroke','#e01a25')
       .attr('stroke-width',1)
       .attr('r', 0)
@@ -208,7 +208,7 @@ const Map: React.FunctionComponent<{width:number , height:number , value:string,
           if(props.data[d.properties.NAME_EN][props.selectedKey[0]][props.index - 1][props.value] > 0)
             return '#0aa5c2'
         }
-        return'#aaa'
+        return'#ddd'
       })
       .attr('stroke',(d:any) => {
         if(props.data[d.properties.NAME_EN])
@@ -236,7 +236,7 @@ const Map: React.FunctionComponent<{width:number , height:number , value:string,
         if(props.data[d.properties.NAME_EN]){
           if(props.highlightNew)
             return rScale(props.data[d.properties.NAME_EN][props.selectedKey[0]][props.index - 1]['new']) 
-          return 0.25
+          return 0.5
         }
         return 0
       })
@@ -264,7 +264,7 @@ const Map: React.FunctionComponent<{width:number , height:number , value:string,
         if(props.data[d.properties.NAME_EN] && props.selectedKey[0] === 'confirmedData'){
           if(props.highlightNew)
             return rScale(props.data[d.properties.NAME_EN]['deathData'][props.index - 1]['new']) 
-          return 0.25
+          return 0.5
         }
         return 0
       })

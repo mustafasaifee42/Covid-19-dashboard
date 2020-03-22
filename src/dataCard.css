@@ -30,9 +30,14 @@
 }
 
 .subNote{
-    margin-top:5px;
     color:#aaa;
     font-size:16px;
     font-weight: bold;
 
+}
+
+.note{
+    
+    color:#414141;
+    font-size:16px;
 }

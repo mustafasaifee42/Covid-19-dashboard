@@ -264,10 +264,10 @@ const Sidebar: React.FunctionComponent<{width:number , height:number, bigScreen:
   return ( 
     <div>
       <DataCards
-        title="Total Countrys Infected"
+        title="Total Countries Infected"
         data={Object.keys(props.data).length - 2}
-        percent={'out of 195'}
-        color='#e01a25' 
+        note={'out of 195'}
+        color='#0aa5c2' 
       />
       <div className="graphContainer">
         <div className='cardTitle'>Epidemic Curve (Log Scale)</div>
