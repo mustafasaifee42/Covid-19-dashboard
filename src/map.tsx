@@ -55,38 +55,38 @@ const Map: React.FunctionComponent<{width:number , height:number , value:string,
       .attr('stroke-width',0.25)
 
     //for adding bubbles or circle on the map
-    zoomGroup
-      .selectAll('.bubble')
+    let bubbleG = zoomGroup
+      .selectAll('.bubbleG')
       .data(mapShapeData.features)
       .enter()
+      .append('g')
+      .attr('class', `bubbleG`)
+      .attr('transform', (d:any) => `translate(${path.centroid(d)[0]},${path.centroid(d)[1]})`)
+    bubbleG
       .append('circle')
       .attr('class', `bubble countryG`)
-      .attr('cx',(d:any) => path.centroid(d)[0])
-      .attr('cy',(d:any) => path.centroid(d)[1])
+      .attr('cx',0)
+      .attr('cy',0)
       .attr('fill','#e01a25')
       .attr('fill-opacity',0.15)
       .attr('stroke','#e01a25')
       .attr('stroke-width',1)
       .attr('r', 0)
-    zoomGroup
-      .selectAll('.deathBubble')
-      .data(mapShapeData.features)
-      .enter()
+    bubbleG
       .append('circle')
       .attr('class', `deathBubble countryG`)
-      .attr('cx',(d:any) => path.centroid(d)[0])
-      .attr('cy',(d:any) => path.centroid(d)[1])
+      .attr('cx',0)
+      .attr('cy',0)
       .attr('fill','#414141')
       .attr('fill-opacity',0.5)
       .attr('stroke','#414141')
-      .attr('stroke-width',0.5)
+      .attr('stroke-width',0.25)
       .attr('r', 0)
     let countryinTopo = mapShapeData.features.map((d:any) => d.properties.NAME_EN)
     let countryinData = Object.keys(props.data)
-    console.log(countryinData.length)
     for (let i = 0; i < countryinData.length; i++){
       if(countryinTopo.indexOf(countryinData[i]) < 0){
-        console.log(countryinData[i])
+        console.warn(`${countryinData[i]} not in World Map`)
       }
     }
     d3.selectAll('.countryG')
@@ -100,7 +100,7 @@ const Map: React.FunctionComponent<{width:number , height:number , value:string,
         
         if(props.data[d.properties.NAME_EN]) {
           d3.select('.tooltipConfirmed')
-            .html(`<span class="bold red">${props.data[d.properties.NAME_EN]['confirmedData'][props.data[d.properties.NAME_EN]['confirmedData'].length - 1]['value']}</span> (<span class="bold red">${(props.data[d.properties.NAME_EN]['confirmedData'][props.data[d.properties.NAME_EN]['confirmedData'].length - 1]['valuePer1000']).toFixed(1)}</span> per 100K)`)
+            .html(`<span class="bold red">${props.data[d.properties.NAME_EN]['confirmedData'][props.data[d.properties.NAME_EN]['confirmedData'].length - 1]['value']}</span> (<span class="bold red">${(props.data[d.properties.NAME_EN]['confirmedData'][props.data[d.properties.NAME_EN]['confirmedData'].length - 1]['valuePer1000']).toFixed(1)}</span> per 100000)`)
           d3.select('.tooltipActive')
             .html(`<span class="bold red">${props.data[d.properties.NAME_EN]['activeData'][props.data[d.properties.NAME_EN]['activeData'].length - 1]['value']}</span>`)
           d3.select('.tooltipDeath')
@@ -155,7 +155,6 @@ const Map: React.FunctionComponent<{width:number , height:number , value:string,
     const rScale = d3.scaleSqrt()
       .domain([0,rad])
       .range([0,50])
-      
     d3.select(mapNode).selectAll('.country')
       .transition()
       .duration(100)
@@ -208,6 +207,14 @@ const Map: React.FunctionComponent<{width:number , height:number , value:string,
     d3.select(mapNode).selectAll('.deathBubble')
       .transition()
       .duration(100)
+      .attr('cy', (d:any) => {
+        if(props.data[d.properties.NAME_EN] && props.selectedKey[0] === 'confirmedData'){
+          if(props.highlightNew)
+            return rScale(props.data[d.properties.NAME_EN]['confirmedData'][props.index - 1][props.value]) - rScale(props.data[d.properties.NAME_EN]['deathData'][props.index - 1][props.value]) -  rScale(props.data[d.properties.NAME_EN]['confirmedData'][props.index - 1]['new'])
+          return rScale(props.data[d.properties.NAME_EN]['confirmedData'][props.index - 1][props.value]) - rScale(props.data[d.properties.NAME_EN]['deathData'][props.index - 1][props.value])
+        }
+        return 0
+      })
       .attr('r', (d:any) => {
         if(props.data[d.properties.NAME_EN] && props.selectedKey[0] === 'confirmedData'){
           if(props.highlightNew)
@@ -269,7 +276,7 @@ const Map: React.FunctionComponent<{width:number , height:number , value:string,
             onClick={() => !props.highlightNew ? props.value === 'valuePer1000' ? props.onValueToggle('value') : props.onValueToggle('valuePer1000') : null}
           >
             <div className='checkBox'><img src={Tick} alt='tick-icon' className='tickIcon'/></div>
-            Per 100K
+            Per 100000
           </div>
           <div 
             className= {props.selectedKey[0] === 'confirmedData' ? props.value === 'valuePer1000' ? 'buttonTab disabled' : props.highlightNew ? 'buttonTab selected' : 'buttonTab' : 'buttonTab disabled'}
@@ -282,7 +289,7 @@ const Map: React.FunctionComponent<{width:number , height:number , value:string,
       </div>
       <div className='title'>
         <div className='titleCountry'><span className='blue bold'>{props.country}</span><br />Active: <span className="bold red">{props.data[props.country] ? props.data[props.country]['activeData'][props.index - 1]['value'] : 0}</span></div>
-        <div className='confirmedTitleMap'> Confirmed: <span className='bold red'>{props.data[props.country] ? props.data[props.country]['confirmedData'][props.index - 1]['value'] : 0}</span> (<span className='bold red'>{props.data[props.country] ? (props.data[props.country]['confirmedData'][props.index - 1]['valuePer1000']).toFixed(1) : 0}</span> per 100K)<br /><span className='italics small'>Last 24 hrs: <span className='bold red'>{props.data[props.country] ? props.data[props.country]['confirmedData'][props.index - 1]['new'] : 0}</span></span></div>
+        <div className='confirmedTitleMap'> Confirmed: <span className='bold red'>{props.data[props.country] ? props.data[props.country]['confirmedData'][props.index - 1]['value'] : 0}</span> (<span className='bold red'>{props.data[props.country] ? (props.data[props.country]['confirmedData'][props.index - 1]['valuePer1000']).toFixed(1) : 0}</span> per 100000)<br /><span className='italics small'>Last 24 hrs: <span className='bold red'>{props.data[props.country] ? props.data[props.country]['confirmedData'][props.index - 1]['new'] : 0}</span></span></div>
         <div className='deathTitleMap'> Deaths: <span className='deathTitle bold'>{props.data[props.country] ? props.data[props.country]['deathData'][props.index - 1]['value'] : 0}</span> (<span className='bold'>{props.data[props.country] ? (props.data[props.country]['deathData'][props.index - 1]['value'] * 100 / props.data[props.country]['confirmedData'][props.index - 1]['value'] ).toFixed(1) : 0}%</span> Mortality rate)<br /><span className='italics small'>Last 24 hrs: <span className='bold'>{props.data[props.country] ? props.data[props.country]['deathData'][props.index - 1]['new'] : 0}</span></span></div>
       </div>
       <svg width={props.width} height={props.height - 160} ref={node => mapNode = node} />

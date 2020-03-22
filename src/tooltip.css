@@ -18,11 +18,13 @@
     padding: 10px;
     display:none;
 }
-
-.tooltipCountry{
+.tooltipCountryContainer{
     background-color: #eaeaea;
-    font-weight: bold;
     padding:10px
+
+}
+.tooltipCountry{
+    font-weight: bold;
 }
 .tooltipConfirmedTitle{
     padding:10px;
@@ -31,4 +33,9 @@
 .tooltipDeathTitle{
     padding:10px;
     border-bottom: 1px solid #f1f1f1; 
+}
+
+.tooltipSubnote{
+    font-size: 14px;
+    color:#aaa
 }

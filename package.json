@@ -12,6 +12,7 @@
     "@types/react-dom": "^16.9.0",
     "d3": "^5.15.0",
     "d3-geo-projection": "^2.8.1",
+    "d3-scale": "^3.2.1",
     "d3-zoom": "^1.8.3",
     "react": "^16.13.0",
     "react-dom": "^16.13.0",

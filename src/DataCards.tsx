@@ -11,7 +11,7 @@ const Sidebar: React.FunctionComponent<{title:string , outof100K?:number , data?
       </div>
       <div className='cardValue' style={{'color':props.color}}>
         {props.data} <span className='percent'>{props.percent}</span>
-        {props.outof100K ? <span className="subNote">{(props.outof100K).toFixed(1)} per 100K</span> : null}
+        {props.outof100K ? <span className="subNote">{(props.outof100K).toFixed(1)} per 100000</span> : null}
       </div>
         
     </div>

@@ -96,7 +96,6 @@ const Visualization: React.FunctionComponent<{width:number,height:number}> = (pr
 
         })
         setIndex(combinedDataObj[Object.keys(combinedDataObj)[0]]['confirmedData'].length)
-        console.log(Object.keys(combinedDataObj).length)
         setData(combinedDataObj)
 
       })
@@ -105,14 +104,14 @@ const Visualization: React.FunctionComponent<{width:number,height:number}> = (pr
     return null
   }
   else{
-    let sidebarRightWidth = 430
-    if(props.width > 1420 && props.width < 1600) sidebarRightWidth = 320
+    let sidebarRightWidth = 430, rightGraphHeight = 320
+    if(props.width > 1420 && props.width < 1600) { sidebarRightWidth = 320 ; rightGraphHeight = 240 }
     let sidebarLeftWidth = 430
     if(props.width < 1180) sidebarLeftWidth = 320
     return ( 
       <div>
         <div className='tooltip'>
-          <div className='tooltipCountry'>Country</div>
+          <div className='tooltipCountryContainer'><span className='tooltipCountry'>Country</span><span className='tooltipSubnote'> Click to see details</span></div>
           <div className='tooltipConfirmedTitle'>Confirmed Cases: <span className='tooltipConfirmed'>0</span></div>
           <div className='tooltipDeathTitle'>Active Cases: <span className='tooltipActive'>0</span></div>
           <div className='tooltipDeathTitle'>Deaths: <span className='tooltipDeath'>0</span></div>
@@ -129,7 +128,6 @@ const Visualization: React.FunctionComponent<{width:number,height:number}> = (pr
                 graphHeight={200}
                 data={data}
                 country={country}
-
               />
             </div>
             <Map
@@ -168,14 +166,15 @@ const Visualization: React.FunctionComponent<{width:number,height:number}> = (pr
                 }
               }}
             />
-            <div style={{'flex':`0 0 ${sidebarRightWidth}px`, "height":'calc(100vh - 100px)','borderRight':'1px solid #f1f1f1','backgroundColor':'#fafafa', 'padding':'10px 10px 0 10px','overflow':'auto','overflowX':'hidden'}}>
+            <div style={{'flex':`0 0 ${sidebarRightWidth}px`, "height":'calc(100vh - 100px)','borderRight':'1px solid #f1f1f1','backgroundColor':'#fafafa', 'padding':'10px 10px 0 10px','overflow':'hidden'}}>
               <SidebarRight
                 width={sidebarRightWidth}
                 height={props.height}
-                graphHeight={200}
+                graphHeight={rightGraphHeight}
                 data={data}
                 selectedCountry={selectedCountry}
                 country={country}
+                bigScreen={true}
                 hover={(country) => {
                   setCountry(country)            
                 }}
@@ -202,8 +201,9 @@ const Visualization: React.FunctionComponent<{width:number,height:number}> = (pr
               <SidebarRight
                 width={sidebarLeftWidth}
                 height={props.height}
-                graphHeight={200}
+                graphHeight={320}
                 data={data}
+                bigScreen={false}
                 selectedCountry={selectedCountry}
                 country={country}
                 hover={(country) => {
@@ -257,7 +257,7 @@ const Visualization: React.FunctionComponent<{width:number,height:number}> = (pr
           <div>
             <Map
               width={props.width - 20 }
-              height={props.width < 800 ? props.height - 300 : props.height - 60}
+              height={5 * (props.width - 20) / 4}
               data={data}
               windowWidth = {props.width}
               country={country}
@@ -303,6 +303,7 @@ const Visualization: React.FunctionComponent<{width:number,height:number}> = (pr
                 width={props.width - 20}
                 height={props.height}
                 graphHeight={320}
+                bigScreen={false}
                 data={data}
                 selectedCountry={selectedCountry}
                 country={country}
