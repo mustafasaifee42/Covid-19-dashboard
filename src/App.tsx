@@ -33,7 +33,7 @@ function App() {
         height={windowHeightValue}
       />
       <div className='footer'>
-        <span>Made by <a href="https://twitter.com/mustafasaifee42" rel="noopener noreferrer" target="_blank">Mustafa Saifee</a> | <a href="https://github.com/CSSEGISandData/COVID-19"  rel="noopener noreferrer" target="_blank">Data Source</a> | <a href="https://github.com/mustafasaifee42/Covid-19-dashboard"  rel="noopener noreferrer" target="_blank">Open Source Code</a> | Spread the information and stay safe</span>
+        <span>Made by <a href="https://twitter.com/mustafasaifee42" rel="noopener noreferrer" target="_blank">Mustafa Saifee</a> | <a href="https://github.com/CSSEGISandData/COVID-19"  rel="noopener noreferrer" target="_blank">Data Source: JHU CSSE</a> | <a href="https://github.com/mustafasaifee42/Covid-19-dashboard"  rel="noopener noreferrer" target="_blank">Open Source Code</a> | Spread the information and stay safe</span>
         <div className='icons'>
           <FacebookShareButton className="fbIcon" url={'https://coronavirus-dashboard.netlify.com/'} quote={'Live dashboard visualizing the spread of coronavirus COVID-19'}>
             <FacebookIcon size={24} round={true} />
