@@ -34,7 +34,7 @@ function App() {
         height={windowHeightValue}
       />
       <div className='footer'>
-        <span>Made in Helsinki by <a href="https://mustafasaifee.com/" rel="noopener noreferrer" target="_blank">Mustafa Saifee</a> @ <a href="https://www.futurice.com/" rel="noopener noreferrer" target="_blank">Futurice</a> | Follow me on <a href="https://twitter.com/mustafasaifee42" rel="noopener noreferrer" target="_blank">twitter</a> | <a href="https://github.com/CSSEGISandData/COVID-19"  rel="noopener noreferrer" target="_blank">Data Source: John Hopkins University CSSE</a> (Updates every 24 Hrs)| <a href="https://github.com/mustafasaifee42/Covid-19-dashboard"  rel="noopener noreferrer" target="_blank">Open Source Code</a> | Spread the information and stay safe</span>
+        <span>Made in Helsinki by <a href="https://mustafasaifee.com/" rel="noopener noreferrer" target="_blank">Mustafa Saifee</a> @ <a href="https://www.futurice.com/" rel="noopener noreferrer" target="_blank">Futurice</a> | Follow me on <a href="https://twitter.com/mustafasaifee42" rel="noopener noreferrer" target="_blank">twitter</a> | <a href="https://github.com/CSSEGISandData/COVID-19"  rel="noopener noreferrer" target="_blank">Data Source: Johns Hopkins University CSSE</a> (Updates every 24 Hrs)| <a href="https://github.com/mustafasaifee42/Covid-19-dashboard"  rel="noopener noreferrer" target="_blank">Open Source Code</a> | Spread the information and stay safe</span>
         <div className='icons'>
           <FacebookShareButton className="fbIcon" url={'https://covid19.mustafasaifee.com'} quote={'Live dashboard visualizing the spread of COVID-19 coronavirus'}>
             <FacebookIcon size={24} round={true} />

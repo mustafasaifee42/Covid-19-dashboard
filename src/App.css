@@ -17,7 +17,7 @@ body{
   display:flex;
   flex-shrink: 0;
   justify-content: space-between;
-  align-items: top;
+  align-items: center;
 }
 
 .appHeader{

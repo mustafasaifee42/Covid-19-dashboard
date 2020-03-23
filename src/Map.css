@@ -164,3 +164,34 @@
 .disabled:hover{
     color: #414141
 }
+
+.titleDate{
+    font-size: 18px;
+    color:#aaa;
+}
+
+.mapContainer{
+    display: flex;
+    justify-content: flex-end;
+}
+
+.buttonContainer{
+    padding-right: 20px;
+    position: fixed;
+    margin:20px 0;
+}
+
+.backToWorld {
+    opacity: 0;
+    background-color: #eaeaea;
+    border: 1px solid #f1f1f1;
+    padding:10px;
+    cursor:pointer;
+    pointer-events: none;
+    transition: opacity 200ms;
+    font-size: 14px;
+}
+.backToWorld.active {
+    opacity: 1;
+    pointer-events: auto;
+}
