@@ -3,6 +3,7 @@ import * as d3 from 'd3';
 import DataCards from './DataCards';
 import CountryNameData from './countryNameData.json';
 import './sidebarRight.css'
+import Button from './Button';
 
 let graphNode!: SVGSVGElement | null;
 const Sidebar: React.FunctionComponent<{width:number , height:number, bigScreen:boolean,  graphHeight:number, data:any ,country:string, sorted:string , sortClick:(e:string) => void, selectedCountry: string,click:(d:string) => void ,hover:(d:string) => void }> = (props) => {
@@ -284,15 +285,72 @@ const Sidebar: React.FunctionComponent<{width:number , height:number, bigScreen:
             <h2 id="countryTable-heading">Data by country</h2>
           </caption>
           <tr className="countryRow header">
-            <th scope="col" className='countryTitle'>Country</th>
-            <th scope="col" className={props.sorted === 'confirmed' ? 'countryConfirmed numbers bold' : 'countryConfirmed numbers' } onClick={() => {props.sortClick('confirmed')}}>Confirmed</th>
-            <th scope="col" className={props.sorted === 'death' ? 'countryDeath numbers bold' : 'countryDeath numbers' } onClick={() => {props.sortClick('death')}}>Mortality Rt.</th>
-            <th scope="col" className={props.sorted === 'recovery' ? 'countryRecovery numbers bold' : 'countryRecovery numbers' } onClick={() => {props.sortClick('recovery')}}>Recovery Rt.</th>
+            <th 
+              scope="col"
+              role="columnheader"
+              className='countryTitle'
+            >
+              Country
+            </th>
+            <th 
+              scope="col"
+              role="columnheader"
+              className='countryConfirmed numbers'
+              aria-sort={props.sorted === 'confirmed' ? 'descending' : 'none' }
+            >
+              <SortButton 
+                label="Confirmed"
+                onClick={() => {props.sortClick('confirmed')}}
+              />
+            </th>
+            <th
+              scope="col"
+              role="columnheader"
+              className='countryDeath numbers'
+              aria-sort={props.sorted === 'death' ? 'descending' : 'none' }
+              onClick={() => {props.sortClick('death')}}
+            >
+              <SortButton 
+                label="Mortality Rt."
+                onClick={() => {props.sortClick('death')}}
+              />
+            </th>
+            <th
+              scope="col"
+              role="columnheader"
+              className='countyrRecovery numbers'
+              aria-sort={props.sorted === 'recovery' ? 'descending' : 'none' }
+              onClick={() => {props.sortClick('recovery')}}
+            >
+              <SortButton 
+                label="Recovery Rt."
+                onClick={() => {props.sortClick('recovery')}}
+              />
+            </th>
           </tr>
 
           {tableRows}
         </table>
       </div>
+    </div>
+  )
+}
+
+/**
+ * An accessible cell that acts as a sort buttons.
+ * Buttons must have an accessible name, that identifies their purpose.
+ * In this case, we use aria-label by, to programmatically associate the names.
+ * This helps ensure that content remains accessible if the text changes.
+ */
+const SortButton: React.FC<{onClick: () => void; label: string}> = ({onClick, label}) => {
+  const buttonLabel = `Sort by ${label}`;
+
+  return (
+    <div className="sortButton">
+      <span>{label}</span>
+      <Button onClick={onClick} aria-label={buttonLabel}>
+        >
+      </Button>
     </div>
   )
 }
