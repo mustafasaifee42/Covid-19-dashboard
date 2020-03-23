@@ -349,15 +349,15 @@ const Map: React.FunctionComponent<{
         <div className='rightOptions'>
           <div className='tabContainer'>
             <Button
+              className="tab"
               aria-pressed={props.selectedKey[0] === 'confirmedData' ? true : false}
-              className= {props.selectedKey[0] === 'confirmedData' ? 'tab selectedTab' : 'tab'}
               onClick={() => props.onToggleClick(['confirmedData',100000])}
             >
               Total Cases
             </Button>
             <Button 
+              className="tab"
               aria-pressed= {props.selectedKey[0] === 'activeData' ? true : false}
-              className= {props.selectedKey[0] === 'activeData' ? 'tab selectedTab' : 'tab'}
               onClick={() => {
                 props.onToggleClick(['activeData',100000]);
                 props.highlightNewClick(false);
