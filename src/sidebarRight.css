@@ -28,13 +28,25 @@
     background-color: #f1f1f1;
 }
 
-.countryTable{
-    overflow:'auto';
-    overflow-x:hidden;
-
+.countryTable-wrapper {
+    overflow-x: auto;
 }
 
-.numbers{
+.countryTable {
+    width: 100%;
+}
+
+.countryTable caption {
+    text-align: left;
+}
+
+/* Align headings to the start */
+.countryTable th {
+    text-align: left;
+}
+
+/* Align numerals to the right */
+.countryTable .numbers{
     flex:0 1 25%;
     text-align: right;
     padding:0 7px;

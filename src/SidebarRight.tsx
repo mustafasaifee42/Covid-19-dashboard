@@ -15,14 +15,13 @@ const Sidebar: React.FunctionComponent<{width:number , height:number, bigScreen:
     dataArr.sort((x:any, y:any) => d3.descending(x[props.sorted] * 100 / x.confirmed, y[props.sorted] * 100 / y.confirmed))
   }
 
-  let tableRow = dataArr.map((d:any, i:number) => {
+  let tableRows = dataArr.map((d:any, i:number) => {
     let country = d.countryName === 'World' ? `🌎 ${d.countryName}` : d.countryName
     return (
-    <div className="countryRow" key={i}
+    <tr className="countryRow" key={i}
       onClick={() => {
         props.click(d.countryName)
-      }}
-      
+      }}      
       onMouseEnter ={() => {
         props.hover(d.countryName)
       }}
@@ -30,11 +29,12 @@ const Sidebar: React.FunctionComponent<{width:number , height:number, bigScreen:
         props.hover(props.selectedCountry)
       }}
     >
-      <div className='countryName'>{country}</div>
-      <div className='countryConfirmed numbers'>{d.confirmed}<br/><span className="tableSubNote">({ (d.confirmedPer1000).toFixed(1) } per 100K)</span></div>
-      <div className='countryDeath numbers'>{(d.death * 100 / d.confirmed).toFixed(1)}%<br /><span>({d.death})</span></div>
-      <div className='countryRecovery numbers'>{(d.recovery * 100 / d.confirmed).toFixed(1)}%<br /><span>({d.recovery})</span></div>
-    </div>
+      {/* Label each row */}
+      <th scope="row" className='countryName'>{country}</th>
+      <td className='countryConfirmed numbers'>{d.confirmed}<br/><span className="tableSubNote">({ (d.confirmedPer1000).toFixed(1) } per 100K)</span></td>
+      <td className='countryDeath numbers'>{(d.death * 100 / d.confirmed).toFixed(1)}%<br /><span>({d.death})</span></td>
+      <td className='countryRecovery numbers'>{(d.recovery * 100 / d.confirmed).toFixed(1)}%<br /><span>({d.recovery})</span></td>
+    </tr>
     )
   })
   useEffect(() => {
@@ -273,15 +273,25 @@ const Sidebar: React.FunctionComponent<{width:number , height:number, bigScreen:
         <div className='cardTitle'>Epidemic Curve (Log Scale)</div>
         <svg width={props.width - 5} height={props.graphHeight} ref={node => graphNode = node}/>
       </div>
-      <div className="countryTable" style={{'height': style }}>
-        <div className="countryRow header">
-          <div className='countryTitle'>Country</div>
-          <div className={props.sorted === 'confirmed' ? 'countryConfirmed numbers bold' : 'countryConfirmed numbers' } onClick={() => {props.sortClick('confirmed')}}>Confirmed</div>
-          <div className={props.sorted === 'death' ? 'countryDeath numbers bold' : 'countryDeath numbers' } onClick={() => {props.sortClick('death')}}>Mortality Rt.</div>
-          <div className={props.sorted === 'recovery' ? 'countryRecovery numbers bold' : 'countryRecovery numbers' } onClick={() => {props.sortClick('recovery')}}>Recovery Rt.</div>
-        </div>
+      {/* Use a wrapper to allow the table to scroll. 
+        * Also set a generic role and make it opreable via keyboard,
+        * so that people can scroll when it is overflowing.
+      */}
+      <div role="group" aria-labelledby="countryTable-heading" className="countryTable-wrapper">
+        {/* Standard HTMl table. Has a caption and table headings to label each cell */}
+        <table className="countryTable" style={{'height': style }}>
+          <caption>
+            <h2 id="countryTable-heading">Data by country</h2>
+          </caption>
+          <tr className="countryRow header">
+            <th scope="col" className='countryTitle'>Country</th>
+            <th scope="col" className={props.sorted === 'confirmed' ? 'countryConfirmed numbers bold' : 'countryConfirmed numbers' } onClick={() => {props.sortClick('confirmed')}}>Confirmed</th>
+            <th scope="col" className={props.sorted === 'death' ? 'countryDeath numbers bold' : 'countryDeath numbers' } onClick={() => {props.sortClick('death')}}>Mortality Rt.</th>
+            <th scope="col" className={props.sorted === 'recovery' ? 'countryRecovery numbers bold' : 'countryRecovery numbers' } onClick={() => {props.sortClick('recovery')}}>Recovery Rt.</th>
+          </tr>
 
-        {tableRow}
+          {tableRows}
+        </table>
       </div>
     </div>
   )
