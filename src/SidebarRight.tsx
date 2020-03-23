@@ -8,7 +8,7 @@ let graphNode!: SVGSVGElement | null;
 const Sidebar: React.FunctionComponent<{width:number , height:number, bigScreen:boolean,  graphHeight:number, data:any ,country:string, sorted:string , sortClick:(e:string) => void, selectedCountry: string,click:(d:string) => void ,hover:(d:string) => void }> = (props) => {
 
   let dataArr:any = Object.keys(props.data).map((key:string) => {
-    return ({'countryName': key, 'confirmed':props.data[key]['confirmedData'][props.data[key]['confirmedData'].length - 1]['value'], 'death':props.data[key]['deathData'][props.data[key]['deathData'].length - 1]['value'], 'recovery':props.data[key]['recoveryData'][props.data[key]['recoveryData'].length - 1]['value']})
+    return ({'countryName': key, 'confirmed':props.data[key]['confirmedData'][props.data[key]['confirmedData'].length - 1]['value'], 'confirmedPer1000':props.data[key]['confirmedData'][props.data[key]['confirmedData'].length - 1]['valuePer1000'], 'death':props.data[key]['deathData'][props.data[key]['deathData'].length - 1]['value'], 'recovery':props.data[key]['recoveryData'][props.data[key]['recoveryData'].length - 1]['value']})
   })
   dataArr.sort((x:any, y:any) => d3.descending(x[props.sorted], y[props.sorted]))
   if(props.sorted !== 'confirmed'){
@@ -31,9 +31,9 @@ const Sidebar: React.FunctionComponent<{width:number , height:number, bigScreen:
       }}
     >
       <div className='countryName'>{country}</div>
-      <div className='countryConfirmed numbers'>{d.confirmed}</div>
-      <div className='countryDeath numbers'>{(d.death * 100 / d.confirmed).toFixed(1)}% ({d.death})</div>
-      <div className='countryRecovery numbers'>{(d.recovery * 100 / d.confirmed).toFixed(1)}% ({d.recovery})</div>
+      <div className='countryConfirmed numbers'>{d.confirmed}<br/><span className="tableSubNote">({ (d.confirmedPer1000).toFixed(1) } per 100K)</span></div>
+      <div className='countryDeath numbers'>{(d.death * 100 / d.confirmed).toFixed(1)}%<br /><span>({d.death})</span></div>
+      <div className='countryRecovery numbers'>{(d.recovery * 100 / d.confirmed).toFixed(1)}%<br /><span>({d.recovery})</span></div>
     </div>
     )
   })

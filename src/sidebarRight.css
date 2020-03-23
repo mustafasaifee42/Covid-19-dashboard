@@ -20,6 +20,10 @@
     flex:0 1 25%;
 }
 
+.tableSubNote{
+    font-size:12px;
+}
+
 .header{
     background-color: #f1f1f1;
 }
