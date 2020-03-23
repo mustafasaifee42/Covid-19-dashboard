@@ -2,6 +2,8 @@ import React, { useEffect } from 'react';
 import * as d3 from 'd3';
 import DataCards from './DataCards';
 import CountryNameData from './countryNameData.json';
+import Button from "./Button";
+import { SortArrowUnset, SortArrowDown } from "./Arrows";
 import {formatNumber} from './utils'
 import './sidebarRight.css'
 
@@ -16,28 +18,45 @@ const Sidebar: React.FunctionComponent<{width:number , height:number, bigScreen:
     dataArr.sort((x:any, y:any) => d3.descending(x[props.sorted] * 100 / x.confirmed, y[props.sorted] * 100 / y.confirmed))
   }
 
-  let tableRow = dataArr.map((d:any, i:number) => {
-    let country = d.countryName === 'World' ? `🌎 ${d.countryName}` : d.countryName
+  let tableRows = dataArr.map((d: any, i: number) => {
+    let country =
+      d.countryName === "World" ? `🌎 ${d.countryName}` : d.countryName;
     return (
-    <div className="countryRow" key={i}
-      onClick={() => {
-        props.click(d.countryName)
-      }}
-      
-      onMouseEnter ={() => {
-        props.hover(d.countryName)
-      }}
-      onMouseLeave = {() => {
-        props.hover(props.selectedCountry)
-      }}
-    >
-      <div className='countryName'>{country}</div>
-      <div className='countryConfirmed numbers'>{formatNumber(d.confirmed)}<br/><span className="tableSubNote">({ (d.confirmedPer1000).toFixed(1) } per 100K)</span></div>
-      <div className='countryDeath numbers'>{(d.death * 100 / d.confirmed).toFixed(1)}%<br /><span>({formatNumber(d.death)})</span></div>
-      <div className='countryRecovery numbers'>{(d.recovery * 100 / d.confirmed).toFixed(1)}%<br /><span>({formatNumber(d.recovery)})</span></div>
-    </div>
-    )
-  })
+      <tr
+        className="countryRow"
+        key={i}
+        onClick={() => {
+          props.click(d.countryName);
+        }}
+        onMouseEnter={() => {
+          props.hover(d.countryName);
+        }}
+        onMouseLeave={() => {
+          props.hover(props.selectedCountry);
+        }}
+      >
+        {/* Label each row */}
+        <th scope="row" className="countryName">
+          {country}
+        </th>
+        <td className="countryConfirmed numbers">
+          {formatNumber(d.confirmed)}
+          <br />
+          <span className="tableSubNote">
+            ({d.confirmedPer1000.toFixed(1)} per 100K)
+          </span>
+        </td>
+        <td className="countryDeath numbers">
+          {((d.death * 100) / d.confirmed).toFixed(1)}%<br />
+          <span>({formatNumber(d.death)})</span>
+        </td>
+        <td className="countryRecovery numbers">
+          {((d.recovery * 100) / d.confirmed).toFixed(1)}%<br />
+          <span>({formatNumber(d.recovery)})</span>
+        </td>
+      </tr>
+    );
+  });
   useEffect(() => {
     let dataArr:any = Object.keys(props.data).map((key:string) => {
       return ({'countryName': key, 'confirmed':props.data[key]['confirmedData'][props.data[key]['confirmedData'].length - 1]['value'], 'death':props.data[key]['deathData'][props.data[key]['deathData'].length - 1]['value'], 'recovery':props.data[key]['recoveryData'][props.data[key]['recoveryData'].length - 1]['value']})
@@ -275,18 +294,110 @@ const Sidebar: React.FunctionComponent<{width:number , height:number, bigScreen:
         <div className='cardTitle'>Epidemic Curve (Log Scale)</div>
         <svg width={props.width - 5} height={props.graphHeight} ref={node => graphNode = node}/>
       </div>
-      <div className="countryTable" style={{'height': style }}>
-        <div className="countryRow header">
-          <div className='countryTitle'>Country</div>
-          <div className={props.sorted === 'confirmed' ? 'countryConfirmed numbers bold' : 'countryConfirmed numbers' } onClick={() => {props.sortClick('confirmed')}}>Confirmed</div>
-          <div className={props.sorted === 'death' ? 'countryDeath numbers bold' : 'countryDeath numbers' } onClick={() => {props.sortClick('death')}}>Mortality Rt.</div>
-          <div className={props.sorted === 'recovery' ? 'countryRecovery numbers bold' : 'countryRecovery numbers' } onClick={() => {props.sortClick('recovery')}}>Recovery Rt.</div>
-        </div>
+      {/* Use a wrapper to allow the table to scroll.
+       * Also set a generic role and make it opreable via keyboard,
+       * so that people can scroll when it is overflowing.
+       */}
+      <div
+        role="group"
+        tabIndex={0}
+        aria-labelledby="countryTable-heading"
+        className="countryTable-wrapper"
+      >
+        {/* Standard HTMl table. Has a caption and table headings to label each cell */}
+        <table className="countryTable" style={{ height: style }}>
+          <caption>
+            <h2 id="countryTable-heading">Data by country</h2>
+          </caption>
+          <tr className="countryRow header">
+            <th scope="col" role="columnheader" className="countryTitle">
+              Country
+            </th>
+            <th
+              scope="col"
+              role="columnheader"
+              className="countryConfirmed numbers"
+              aria-sort={props.sorted === "confirmed" ? "descending" : "none"}
+            >
+              <SortButton
+                label="Confirmed"
+                isSorted={props.sorted === "confirmed"}
+                onClick={() => {
+                  props.sortClick("confirmed");
+                }}
+              />
+            </th>
+            <th
+              scope="col"
+              role="columnheader"
+              className="countryDeath numbers"
+              aria-sort={props.sorted === "death" ? "descending" : "none"}
+              onClick={() => {
+                props.sortClick("death");
+              }}
+            >
+              <SortButton
+                label="Mortality Rt."
+                isSorted={props.sorted === "death"}
+                onClick={() => {
+                  props.sortClick("death");
+                }}
+              />
+            </th>
+            <th
+              scope="col"
+              role="columnheader"
+              className="countyrRecovery numbers"
+              aria-sort={props.sorted === "recovery" ? "descending" : "none"}
+              onClick={() => {
+                props.sortClick("recovery");
+              }}
+            >
+              <SortButton
+                label="Recovery Rt."
+                isSorted={props.sorted === "recovery"}
+                onClick={() => {
+                  props.sortClick("recovery");
+                }}
+              />
+            </th>
+          </tr>
 
-        {tableRow}
+          {tableRows}
+        </table>
       </div>
     </div>
   )
 }
 
-export default Sidebar
+/**
+ * An accessible cell that acts as a sort buttons.
+ * Buttons must have an accessible name, that identifies their purpose.
+ * In this case, we use aria-label by, to programmatically associate the names.
+ * This helps ensure that content remains accessible if the text changes.
+ */
+const SortButton: React.FC<{
+  onClick: () => void;
+  label: string;
+  isSorted: boolean;
+}> = ({ onClick, isSorted, label }) => {
+  const buttonLabel = `Sort by ${label}`;
+
+  return (
+    <div className="sortButton">
+      <span>{label}</span>
+      <Button onClick={onClick} aria-label={buttonLabel}>
+        {/* NOTE: We set the purpose of the arrows as "decorative", hiding them
+        from assistive technologies. We do this because we have aria-label,
+        which supercedes the label from content. */}
+        {isSorted ? (
+          <SortArrowDown width="14px" height="14px" purpose="decorative" />
+        ) : (
+          <SortArrowUnset width="14px" height="14px" purpose="decorative" />
+        )}
+      </Button>
+    </div>
+  );
+};
+
+export default Sidebar;

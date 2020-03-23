@@ -36,6 +36,7 @@ code {
 
   /* Corrects inability to style clickable `input` types in iOS */
   appearance: none;
+  cursor: pointer;
 }
 
 /* Remove excess padding and border in Firefox 4+ */
