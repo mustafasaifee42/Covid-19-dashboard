@@ -298,6 +298,7 @@ const Sidebar: React.FunctionComponent<{width:number , height:number, bigScreen:
        */}
       <div
         role="group"
+        tabIndex={0}
         aria-labelledby="countryTable-heading"
         className="countryTable-wrapper"
       >
