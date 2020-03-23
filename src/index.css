@@ -12,9 +12,7 @@ code {
     monospace;
 }
 
-/* Button reset; use this as the base for buttons.
-* It is preferable to use this, rather than extending fiba-button-reset,
-* because the specificity is more predictable;
+/* Button reset; use this as the base for buttons, to style them further
 */
 .button-reset {
   width: auto;
