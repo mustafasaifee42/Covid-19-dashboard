@@ -63,6 +63,7 @@
     border-radius: 0 4px 4px 0;
 }
 
+/* Button Tabs */
 .buttonTab{
     font-size: 14px;
     color:rgba(65,65,65,1);
@@ -72,9 +73,30 @@
     margin:0 10px;
 }
 
-.selectedButtonTab{
-    font-weight: bold;
+.buttonTab:hover{
+    color: rgb(224, 26, 37)
 }
+
+/* State-based selectors for pressed and disabled*/
+
+.buttonTab[aria-pressed="true"] {
+    font-weight: bold;
+    color: rgb(224, 26, 37)
+}
+
+.buttonTab[aria-pressed="true"] > .checkbox {
+    background-color: #414141 ;
+}
+
+.buttonTab[disabled] {
+    opacity: 0.5;
+}
+
+.buttonTab[disabled]:hover {
+    color: #414141;
+    cursor: not-allowed;
+}
+
 .checkBox{
     width:16px;
     height:16px;
@@ -82,13 +104,6 @@
     border-radius: 2px;
     margin-right:5px;
     background-color: #fff;
-}
-.selected > .checkBox{
-    background-color: #414141 ;
-}
-.selected{
-    font-weight: bold;
-    color: rgb(224, 26, 37)
 }
 .tickIcon{
     width: 16px;
@@ -156,10 +171,3 @@
   }
 
   
-.buttonTab:hover{
-    color: rgb(224, 26, 37)
-}
-
-.disabled:hover{
-    color: #414141
-}
