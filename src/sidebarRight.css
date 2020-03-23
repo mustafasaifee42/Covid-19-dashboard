@@ -30,8 +30,7 @@
 }
 
 .sortButton button {
-    border: 1px solid #111;
-    border-radius: 0.125rem;
+    margin-left: 0.25em;
 }
 
 .countryTable-wrapper {
