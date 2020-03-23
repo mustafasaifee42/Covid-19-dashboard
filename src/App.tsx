@@ -20,10 +20,10 @@ function App() {
       <div className='appHeader'>
         <div className='headerTitle'>COVID 19 Dashboard</div>
           <div className='icons'>
-            <FacebookShareButton className="fbIcon" url={'https://coronavirus-dashboard.netlify.com/'} quote={'Live dashboard visualizing the spread of coronavirus COVID-19'}>
+            <FacebookShareButton className="fbIcon" url={'https://covid19.mustafasaifee.com'} quote={'Live dashboard visualizing the spread of coronavirus COVID-19'}>
               <FacebookIcon size={28} round={true} />
             </FacebookShareButton>
-            <TwitterShareButton url={'https://coronavirus-dashboard.netlify.com/'} title={'Live dashboard visualizing the spread of coronavirus COVID-19 https://coronavirus-dashboard.netlify.com/ via @mustafasaifee42'}>
+            <TwitterShareButton url={'https://covid19.mustafasaifee.com'} title={'Live dashboard visualizing the spread of coronavirus COVID-19 https://covid19.mustafasaifee.com via @mustafasaifee42'}>
               <TwitterIcon size={28} round={true} />
             </TwitterShareButton>
           </div>
@@ -33,12 +33,12 @@ function App() {
         height={windowHeightValue}
       />
       <div className='footer'>
-        <span>Made by <a href="https://mustafasaifee.netlify.com/" rel="noopener noreferrer" target="_blank">Mustafa Saifee</a> | Follow me on <a href="https://twitter.com/mustafasaifee42" rel="noopener noreferrer" target="_blank">twitter</a> | <a href="https://github.com/CSSEGISandData/COVID-19"  rel="noopener noreferrer" target="_blank">Data Source: JHU CSSE</a> | <a href="https://github.com/mustafasaifee42/Covid-19-dashboard"  rel="noopener noreferrer" target="_blank">Open Source Code</a> | Spread the information and stay safe</span>
+        <span>Made by <a href="https://mustafasaifee.com/" rel="noopener noreferrer" target="_blank">Mustafa Saifee</a> | Follow me on <a href="https://twitter.com/mustafasaifee42" rel="noopener noreferrer" target="_blank">twitter</a> | <a href="https://github.com/CSSEGISandData/COVID-19"  rel="noopener noreferrer" target="_blank">Data Source: JHU CSSE</a> | <a href="https://github.com/mustafasaifee42/Covid-19-dashboard"  rel="noopener noreferrer" target="_blank">Open Source Code</a> | Spread the information and stay safe</span>
         <div className='icons'>
-          <FacebookShareButton className="fbIcon" url={'https://coronavirus-dashboard.netlify.com/'} quote={'Live dashboard visualizing the spread of coronavirus COVID-19'}>
+          <FacebookShareButton className="fbIcon" url={'https://covid19.mustafasaifee.com'} quote={'Live dashboard visualizing the spread of COVID-19 coronavirus'}>
             <FacebookIcon size={24} round={true} />
           </FacebookShareButton>
-          <TwitterShareButton url={'https://coronavirus-dashboard.netlify.com/'} title={'Live dashboard visualizing the spread of coronavirus COVID-19 https://coronavirus-dashboard.netlify.com/ via @mustafasaifee42'}>
+          <TwitterShareButton url={'https://covid19.mustafasaifee.com'} title={'Live dashboard visualizing the spread of COVID-19 coronavirus https://covid19.mustafasaifee.com via @mustafasaifee42'}>
             <TwitterIcon size={24} round={true} />
           </TwitterShareButton>
         </div>
