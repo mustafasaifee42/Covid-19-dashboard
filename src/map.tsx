@@ -5,6 +5,7 @@ import * as topojson from 'topojson';
 import * as d3 from 'd3';
 import Play from './play.svg';
 import Tick from './tick.svg';
+import Button from "./Button";
 import {formatNumber} from './utils';
 
 const mapShape:any = require('./topo.json');
@@ -308,25 +309,27 @@ const Map: React.FunctionComponent<{width:number , height:number , value:string,
       <div className='mapHeader'>
         <div className='dateContainer'>
           <div className='date'>{d3.timeFormat("%b. %d")(props.data[Object.keys(props.data)[0]]['confirmedData'][props.index - 1]['date'])}</div>
-          <div className={props.index === props.data[Object.keys(props.data)[0]]['confirmedData'].length ? 'replay' : 'replay disabled'}
+          <Button className={props.index === props.data[Object.keys(props.data)[0]]['confirmedData'].length ? 'replay' : 'replay disabled'}
             onClick={() => {
               if(props.index === props.data[Object.keys(props.data)[0]]['confirmedData'].length) 
                 props.replay()
             }}
           >
-            <img src={Play} alt='play-icon' className='playIcon'/> Play Timelapse
-          </div>
+            <img src={Play} alt='' className='playIcon'/> Play Timelapse
+          </Button>
         </div>
         <div className='rightOptions'>
           <div className='tabContainer'>
-            <div 
-              className= {props.selectedKey[0] === 'confirmedData' ? 'tab selectedTab' : 'tab'}
+            <Button
+              className="tab"
+              aria-pressed={props.selectedKey[0] === 'confirmedData' ? true : false}
               onClick={() => props.onToggleClick(['confirmedData',100000])}
             >
               Total Cases
-            </div>
-            <div 
-              className= {props.selectedKey[0] === 'activeData' ? 'tab selectedTab' : 'tab'}
+            </Button>
+            <Button 
+              className="tab"
+              aria-pressed= {props.selectedKey[0] === 'activeData' ? true : false}
               onClick={() => {
                 props.onToggleClick(['activeData',100000]);
                 props.highlightNewClick(false);
@@ -334,29 +337,35 @@ const Map: React.FunctionComponent<{width:number , height:number , value:string,
               }}
             >
               Active Cases
-            </div>
+            </Button>
           </div>
-          <div 
-            className= {props.selectedKey[0] === 'confirmedData' ? props.deathVisibility === 1 ? 'buttonTab selected' : 'buttonTab' :  'buttonTab disabled'}
+          <Button
+            className="buttonTab"
+            aria-pressed={props.selectedKey[0] === 'confirmedData' ? props.deathVisibility === 1 ? true : false : false}
+            disabled={props.selectedKey[0] === 'confirmedData' ? props.deathVisibility === 1 ? false : false : true}
             onClick={() => props.selectedKey[0] === 'confirmedData' ? props.deathVisibility === 1 ? props.toggleDeathVisibility(0) : props.toggleDeathVisibility(1) : null}
           >
-            <div className='checkBox'><img src={Tick} alt='tick-icon' className='tickIcon'/></div>
+            <div className='checkBox'><img src={Tick} alt='' className='tickIcon'/></div>
             Show Deaths
-          </div>
-          <div 
-            className= {props.highlightNew ? 'buttonTab disabled' : props.value === 'valuePer100K' ? 'buttonTab selected' : 'buttonTab'}
+          </Button>
+          <Button
+            className="buttonTab"
+            aria-pressed={props.highlightNew ? false : props.value === 'valuePer100K' ? true : false}
+            disabled={props.highlightNew ? true : props.value === 'valuePer100K' ? false : false}
             onClick={() => !props.highlightNew ? props.value === 'valuePer100K' ? props.onValueToggle('value') : props.onValueToggle('valuePer100K') : null}
           >
-            <div className='checkBox'><img src={Tick} alt='tick-icon' className='tickIcon'/></div>
+            <div className='checkBox'><img src={Tick} alt='' className='tickIcon'/></div>
             Per 100 000
-          </div>
-          <div 
-            className= {props.selectedKey[0] === 'confirmedData' ? props.value === 'valuePer100K' ? 'buttonTab disabled' : props.highlightNew ? 'buttonTab selected' : 'buttonTab' : 'buttonTab disabled'}
+          </Button>
+          <Button 
+            className="buttonTab"
+            aria-pressed={props.selectedKey[0] === 'confirmedData' ? props.value === 'valuePer100K' ? false : props.highlightNew ? true : false : false}
+            disabled={props.selectedKey[0] === 'confirmedData' ? props.value === 'valuePer100K' ? true : props.highlightNew ? false : false : true}
             onClick={() => props.value !== 'valuePer100K' && props.selectedKey[0] === 'confirmedData' ? props.highlightNew ? props.highlightNewClick(false) : props.highlightNewClick(true) : null}
           >
-          <div className='checkBox'><img src={Tick} alt='tick-icon' className='tickIcon'/></div>
+            <div className='checkBox'><img src={Tick} alt='' className='tickIcon'/></div>
             Highlight last 24 Hrs
-          </div>
+          </Button>
         </div>
       </div>
       <div className='title'>
