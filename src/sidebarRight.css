@@ -29,6 +29,10 @@
     cursor: unset;
 }
 
+.countryTable{
+    overflow:'auto';
+    overflow-x:hidden;
+}
 .sortButton {
     display: flex;
     align-items: center;

@@ -287,7 +287,7 @@ const Sidebar: React.FunctionComponent<{width:number , height:number, graphHeigh
 
   return ( 
     <div>
-      <div className='countryShow'>{props.country}</div>
+      <h2 className='countryShow'>{props.country}</h2>
       <DataCards
         title="Total Confirmed"
         data={props.data[props.country] ? props.data[props.country]['confirmedData'][props.data[props.country]['confirmedData'].length - 1].value : 0}

@@ -7,9 +7,9 @@ const Sidebar: React.FunctionComponent<{title:string , outof100K?:number , note?
    
   return ( 
     <div className="dataCard">
-      <div className='cardTitle'>
+      <h3 className='cardTitle'>
         {props.title} 
-      </div>
+      </h3>
       <div className='cardValue' style={{'color':props.color}}>
         {props.data === 0 ? 'NA' : formatNumber(props.data)} <span className='percent'>{props.percent}</span>
         {props.note ? <span className='note'>{props.note}</span>: null}
