@@ -6,6 +6,9 @@ import * as d3 from 'd3';
 import Play from './play.svg';
 import Tick from './tick.svg';
 
+const mapShape:any = require('./topo.json');
+const mapShapeData:any = topojson.feature(mapShape, mapShape.objects.countries)
+
 let mapNode!: SVGSVGElement | null;
 const Map: React.FunctionComponent<{width:number , height:number , value:string, deathVisibility:number , toggleDeathVisibility:(e:number) => void, onValueToggle:(e:string) => void, windowWidth:number , index:any ,highlightNew:boolean,highlightNewClick:(e:boolean) => void, replay:()=> void, data:any , selectedKey:[string,number] , onToggleClick:(e:[string,number]) => void ,onCountryClick:(e:string) => void , country:string}> = (props) => {
   const {
@@ -13,15 +16,24 @@ const Map: React.FunctionComponent<{width:number , height:number , value:string,
     width,
     windowWidth
   } = props
+
+  useEffect(() => {
+    
+    let countryinTopo = mapShapeData.features.map((d:any) => d.properties.NAME_EN)
+    let countryinData = Object.keys(props.data)
+    for (let i = 0; i < countryinData.length; i++){
+      if(countryinTopo.indexOf(countryinData[i]) < 0){
+        if (countryinData[i] !== 'World' && countryinData[i] !== 'Cruise Ship') console.warn(`${countryinData[i]} not in World Map`)
+      }
+    }
+  },[props.data])
   useEffect(() => {
     let scaleFactor = (windowWidth < 800) ? 0.35 : 0.45
     d3.select(mapNode).selectAll('g').remove();
-    const mapShape:any = require('./topo.json');
     const projection = d3GeoProjection.geoRobinson()
       .scale(409 * (width) / 2048)
       .translate([0.41 * (width), scaleFactor * (height)]);
     const path:any = d3.geoPath().projection(projection);
-    const mapShapeData:any = topojson.feature(mapShape, mapShape.objects.countries)
     let Zoom:any = d3.zoom().scaleExtent([0.6, 10]).on('zoom', zoomed);
     let mapSVG = d3.select(mapNode).call(Zoom);
     let zoomGroup = mapSVG.append('g');
@@ -84,13 +96,6 @@ const Map: React.FunctionComponent<{width:number , height:number , value:string,
       .attr('stroke','#414141')
       .attr('stroke-width',0.25)
       .attr('r', 0)
-    let countryinTopo = mapShapeData.features.map((d:any) => d.properties.NAME_EN)
-    let countryinData = Object.keys(props.data)
-    for (let i = 0; i < countryinData.length; i++){
-      if(countryinTopo.indexOf(countryinData[i]) < 0){
-        console.warn(`${countryinData[i]} not in World Map`)
-      }
-    }
     d3.selectAll('.countryG')
       .on('mouseenter',(d:any) => {
         d3.select('.tooltip')
