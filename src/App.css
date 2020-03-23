@@ -17,7 +17,7 @@ body{
   display:flex;
   flex-shrink: 0;
   justify-content: space-between;
-  align-items: top;
+  align-items: center;
 }
 
 .appHeader{
@@ -31,6 +31,20 @@ body{
   color:#fff;
   justify-content: space-between;
   align-items: center;
+}
+
+.headerSubNote{
+  font-size:16px;
+  font-weight: normal;
+  margin-left: 10px;
+
+}
+a.headerLink {
+  font-style: italic;
+}
+
+a.headerLink:visited {
+  text-decoration-color: white;
 }
 
 .footer{
@@ -57,18 +71,27 @@ body{
 }
 
 .headerTitle{
-  padding:0 20px
+  padding:0 20px;
+  display: flex;
+  align-items: baseline;
 }
 .icons{
   display:flex;
   height:24px;
-  margin: 0 10px;
+  margin: 0 20px 0 10px;
 }
 
 .fbIcon{
   margin-right:10px;
 }
-a{
+a{    
+  color: inherit;
   text-decoration: none;
   font-style: italic;
+  font-weight: bold;
+}
+
+.chilicornLogo{
+  width:16px;
+  margin-left:10px;
 }
