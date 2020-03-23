@@ -292,7 +292,7 @@ const Sidebar: React.FunctionComponent<{width:number , height:number, graphHeigh
         outof100K= {props.data[props.country] ? props.data[props.country]['confirmedData'][props.data[props.country]['confirmedData'].length - 1]['valuePer100K'] : undefined}
       />
       <DataCards
-        title="Doubling Time (atleast 100 cases)"
+        title="Doubling Time (at least 100 cases)"
         data={doublingTime}
         note={doublingTime !== 'NA' ? 'days' : undefined}
         color='#414141' 
