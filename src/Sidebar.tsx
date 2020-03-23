@@ -1,6 +1,7 @@
 import React,{ useEffect} from 'react';
 import * as d3 from 'd3';
 import DataCards from './DataCards';
+import {formatNumber} from './utils';
 import './sidebar.css'
 
 let graphNode!: SVGSVGElement | null;
@@ -138,7 +139,7 @@ const Sidebar: React.FunctionComponent<{width:number , height:number, graphHeigh
             d3.select('.tooltipDate')
               .html(d3.timeFormat("%d %b")(d.date))	
             d3.select('.tooltipCases')
-              .html(d.new)
+              .html(formatNumber(d.new))
           })
           .on('mousemove',(d:any) => {
             d3.select('.barGraphtooltip')
@@ -223,7 +224,7 @@ const Sidebar: React.FunctionComponent<{width:number , height:number, graphHeigh
             d3.select('.tooltipDate')
               .html(d3.timeFormat("%d %b")(d.date))	
             d3.select('.tooltipCases')
-              .html(d.new)
+              .html(formatNumber(d.new))
           })
           .on('mousemove',(d:any) => {
             d3.select('.barGraphtooltip')
@@ -271,16 +272,18 @@ const Sidebar: React.FunctionComponent<{width:number , height:number, graphHeigh
     }
   })
 
-  let doublingTime = 'NA'
+  let doublingTime = 0
 
   if(props.data[props.country]){
     let confirmedDataFiltered = props.data[props.country]['confirmedData'].filter((d:any, i:number) => d.value >= 100)
     if(confirmedDataFiltered.length > 1){
       let rate = (Math.pow(confirmedDataFiltered[confirmedDataFiltered.length - 1].value / confirmedDataFiltered[0].value , 1 / (confirmedDataFiltered.length - 1)) - 1) * 100
-      doublingTime = `${(70 / rate).toFixed(1)}`
+      doublingTime = parseFloat((70 / rate).toFixed(1))
     }
 
   }
+
+  console.log(d3.format(',')(100000))
 
   return ( 
     <div>
@@ -288,19 +291,21 @@ const Sidebar: React.FunctionComponent<{width:number , height:number, graphHeigh
       <DataCards
         title="Total Confirmed"
         data={props.data[props.country] ? props.data[props.country]['confirmedData'][props.data[props.country]['confirmedData'].length - 1].value : 0}
+        subNote={props.data[props.country] ? props.data[props.country]['confirmedData'][props.data[props.country]['confirmedData'].length - 1].new : undefined}
         color='#e01a25' 
         outof100K= {props.data[props.country] ? props.data[props.country]['confirmedData'][props.data[props.country]['confirmedData'].length - 1]['valuePer100K'] : undefined}
       />
       <DataCards
         title="Doubling Time (at least 100 cases)"
         data={doublingTime}
-        note={doublingTime !== 'NA' ? 'days' : undefined}
+        note={doublingTime !== 0 ? 'days' : undefined}
         color='#414141' 
       />
       <DataCards
         title="Total Death"
         data={props.data[props.country] ? props.data[props.country]['deathData'][props.data[props.country]['deathData'].length - 1].value : 0}
         percent={props.data[props.country] ? `${(props.data[props.country]['deathData'][props.data[props.country]['deathData'].length - 1].value * 100 / props.data[props.country]['confirmedData'][props.data[props.country]['confirmedData'].length - 1].value).toFixed(1)}% Mortality Rate` : '0%'}
+        subNote={props.data[props.country] ? props.data[props.country]['deathData'][props.data[props.country]['deathData'].length - 1].new : undefined}
         color='#414141' 
       />
       <DataCards

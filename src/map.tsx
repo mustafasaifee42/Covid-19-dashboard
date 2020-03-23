@@ -5,6 +5,8 @@ import * as topojson from 'topojson';
 import * as d3 from 'd3';
 import Play from './play.svg';
 import Tick from './tick.svg';
+import Button from "./Button";
+import {formatNumber} from './utils';
 
 const mapShape:any = require('./topo.json');
 const mapShapeData:any = topojson.feature(mapShape, mapShape.objects.countries)
@@ -53,6 +55,11 @@ const Map: React.FunctionComponent<{width:number , height:number , value:string,
         props.onCountryClick('World')
       });
 
+    d3.select('.backToWorld')
+      .on('click',() => {
+        mapSVG.transition().duration(500).call(Zoom.transform, d3.zoomIdentity);
+        props.onCountryClick('World')
+      })
     function zoomed() {
       zoomGroup.attr('transform', d3.event.transform); // updated for d3 v4
     }
@@ -119,11 +126,11 @@ const Map: React.FunctionComponent<{width:number , height:number , value:string,
         
         if(props.data[d.properties.NAME_EN]) {
           d3.select('.tooltipConfirmed')
-            .html(`<span class="bold red">${props.data[d.properties.NAME_EN]['confirmedData'][props.data[d.properties.NAME_EN]['confirmedData'].length - 1]['value']}</span> (<span class="bold red">${(props.data[d.properties.NAME_EN]['confirmedData'][props.data[d.properties.NAME_EN]['confirmedData'].length - 1]['valuePer100K']).toFixed(1)}</span> per 100 000)`)
+            .html(`<span class="bold red">${formatNumber(props.data[d.properties.NAME_EN]['confirmedData'][props.data[d.properties.NAME_EN]['confirmedData'].length - 1]['value'])}</span> (<span class="bold red">${(props.data[d.properties.NAME_EN]['confirmedData'][props.data[d.properties.NAME_EN]['confirmedData'].length - 1]['valuePer100K']).toFixed(1)}</span> per 100 000)`)
           d3.select('.tooltipActive')
-            .html(`<span class="bold red">${props.data[d.properties.NAME_EN]['activeData'][props.data[d.properties.NAME_EN]['activeData'].length - 1]['value']}</span>`)
+            .html(`<span class="bold red">${formatNumber(props.data[d.properties.NAME_EN]['activeData'][props.data[d.properties.NAME_EN]['activeData'].length - 1]['value'])}</span>`)
           d3.select('.tooltipDeath')
-            .html(`<span class="bold">${props.data[d.properties.NAME_EN]['deathData'][props.data[d.properties.NAME_EN]['deathData'].length - 1]['value']}</span> (<span class="bold">${(props.data[d.properties.NAME_EN]['deathData'][props.data[d.properties.NAME_EN]['deathData'].length - 1]['value'] * 100 / props.data[d.properties.NAME_EN]['confirmedData'][props.data[d.properties.NAME_EN]['confirmedData'].length - 1]['value']).toFixed(1)}%</span> Mortality rate)`)
+            .html(`<span class="bold">${formatNumber(props.data[d.properties.NAME_EN]['deathData'][props.data[d.properties.NAME_EN]['deathData'].length - 1]['value'])}</span> (<span class="bold">${(props.data[d.properties.NAME_EN]['deathData'][props.data[d.properties.NAME_EN]['deathData'].length - 1]['value'] * 100 / props.data[d.properties.NAME_EN]['confirmedData'][props.data[d.properties.NAME_EN]['confirmedData'].length - 1]['value']).toFixed(1)}%</span> Mortality rate)`)
         } else {
           d3.select('.tooltipConfirmed')
             .html(`<span class="bold red">0</span>`)
@@ -176,6 +183,7 @@ const Map: React.FunctionComponent<{width:number , height:number , value:string,
       .range([0,maxRadius])
     let keyVal = props.value === 'valuePer100K' ? (windowWidth < 800) ? [100,500] : [10,100,500] : (windowWidth < 800) ? [10000,50000] : [1000,10000,50000]
     d3.selectAll('.keyCircle').remove();
+
     let keyG = d3.select('.mapKey')
       .selectAll('.keyCircle')
       .data(keyVal)
@@ -290,7 +298,10 @@ const Map: React.FunctionComponent<{width:number , height:number , value:string,
         if(d.properties.NAME_EN === props.country) return props.deathVisibility
         return props.deathVisibility * 0.2
       })
-
+    if(props.country === 'World')
+      d3.select('.backToWorld').classed('active',false)
+    else
+      d3.select('.backToWorld').classed('active',true)
   },[props.index, props.selectedKey, props.data, props.country, props.highlightNew, width, windowWidth, height, props.value, props.deathVisibility])
   
   return ( 
@@ -298,25 +309,27 @@ const Map: React.FunctionComponent<{width:number , height:number , value:string,
       <div className='mapHeader'>
         <div className='dateContainer'>
           <h2 className='date'>{d3.timeFormat("%b. %d")(props.data[Object.keys(props.data)[0]]['confirmedData'][props.index - 1]['date'])}</h2>
-          <div className={props.index === props.data[Object.keys(props.data)[0]]['confirmedData'].length ? 'replay' : 'replay disabled'}
+          <Button className={props.index === props.data[Object.keys(props.data)[0]]['confirmedData'].length ? 'replay' : 'replay disabled'}
             onClick={() => {
               if(props.index === props.data[Object.keys(props.data)[0]]['confirmedData'].length) 
                 props.replay()
             }}
           >
-            <img src={Play} alt='play-icon' className='playIcon'/> Play Timelapse
-          </div>
+            <img src={Play} alt='' className='playIcon'/> Play Timelapse
+          </Button>
         </div>
         <div className='rightOptions'>
           <div className='tabContainer'>
-            <div 
-              className= {props.selectedKey[0] === 'confirmedData' ? 'tab selectedTab' : 'tab'}
+            <Button
+              className="tab"
+              aria-pressed={props.selectedKey[0] === 'confirmedData' ? true : false}
               onClick={() => props.onToggleClick(['confirmedData',100000])}
             >
               Total Cases
-            </div>
-            <div 
-              className= {props.selectedKey[0] === 'activeData' ? 'tab selectedTab' : 'tab'}
+            </Button>
+            <Button 
+              className="tab"
+              aria-pressed= {props.selectedKey[0] === 'activeData' ? true : false}
               onClick={() => {
                 props.onToggleClick(['activeData',100000]);
                 props.highlightNewClick(false);
@@ -324,37 +337,48 @@ const Map: React.FunctionComponent<{width:number , height:number , value:string,
               }}
             >
               Active Cases
-            </div>
+            </Button>
           </div>
-          <div 
-            className= {props.selectedKey[0] === 'confirmedData' ? props.deathVisibility === 1 ? 'buttonTab selected' : 'buttonTab' :  'buttonTab disabled'}
+          <Button
+            className="buttonTab"
+            aria-pressed={props.selectedKey[0] === 'confirmedData' ? props.deathVisibility === 1 ? true : false : false}
+            disabled={props.selectedKey[0] === 'confirmedData' ? props.deathVisibility === 1 ? false : false : true}
             onClick={() => props.selectedKey[0] === 'confirmedData' ? props.deathVisibility === 1 ? props.toggleDeathVisibility(0) : props.toggleDeathVisibility(1) : null}
           >
-            <div className='checkBox'><img src={Tick} alt='tick-icon' className='tickIcon'/></div>
+            <div className='checkBox'><img src={Tick} alt='' className='tickIcon'/></div>
             Show Deaths
-          </div>
-          <div 
-            className= {props.highlightNew ? 'buttonTab disabled' : props.value === 'valuePer100K' ? 'buttonTab selected' : 'buttonTab'}
+          </Button>
+          <Button
+            className="buttonTab"
+            aria-pressed={props.highlightNew ? false : props.value === 'valuePer100K' ? true : false}
+            disabled={props.highlightNew ? true : props.value === 'valuePer100K' ? false : false}
             onClick={() => !props.highlightNew ? props.value === 'valuePer100K' ? props.onValueToggle('value') : props.onValueToggle('valuePer100K') : null}
           >
-            <div className='checkBox'><img src={Tick} alt='tick-icon' className='tickIcon'/></div>
+            <div className='checkBox'><img src={Tick} alt='' className='tickIcon'/></div>
             Per 100 000
-          </div>
-          <div 
-            className= {props.selectedKey[0] === 'confirmedData' ? props.value === 'valuePer100K' ? 'buttonTab disabled' : props.highlightNew ? 'buttonTab selected' : 'buttonTab' : 'buttonTab disabled'}
+          </Button>
+          <Button 
+            className="buttonTab"
+            aria-pressed={props.selectedKey[0] === 'confirmedData' ? props.value === 'valuePer100K' ? false : props.highlightNew ? true : false : false}
+            disabled={props.selectedKey[0] === 'confirmedData' ? props.value === 'valuePer100K' ? true : props.highlightNew ? false : false : true}
             onClick={() => props.value !== 'valuePer100K' && props.selectedKey[0] === 'confirmedData' ? props.highlightNew ? props.highlightNewClick(false) : props.highlightNewClick(true) : null}
           >
-          <div className='checkBox'><img src={Tick} alt='tick-icon' className='tickIcon'/></div>
+            <div className='checkBox'><img src={Tick} alt='' className='tickIcon'/></div>
             Highlight last 24 Hrs
-          </div>
+          </Button>
         </div>
       </div>
       <div className='title'>
-        <div className='titleCountry'><span className='blue bold'>{props.country}</span><br />Active: <span className="bold red">{props.data[props.country] ? props.data[props.country]['activeData'][props.index - 1]['value'] : 0}</span></div>
-        <div className='confirmedTitleMap'> Confirmed: <span className='bold red'>{props.data[props.country] ? props.data[props.country]['confirmedData'][props.index - 1]['value'] : 0}</span> (<span className='bold red'>{props.data[props.country] ? (props.data[props.country]['confirmedData'][props.index - 1]['valuePer100K']).toFixed(1) : 0}</span> per 100 000)<br /><span className='italics small'>Last 24 hrs: <span className='bold red'>{props.data[props.country] ? props.data[props.country]['confirmedData'][props.index - 1]['new'] : 0}</span></span></div>
-        <div className='deathTitleMap'> Deaths: <span className='deathTitle bold'>{props.data[props.country] ? props.data[props.country]['deathData'][props.index - 1]['value'] : 0}</span> (<span className='bold'>{props.data[props.country] ? (props.data[props.country]['deathData'][props.index - 1]['value'] * 100 / props.data[props.country]['confirmedData'][props.index - 1]['value'] ).toFixed(1) : 0}%</span> Mortality rate)<br /><span className='italics small'>Last 24 hrs: <span className='bold'>{props.data[props.country] ? props.data[props.country]['deathData'][props.index - 1]['new'] : 0}</span></span></div>
+        <div className='titleCountry'><span className='blue bold'>{props.country}</span><br />Active: <span className="bold red">{props.data[props.country] ? formatNumber(props.data[props.country]['activeData'][props.index - 1]['value']) : 0}</span></div>
+        <div className='confirmedTitleMap'> Confirmed: <span className='bold red'>{props.data[props.country] ? formatNumber(props.data[props.country]['confirmedData'][props.index - 1]['value']) : 0}</span> (<span className='bold red'>{props.data[props.country] ? (props.data[props.country]['confirmedData'][props.index - 1]['valuePer100K']).toFixed(1) : 0}</span> per 100 000)<br /><span className='italics small'>Last 24 hrs: <span className='bold red'>{props.data[props.country] ? formatNumber(props.data[props.country]['confirmedData'][props.index - 1]['new']) : 0}</span></span></div>
+        <div className='deathTitleMap'> Deaths: <span className='deathTitle bold'>{props.data[props.country] ? formatNumber(props.data[props.country]['deathData'][props.index - 1]['value']) : 0}</span> (<span className='bold'>{props.data[props.country] ? (props.data[props.country]['deathData'][props.index - 1]['value'] * 100 / props.data[props.country]['confirmedData'][props.index - 1]['value'] ).toFixed(1) : 0}%</span> Mortality rate)<br /><span className='italics small'>Last 24 hrs: <span className='bold'>{props.data[props.country] ? formatNumber(props.data[props.country]['deathData'][props.index - 1]['new']) : 0}</span></span></div>
       </div>
-      <svg width={props.width} height={props.height - 160} ref={node => mapNode = node} />
+      <div className='mapContainer'>
+        <div className='buttonContainer'>
+          <div className='backToWorld'>Back to World</div>
+        </div>
+        <svg width={props.width} height={props.height - 160} ref={node => mapNode = node} />
+      </div>
     </div>
   )
 }

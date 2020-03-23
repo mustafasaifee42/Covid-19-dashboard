@@ -18,14 +18,17 @@
 }
 
 .replay{
+    margin-right: 20px;
     padding: 10px;
     background-color: #eaeaea;
     border: 1px solid #f1f1f1;
     border-radius: 4px;
     font-size: 14px;
+    margin-right: 20px;
     cursor: pointer;
     display: flex;
     align-items: center;
+    text-align: left;;
 }
 
 .disabled{
@@ -49,33 +52,34 @@
     background-color: #fff;
     color:rgba(65,65,65,1);
     cursor: pointer;
+    text-align: left;
 }
 
-.selectedTab{
+.tab[aria-pressed="true"] {
     font-weight: bold;
     background-color: #eaeaea;
     color: rgb(224, 26, 37)
-
 }
+
 .tab:first-of-type{
     border-radius: 4px 0 0 4px;
 }
+
 .tab:last-of-type{
     border-radius: 0 4px 4px 0;
 }
 
+/* Button Tabs */
 .buttonTab{
     font-size: 14px;
     color:rgba(65,65,65,1);
     cursor: pointer;
     display: flex;
     align-items: center;
+    text-align: left;
     margin:0 10px;
 }
 
-.selectedButtonTab{
-    font-weight: bold;
-}
 .checkBox{
     width:16px;
     height:16px;
@@ -84,16 +88,33 @@
     margin-right:5px;
     background-color: #fff;
 }
-.selected > .checkBox{
-    background-color: #414141 ;
-}
-.selected{
-    font-weight: bold;
-    color: rgb(224, 26, 37)
-}
 .tickIcon{
     width: 16px;
     height:16px;
+}
+
+.buttonTab:hover{
+    color: rgb(224, 26, 37)
+}
+
+/* State-based selectors for pressed and disabled*/
+
+.buttonTab[aria-pressed="true"] {
+    font-weight: bold;
+    color: rgb(224, 26, 37)
+}
+
+.buttonTab[aria-pressed="true"] > .checkBox {
+    background-color: #414141 ;
+}
+
+.buttonTab[disabled] {
+    opacity: 0.5;
+}
+
+.buttonTab[disabled]:hover {
+    color: #414141;
+    cursor: not-allowed;
 }
 
 .title{
@@ -156,11 +177,41 @@
     }
   }
 
-  
 .buttonTab:hover{
     color: rgb(224, 26, 37)
 }
 
 .disabled:hover{
     color: #414141
+}
+
+.titleDate{
+    font-size: 18px;
+    color:#aaa;
+}
+
+.mapContainer{
+    display: flex;
+    justify-content: flex-end;
+}
+
+.buttonContainer{
+    padding-right: 20px;
+    position: fixed;
+    margin:20px 0;
+}
+
+.backToWorld {
+    opacity: 0;
+    background-color: #eaeaea;
+    border: 1px solid #f1f1f1;
+    padding:10px;
+    cursor:pointer;
+    pointer-events: none;
+    transition: opacity 200ms;
+    font-size: 14px;
+}
+.backToWorld.active {
+    opacity: 1;
+    pointer-events: auto;
 }
