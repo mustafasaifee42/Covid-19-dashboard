@@ -297,7 +297,7 @@ const Map: React.FunctionComponent<{width:number , height:number , value:string,
     <div>
       <div className='mapHeader'>
         <div className='dateContainer'>
-          <div className='date'>{d3.timeFormat("%b. %d")(props.data[Object.keys(props.data)[0]]['confirmedData'][props.index - 1]['date'])}</div>
+          <h2 className='date'>{d3.timeFormat("%b. %d")(props.data[Object.keys(props.data)[0]]['confirmedData'][props.index - 1]['date'])}</h2>
           <div className={props.index === props.data[Object.keys(props.data)[0]]['confirmedData'].length ? 'replay' : 'replay disabled'}
             onClick={() => {
               if(props.index === props.data[Object.keys(props.data)[0]]['confirmedData'].length) 
