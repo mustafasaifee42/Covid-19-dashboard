@@ -76,7 +76,7 @@ const Map: React.FunctionComponent<{width:number , height:number , value:string,
       .attr('class', `disputedArea`)
       .attr('d', path)
       .attr('fill', 'none')
-      .attr('stroke','#212121')
+      .attr('stroke','#666')
       .attr('stroke-width',0.5)
       .attr("stroke-dasharray", "2,2")
 
