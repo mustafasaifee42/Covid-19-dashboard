@@ -29,6 +29,15 @@
     cursor: unset;
 }
 
+.sortButton {
+    display: flex;
+    align-items: center;
+}
+
+.numbers .sortButton {
+    justify-content: flex-end;
+}
+
 .sortButton button {
     margin-left: 0.25em;
 }
