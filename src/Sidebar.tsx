@@ -282,9 +282,6 @@ const Sidebar: React.FunctionComponent<{width:number , height:number, graphHeigh
     }
 
   }
-
-  console.log(d3.format(',')(100000))
-
   return ( 
     <div>
       <h2 className='countryShow'>{props.country}</h2>

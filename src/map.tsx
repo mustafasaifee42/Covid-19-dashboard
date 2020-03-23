@@ -377,7 +377,7 @@ const Map: React.FunctionComponent<{width:number , height:number , value:string,
         <div className='buttonContainer'>
           <div className='backToWorld'>Back to World</div>
         </div>
-        <svg width={props.width} height={props.height - 160} ref={node => mapNode = node} />
+        <svg width={props.width} height={props.height - 190} ref={node => mapNode = node} />
       </div>
     </div>
   )

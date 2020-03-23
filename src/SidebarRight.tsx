@@ -14,9 +14,6 @@ const Sidebar: React.FunctionComponent<{width:number , height:number, bigScreen:
     return ({'countryName': key, 'confirmed':props.data[key]['confirmedData'][props.data[key]['confirmedData'].length - 1]['value'], 'confirmedPer1000':props.data[key]['confirmedData'][props.data[key]['confirmedData'].length - 1]['valuePer100K'], 'death':props.data[key]['deathData'][props.data[key]['deathData'].length - 1]['value'], 'recovery':props.data[key]['recoveryData'][props.data[key]['recoveryData'].length - 1]['value']})
   })
   dataArr.sort((x:any, y:any) => d3.descending(x[props.sorted], y[props.sorted]))
-  if(props.sorted !== 'confirmed'){
-    dataArr.sort((x:any, y:any) => d3.descending(x[props.sorted] * 100 / x.confirmed, y[props.sorted] * 100 / y.confirmed))
-  }
 
   let tableRows = dataArr.map((d: any, i: number) => {
     let country =
@@ -47,12 +44,12 @@ const Sidebar: React.FunctionComponent<{width:number , height:number, bigScreen:
           </span>
         </td>
         <td className="countryDeath numbers">
-          {((d.death * 100) / d.confirmed).toFixed(1)}%<br />
-          <span>({formatNumber(d.death)})</span>
+          {formatNumber(d.death)}<br />
+          <span>({((d.death * 100) / d.confirmed).toFixed(1)}%)</span>
         </td>
         <td className="countryRecovery numbers">
-          {((d.recovery * 100) / d.confirmed).toFixed(1)}%<br />
-          <span>({formatNumber(d.recovery)})</span>
+          {formatNumber(d.recovery)}<br />
+          <span>({((d.recovery * 100) / d.confirmed).toFixed(1)}%)</span>
         </td>
       </tr>
     );
@@ -303,67 +300,71 @@ const Sidebar: React.FunctionComponent<{width:number , height:number, bigScreen:
         tabIndex={0}
         aria-labelledby="countryTable-heading"
         className="countryTable-wrapper"
+        style={{ height: style }}
       >
         {/* Standard HTMl table. Has a caption and table headings to label each cell */}
-        <table className="countryTable" style={{ height: style }}>
+        <table className="countryTable">
           <caption>
-            <h2 id="countryTable-heading">Data by country</h2>
+            <h2 id="countryTable-heading" style={{ fontSize: '14px', textAlign: 'center', backgroundColor: '#eee', textTransform:'uppercase' , padding:'7px 0', margin:'0'}}>Data by country</h2>
           </caption>
-          <tr className="countryRow header">
-            <th scope="col" role="columnheader" className="countryTitle">
-              Country
-            </th>
-            <th
-              scope="col"
-              role="columnheader"
-              className="countryConfirmed numbers"
-              aria-sort={props.sorted === "confirmed" ? "descending" : "none"}
-            >
-              <SortButton
-                label="Confirmed"
-                isSorted={props.sorted === "confirmed"}
-                onClick={() => {
-                  props.sortClick("confirmed");
-                }}
-              />
-            </th>
-            <th
-              scope="col"
-              role="columnheader"
-              className="countryDeath numbers"
-              aria-sort={props.sorted === "death" ? "descending" : "none"}
-              onClick={() => {
-                props.sortClick("death");
-              }}
-            >
-              <SortButton
-                label="Mortality Rt."
-                isSorted={props.sorted === "death"}
+          <thead>
+            <tr className="countryRow header">
+              <th scope="col" role="columnheader" className="countryTitle">
+                Country
+              </th>
+              <th
+                scope="col"
+                role="columnheader"
+                className="countryConfirmed numbers"
+                aria-sort={props.sorted === "confirmed" ? "descending" : "none"}
+              >
+                <SortButton
+                  label="Confirmed"
+                  isSorted={props.sorted === "confirmed"}
+                  onClick={() => {
+                    props.sortClick("confirmed");
+                  }}
+                />
+              </th>
+              <th
+                scope="col"
+                role="columnheader"
+                className="countryDeath numbers"
+                aria-sort={props.sorted === "death" ? "descending" : "none"}
                 onClick={() => {
                   props.sortClick("death");
                 }}
-              />
-            </th>
-            <th
-              scope="col"
-              role="columnheader"
-              className="countyrRecovery numbers"
-              aria-sort={props.sorted === "recovery" ? "descending" : "none"}
-              onClick={() => {
-                props.sortClick("recovery");
-              }}
-            >
-              <SortButton
-                label="Recovery Rt."
-                isSorted={props.sorted === "recovery"}
+              >
+                <SortButton
+                  label="Mortality"
+                  isSorted={props.sorted === "death"}
+                  onClick={() => {
+                    props.sortClick("death");
+                  }}
+                />
+              </th>
+              <th
+                scope="col"
+                role="columnheader"
+                className="countyrRecovery numbers"
+                aria-sort={props.sorted === "recovery" ? "descending" : "none"}
                 onClick={() => {
                   props.sortClick("recovery");
                 }}
-              />
-            </th>
-          </tr>
-
-          {tableRows}
+              >
+                <SortButton
+                  label="Recovery"
+                  isSorted={props.sorted === "recovery"}
+                  onClick={() => {
+                    props.sortClick("recovery");
+                  }}
+                />
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            {tableRows}
+          </tbody>
         </table>
       </div>
     </div>
@@ -385,8 +386,8 @@ const SortButton: React.FC<{
 
   return (
     <div className="sortButton">
-      <span>{label}</span>
       <Button onClick={onClick} aria-label={buttonLabel}>
+        <span>{label}</span>
         {/* NOTE: We set the purpose of the arrows as "decorative", hiding them
         from assistive technologies. We do this because we have aria-label,
         which supercedes the label from content. */}
