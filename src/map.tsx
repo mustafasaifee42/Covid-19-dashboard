@@ -119,7 +119,7 @@ const Map: React.FunctionComponent<{width:number , height:number , value:string,
         
         if(props.data[d.properties.NAME_EN]) {
           d3.select('.tooltipConfirmed')
-            .html(`<span class="bold red">${props.data[d.properties.NAME_EN]['confirmedData'][props.data[d.properties.NAME_EN]['confirmedData'].length - 1]['value']}</span> (<span class="bold red">${(props.data[d.properties.NAME_EN]['confirmedData'][props.data[d.properties.NAME_EN]['confirmedData'].length - 1]['valuePer1000']).toFixed(1)}</span> per 100000)`)
+            .html(`<span class="bold red">${props.data[d.properties.NAME_EN]['confirmedData'][props.data[d.properties.NAME_EN]['confirmedData'].length - 1]['value']}</span> (<span class="bold red">${(props.data[d.properties.NAME_EN]['confirmedData'][props.data[d.properties.NAME_EN]['confirmedData'].length - 1]['valuePer100K']).toFixed(1)}</span> per 100 000)`)
           d3.select('.tooltipActive')
             .html(`<span class="bold red">${props.data[d.properties.NAME_EN]['activeData'][props.data[d.properties.NAME_EN]['activeData'].length - 1]['value']}</span>`)
           d3.select('.tooltipDeath')
@@ -170,11 +170,11 @@ const Map: React.FunctionComponent<{width:number , height:number , value:string,
   
   useEffect(() => {
     let maxRadius = (windowWidth < 800) ? 30 : 50
-    let rad = props.value === 'valuePer1000' ? 1000 : 100000
+    let rad = props.value === 'valuePer100K' ? 1000 : 100000
     const rScale = d3.scaleSqrt()
       .domain([0,rad])
       .range([0,maxRadius])
-    let keyVal = props.value === 'valuePer1000' ? (windowWidth < 800) ? [100,500] : [10,100,500] : (windowWidth < 800) ? [10000,50000] : [1000,10000,50000]
+    let keyVal = props.value === 'valuePer100K' ? (windowWidth < 800) ? [100,500] : [10,100,500] : (windowWidth < 800) ? [10000,50000] : [1000,10000,50000]
     d3.selectAll('.keyCircle').remove();
     let keyG = d3.select('.mapKey')
       .selectAll('.keyCircle')
@@ -213,7 +213,7 @@ const Map: React.FunctionComponent<{width:number , height:number , value:string,
 
   useEffect(() => {
     let maxRadius = (windowWidth < 800) ? 30 : 50
-    let rad = props.value === 'valuePer1000' ? 1000 : 100000
+    let rad = props.value === 'valuePer100K' ? 1000 : 100000
     const rScale = d3.scaleSqrt()
       .domain([0,rad])
       .range([0,maxRadius])
@@ -334,15 +334,15 @@ const Map: React.FunctionComponent<{width:number , height:number , value:string,
             Show Deaths
           </div>
           <div 
-            className= {props.highlightNew ? 'buttonTab disabled' : props.value === 'valuePer1000' ? 'buttonTab selected' : 'buttonTab'}
-            onClick={() => !props.highlightNew ? props.value === 'valuePer1000' ? props.onValueToggle('value') : props.onValueToggle('valuePer1000') : null}
+            className= {props.highlightNew ? 'buttonTab disabled' : props.value === 'valuePer100K' ? 'buttonTab selected' : 'buttonTab'}
+            onClick={() => !props.highlightNew ? props.value === 'valuePer100K' ? props.onValueToggle('value') : props.onValueToggle('valuePer100K') : null}
           >
             <div className='checkBox'><img src={Tick} alt='tick-icon' className='tickIcon'/></div>
-            Per 100000
+            Per 100 000
           </div>
           <div 
-            className= {props.selectedKey[0] === 'confirmedData' ? props.value === 'valuePer1000' ? 'buttonTab disabled' : props.highlightNew ? 'buttonTab selected' : 'buttonTab' : 'buttonTab disabled'}
-            onClick={() => props.value !== 'valuePer1000' && props.selectedKey[0] === 'confirmedData' ? props.highlightNew ? props.highlightNewClick(false) : props.highlightNewClick(true) : null}
+            className= {props.selectedKey[0] === 'confirmedData' ? props.value === 'valuePer100K' ? 'buttonTab disabled' : props.highlightNew ? 'buttonTab selected' : 'buttonTab' : 'buttonTab disabled'}
+            onClick={() => props.value !== 'valuePer100K' && props.selectedKey[0] === 'confirmedData' ? props.highlightNew ? props.highlightNewClick(false) : props.highlightNewClick(true) : null}
           >
           <div className='checkBox'><img src={Tick} alt='tick-icon' className='tickIcon'/></div>
             Highlight last 24 Hrs
@@ -351,7 +351,7 @@ const Map: React.FunctionComponent<{width:number , height:number , value:string,
       </div>
       <div className='title'>
         <div className='titleCountry'><span className='blue bold'>{props.country}</span><br />Active: <span className="bold red">{props.data[props.country] ? props.data[props.country]['activeData'][props.index - 1]['value'] : 0}</span></div>
-        <div className='confirmedTitleMap'> Confirmed: <span className='bold red'>{props.data[props.country] ? props.data[props.country]['confirmedData'][props.index - 1]['value'] : 0}</span> (<span className='bold red'>{props.data[props.country] ? (props.data[props.country]['confirmedData'][props.index - 1]['valuePer1000']).toFixed(1) : 0}</span> per 100000)<br /><span className='italics small'>Last 24 hrs: <span className='bold red'>{props.data[props.country] ? props.data[props.country]['confirmedData'][props.index - 1]['new'] : 0}</span></span></div>
+        <div className='confirmedTitleMap'> Confirmed: <span className='bold red'>{props.data[props.country] ? props.data[props.country]['confirmedData'][props.index - 1]['value'] : 0}</span> (<span className='bold red'>{props.data[props.country] ? (props.data[props.country]['confirmedData'][props.index - 1]['valuePer100K']).toFixed(1) : 0}</span> per 100 000)<br /><span className='italics small'>Last 24 hrs: <span className='bold red'>{props.data[props.country] ? props.data[props.country]['confirmedData'][props.index - 1]['new'] : 0}</span></span></div>
         <div className='deathTitleMap'> Deaths: <span className='deathTitle bold'>{props.data[props.country] ? props.data[props.country]['deathData'][props.index - 1]['value'] : 0}</span> (<span className='bold'>{props.data[props.country] ? (props.data[props.country]['deathData'][props.index - 1]['value'] * 100 / props.data[props.country]['confirmedData'][props.index - 1]['value'] ).toFixed(1) : 0}%</span> Mortality rate)<br /><span className='italics small'>Last 24 hrs: <span className='bold'>{props.data[props.country] ? props.data[props.country]['deathData'][props.index - 1]['new'] : 0}</span></span></div>
       </div>
       <svg width={props.width} height={props.height - 160} ref={node => mapNode = node} />

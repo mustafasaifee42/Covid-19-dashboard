@@ -289,7 +289,7 @@ const Sidebar: React.FunctionComponent<{width:number , height:number, graphHeigh
         title="Total Confirmed"
         data={props.data[props.country] ? props.data[props.country]['confirmedData'][props.data[props.country]['confirmedData'].length - 1].value : 0}
         color='#e01a25' 
-        outof100K= {props.data[props.country] ? props.data[props.country]['confirmedData'][props.data[props.country]['confirmedData'].length - 1]['valuePer1000'] : undefined}
+        outof100K= {props.data[props.country] ? props.data[props.country]['confirmedData'][props.data[props.country]['confirmedData'].length - 1]['valuePer100K'] : undefined}
       />
       <DataCards
         title="Doubling Time (atleast 100 cases)"

@@ -83,12 +83,12 @@ const Visualization: React.FunctionComponent<{width:number,height:number}> = (pr
           if(index >= 0) combinedDataObj[country]['Population'] = populationData[index]['Population']
           combinedDataObj[country]['activeData'] = []
           combinedDataObj[country]['confirmedData'].forEach((d:any,i:number) => {
-            d['valuePer1000'] = +(d['value'] * 100000 / combinedDataObj[country]['Population'])
-            combinedDataObj[country]['activeData'].push({"value":d['value'] - combinedDataObj[country]['deathData'][i]['value']  - combinedDataObj[country]['recoveryData'][i]['value'],"valuePer1000": (d['value'] - combinedDataObj[country]['deathData'][i]['value']  - combinedDataObj[country]['recoveryData'][i]['value']) * 100000 / combinedDataObj[country]['Population']})
+            d['valuePer100K'] = +(d['value'] * 100000 / combinedDataObj[country]['Population'])
+            combinedDataObj[country]['activeData'].push({"value":d['value'] - combinedDataObj[country]['deathData'][i]['value']  - combinedDataObj[country]['recoveryData'][i]['value'],"valuePer100K": (d['value'] - combinedDataObj[country]['deathData'][i]['value']  - combinedDataObj[country]['recoveryData'][i]['value']) * 100000 / combinedDataObj[country]['Population']})
             d['new'] = i === 0 ? d['value'] : (d['value'] - combinedDataObj[country]['confirmedData'][i-1]['value'] < 0 ) ? 0 : d['value'] - combinedDataObj[country]['confirmedData'][i-1]['value']
           })
           combinedDataObj[country]['deathData'].forEach((d:any,i:number) => {
-            d['valuePer1000'] = +(d['value'] * 100000 / combinedDataObj[country]['Population'])
+            d['valuePer100K'] = +(d['value'] * 100000 / combinedDataObj[country]['Population'])
             d['new'] = i === 0 ? d['value'] : (d['value'] - combinedDataObj[country]['deathData'][i-1]['value'] < 0 ) ? 0 : d['value'] - combinedDataObj[country]['deathData'][i-1]['value']
           })
           combinedDataObj[country]['recoveryData'].forEach((d:any,i:number) => {
@@ -162,7 +162,7 @@ const Visualization: React.FunctionComponent<{width:number,height:number}> = (pr
                     indexToUpdate++;
                     setIndex(indexToUpdate);
                   }
-                } , 400)
+                } , 200)
                 function stopReplay(){
                   indexToUpdate = 1
                   clearInterval(replay)
@@ -250,7 +250,7 @@ const Visualization: React.FunctionComponent<{width:number,height:number}> = (pr
                     indexToUpdate++;
                     setIndex(indexToUpdate);
                   }
-                } , 400)
+                } , 200)
                 function stopReplay(){
                   indexToUpdate = 1
                   clearInterval(replay)
@@ -290,7 +290,7 @@ const Visualization: React.FunctionComponent<{width:number,height:number}> = (pr
                     indexToUpdate++;
                     setIndex(indexToUpdate);
                   }
-                } , 400)
+                } , 200)
                 function stopReplay(){
                   indexToUpdate = 1
                   clearInterval(replay)
