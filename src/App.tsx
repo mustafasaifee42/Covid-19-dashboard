@@ -23,7 +23,7 @@ function App() {
             <FacebookShareButton className="fbIcon" url={'https://covid19.mustafasaifee.com'} quote={'Live dashboard visualizing the spread of coronavirus COVID-19'}>
               <FacebookIcon size={28} round={true} />
             </FacebookShareButton>
-            <TwitterShareButton url={'https://covid19.mustafasaifee.com'} title={'Live dashboard visualizing the spread of coronavirus COVID-19 https://covid19.mustafasaifee.com via @mustafasaifee42'}>
+            <TwitterShareButton url={'https://covid19.mustafasaifee.com'} title={'Live dashboard visualizing the spread of coronavirus COVID-19 via @mustafasaifee42'}>
               <TwitterIcon size={28} round={true} />
             </TwitterShareButton>
           </div>
@@ -38,7 +38,7 @@ function App() {
           <FacebookShareButton className="fbIcon" url={'https://covid19.mustafasaifee.com'} quote={'Live dashboard visualizing the spread of COVID-19 coronavirus'}>
             <FacebookIcon size={24} round={true} />
           </FacebookShareButton>
-          <TwitterShareButton url={'https://covid19.mustafasaifee.com'} title={'Live dashboard visualizing the spread of COVID-19 coronavirus https://covid19.mustafasaifee.com via @mustafasaifee42'}>
+          <TwitterShareButton url={'https://covid19.mustafasaifee.com'} title={'Live dashboard visualizing the spread of COVID-19 coronavirus via @mustafasaifee42'}>
             <TwitterIcon size={24} round={true} />
           </TwitterShareButton>
         </div>
