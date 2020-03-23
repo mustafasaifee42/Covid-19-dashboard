@@ -1,158 +1,120 @@
-import React, { useEffect } from "react";
-import * as d3GeoProjection from "d3-geo-projection";
-import "./Map.css";
-import * as topojson from "topojson";
-import * as d3 from "d3";
-import Play from "./play.svg";
-import Tick from "./tick.svg";
+import React,{ useEffect } from 'react';
+import * as d3GeoProjection from 'd3-geo-projection';
+import './Map.css';
+import * as topojson from 'topojson';
+import * as d3 from 'd3';
+import Play from './play.svg';
+import Tick from './tick.svg';
 import Button from "./Button";
 
-const mapShape: any = require("./topo.json");
-const mapShapeData: any = topojson.feature(
-  mapShape,
-  mapShape.objects.countries
-);
-const disputedRegionsMapShapeData: any = topojson.feature(
-  mapShape,
-  mapShape.objects.ne_10m_admin_0_disputed_areas
-);
+const mapShape:any = require('./topo.json');
+const mapShapeData:any = topojson.feature(mapShape, mapShape.objects.countries)
+const disputedRegionsMapShapeData:any = topojson.feature(mapShape, mapShape.objects.ne_10m_admin_0_disputed_areas)
 
 let mapNode!: SVGSVGElement | null;
-const Map: React.FunctionComponent<{
-  width: number;
-  height: number;
-  value: string;
-  deathVisibility: number;
-  toggleDeathVisibility: (e: number) => void;
-  onValueToggle: (e: string) => void;
-  windowWidth: number;
-  index: any;
-  highlightNew: boolean;
-  highlightNewClick: (e: boolean) => void;
-  replay: () => void;
-  data: any;
-  selectedKey: [string, number];
-  onToggleClick: (e: [string, number]) => void;
-  onCountryClick: (e: string) => void;
-  country: string;
-}> = props => {
-  const { height, width, windowWidth } = props;
+const Map: React.FunctionComponent<{width:number , height:number , value:string, deathVisibility:number , toggleDeathVisibility:(e:number) => void, onValueToggle:(e:string) => void, windowWidth:number , index:any ,highlightNew:boolean,highlightNewClick:(e:boolean) => void, replay:()=> void, data:any , selectedKey:[string,number] , onToggleClick:(e:[string,number]) => void ,onCountryClick:(e:string) => void , country:string}> = (props) => {
+  const {
+    height,
+    width,
+    windowWidth
+  } = props
 
   useEffect(() => {
-    let countryinTopo = mapShapeData.features.map(
-      (d: any) => d.properties.NAME_EN
-    );
-    let countryinData = Object.keys(props.data);
-    for (let i = 0; i < countryinData.length; i++) {
-      if (countryinTopo.indexOf(countryinData[i]) < 0) {
-        if (countryinData[i] !== "World" && countryinData[i] !== "Cruise Ship")
-          console.warn(`${countryinData[i]} not in World Map`);
+    
+    let countryinTopo = mapShapeData.features.map((d:any) => d.properties.NAME_EN)
+    let countryinData = Object.keys(props.data)
+    for (let i = 0; i < countryinData.length; i++){
+      if(countryinTopo.indexOf(countryinData[i]) < 0){
+        if (countryinData[i] !== 'World' && countryinData[i] !== 'Cruise Ship') console.warn(`${countryinData[i]} not in World Map`)
       }
     }
-  }, [props.data]);
+  },[props.data])
   useEffect(() => {
-    let scaleFactor = windowWidth < 800 ? 0.35 : 0.45;
-    d3.select(mapNode)
-      .selectAll("g")
-      .remove();
-    const projection = d3GeoProjection
-      .geoRobinson()
-      .scale((409 * width) / 2048)
-      .translate([0.41 * width, scaleFactor * height]);
-    const path: any = d3.geoPath().projection(projection);
-    let Zoom: any = d3
-      .zoom()
-      .scaleExtent([0.6, 10])
-      .on("zoom", zoomed);
+    let scaleFactor = (windowWidth < 800) ? 0.35 : 0.45
+    d3.select(mapNode).selectAll('g').remove();
+    const projection = d3GeoProjection.geoRobinson()
+      .scale(409 * (width) / 2048)
+      .translate([0.41 * (width), scaleFactor * (height)]);
+    const path:any = d3.geoPath().projection(projection);
+    let Zoom:any = d3.zoom().scaleExtent([0.6, 10]).on('zoom', zoomed);
     let mapSVG = d3.select(mapNode).call(Zoom);
-    let zoomGroup = mapSVG.append("g");
-    zoomGroup
-      .append("g")
-      .attr("class", "mapKey")
-      .attr(
-        "transform",
-        `translate(${projection([-15, -45])[0]},${projection([-15, -45])[1]})`
-      );
-    zoomGroup
-      .append("rect")
-      .attr("class", "bg")
-      .attr("x", 0)
-      .attr("y", 0)
-      .attr("width", width)
-      .attr("height", height)
-      .attr("opacity", 0)
-      .on("click", (d: any) => {
-        mapSVG
-          .transition()
-          .duration(500)
-          .call(Zoom.transform, d3.zoomIdentity);
-        props.onCountryClick("World");
+    let zoomGroup = mapSVG.append('g');
+    zoomGroup.append('g')
+      .attr('class','mapKey')
+      .attr('transform',`translate(${projection([-15, -45])[0]},${projection([-15, -45])[1]})`)
+    zoomGroup.append('rect')
+      .attr('class', 'bg')
+      .attr('x',0)
+      .attr('y',0)
+      .attr('width', width)
+      .attr('height', height)
+      .attr('opacity', 0)
+      .on('click',(d:any) => {
+        mapSVG.transition().duration(500).call(Zoom.transform, d3.zoomIdentity);
+        props.onCountryClick('World')
       });
 
     function zoomed() {
-      zoomGroup.attr("transform", d3.event.transform); // updated for d3 v4
+      zoomGroup.attr('transform', d3.event.transform); // updated for d3 v4
     }
 
     zoomGroup
-      .selectAll(".country")
+      .selectAll('.country')
       .data(mapShapeData.features)
       .enter()
-      .append("path")
-      .attr("class", `country countryG`)
-      .attr("d", path)
-      .attr("fill", "#ddd")
-      .attr("fill-opacity", 0.25)
-      .attr("stroke", "#999")
-      .attr("stroke-width", 0.5);
+      .append('path')
+      .attr('class', `country countryG`)
+      .attr('d', path)
+      .attr('fill', '#ddd')
+      .attr('fill-opacity', 0.25)
+      .attr('stroke','#999')
+      .attr('stroke-width',0.5)
     zoomGroup
-      .selectAll(".disputedArea")
+      .selectAll('.disputedArea')
       .data(disputedRegionsMapShapeData.features)
       .enter()
-      .append("path")
-      .attr("class", `disputedArea`)
-      .attr("d", path)
-      .attr("fill", "none")
-      .attr("stroke", "#666")
-      .attr("stroke-width", 0.5)
-      .attr("stroke-dasharray", "2,2");
+      .append('path')
+      .attr('class', `disputedArea`)
+      .attr('d', path)
+      .attr('fill', 'none')
+      .attr('stroke','#666')
+      .attr('stroke-width',0.5)
+      .attr("stroke-dasharray", "2,2")
 
     //for adding bubbles or circle on the map
     let bubbleG = zoomGroup
-      .selectAll(".bubbleG")
+      .selectAll('.bubbleG')
       .data(mapShapeData.features)
       .enter()
-      .append("g")
-      .attr("class", `bubbleG`)
-      .attr(
-        "transform",
-        (d: any) => `translate(${path.centroid(d)[0]},${path.centroid(d)[1]})`
-      );
+      .append('g')
+      .attr('class', `bubbleG`)
+      .attr('transform', (d:any) => `translate(${path.centroid(d)[0]},${path.centroid(d)[1]})`)
     bubbleG
-      .append("circle")
-      .attr("class", `bubble countryG`)
-      .attr("cx", 0)
-      .attr("cy", 0)
-      .attr("fill", "#e01a25")
-      .attr("fill-opacity", 0.25)
-      .attr("stroke", "#e01a25")
-      .attr("stroke-width", 1)
-      .attr("r", 0);
+      .append('circle')
+      .attr('class', `bubble countryG`)
+      .attr('cx',0)
+      .attr('cy',0)
+      .attr('fill','#e01a25')
+      .attr('fill-opacity',0.25)
+      .attr('stroke','#e01a25')
+      .attr('stroke-width',1)
+      .attr('r', 0)
     bubbleG
-      .append("circle")
-      .attr("class", `deathBubble countryG`)
-      .attr("cx", 0)
-      .attr("cy", 0)
-      .attr("fill", "#414141")
-      .attr("fill-opacity", 0.5)
-      .attr("stroke", "#414141")
-      .attr("stroke-width", 0.25)
-      .attr("r", 0);
-    d3.selectAll(".countryG")
-      .on("mouseenter", (d: any) => {
-        d3.select(".tooltip")
-          .style("display", "inline")
-          .style("left", `${d3.event.pageX + 5}px`)
-          .style("top", `${d3.event.pageY - 10}px`);
+      .append('circle')
+      .attr('class', `deathBubble countryG`)
+      .attr('cx',0)
+      .attr('cy',0)
+      .attr('fill','#414141')
+      .attr('fill-opacity',0.5)
+      .attr('stroke','#414141')
+      .attr('stroke-width',0.25)
+      .attr('r', 0)
+    d3.selectAll('.countryG')
+      .on('mouseenter',(d:any) => {
+        d3.select('.tooltip')
+          .style('display','inline')
+          .style("left", `${d3.event.pageX + 5}px`)		
+          .style("top", `${d3.event.pageY - 10}px`);	
         d3.select('.tooltipCountry')
           .html(d.properties.NAME_EN)
         
