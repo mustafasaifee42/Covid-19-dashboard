@@ -4,6 +4,7 @@ import DataCards from './DataCards';
 import CountryNameData from './countryNameData.json';
 import Button from "./Button";
 import { SortArrowUnset, SortArrowDown } from "./Arrows";
+import {formatNumber} from './utils'
 import './sidebarRight.css'
 
 let graphNode!: SVGSVGElement | null;
@@ -39,7 +40,7 @@ const Sidebar: React.FunctionComponent<{width:number , height:number, bigScreen:
           {country}
         </th>
         <td className="countryConfirmed numbers">
-          {d.confirmed}
+          {formatNumber(d.confirmed)}
           <br />
           <span className="tableSubNote">
             ({d.confirmedPer1000.toFixed(1)} per 100K)
@@ -47,11 +48,11 @@ const Sidebar: React.FunctionComponent<{width:number , height:number, bigScreen:
         </td>
         <td className="countryDeath numbers">
           {((d.death * 100) / d.confirmed).toFixed(1)}%<br />
-          <span>({d.death})</span>
+          <span>({formatNumber(d.death)})</span>
         </td>
         <td className="countryRecovery numbers">
           {((d.recovery * 100) / d.confirmed).toFixed(1)}%<br />
-          <span>({d.recovery})</span>
+          <span>({formatNumber(d.recovery)})</span>
         </td>
       </tr>
     );
@@ -264,6 +265,7 @@ const Sidebar: React.FunctionComponent<{width:number , height:number, bigScreen:
               let index = CountryNameData.findIndex((obj:any) => obj.countryName === countryListFiltered[k])
               return index < 0 ? countryListFiltered[k] : CountryNameData[index].countryShortCode
             })
+            .style('cursor','pointer')
         })
       }
       else {
