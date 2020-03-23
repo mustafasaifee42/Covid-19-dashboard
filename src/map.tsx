@@ -8,6 +8,7 @@ import Tick from './tick.svg';
 
 const mapShape:any = require('./topo.json');
 const mapShapeData:any = topojson.feature(mapShape, mapShape.objects.countries)
+const disputedRegionsMapShapeData:any = topojson.feature(mapShape, mapShape.objects.ne_10m_admin_0_disputed_areas)
 
 let mapNode!: SVGSVGElement | null;
 const Map: React.FunctionComponent<{width:number , height:number , value:string, deathVisibility:number , toggleDeathVisibility:(e:number) => void, onValueToggle:(e:string) => void, windowWidth:number , index:any ,highlightNew:boolean,highlightNewClick:(e:boolean) => void, replay:()=> void, data:any , selectedKey:[string,number] , onToggleClick:(e:[string,number]) => void ,onCountryClick:(e:string) => void , country:string}> = (props) => {
@@ -67,6 +68,17 @@ const Map: React.FunctionComponent<{width:number , height:number , value:string,
       .attr('fill-opacity', 0.25)
       .attr('stroke','#999')
       .attr('stroke-width',0.5)
+    zoomGroup
+      .selectAll('.disputedArea')
+      .data(disputedRegionsMapShapeData.features)
+      .enter()
+      .append('path')
+      .attr('class', `disputedArea`)
+      .attr('d', path)
+      .attr('fill', 'none')
+      .attr('stroke','#212121')
+      .attr('stroke-width',0.5)
+      .attr("stroke-dasharray", "2,2")
 
     //for adding bubbles or circle on the map
     let bubbleG = zoomGroup
