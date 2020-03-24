@@ -44,7 +44,7 @@ const Visualization: React.FunctionComponent<{width:number,height:number}> = (pr
   const [value, setValue] = useState('value')
   const [highlightNew, setHighlightNew] = useState(false)
   const [deathVisibility, setDeathVisibility] = useState(0)
-  const [visualizationType, setVisualizationType] = useState('table')
+  const [visualizationType, setVisualizationType] = useState('map')
   let indexToUpdate = 1;
   const [selectedKey, setSelectedKey] = useState<[string,number]>(['confirmedData',100000])
   useEffect(() => {
@@ -121,6 +121,7 @@ const Visualization: React.FunctionComponent<{width:number,height:number}> = (pr
           <div className='tooltipCountryContainer'><span className='tooltipCountry'>Country</span><span className='tooltipSubnote'> Click to see details</span></div>
           <div className='tooltipConfirmedTitle'>Confirmed Cases: <span className='tooltipConfirmed'>0</span></div>
           <div className='tooltipDeathTitle'>Deaths: <span className='tooltipDeath'>0</span></div>
+          <div className='tooltipLast24Hrs'>Last 24 Hrs.: <span className='tooltipcases24 red bold'>0</span> new cases and <span className='tooltipdeaths24 bold'>0</span> deaths</div>
         </div>
         <div className='barGraphtooltip'>
           <span className='tooltipDate'>Country</span>: <span className='tooltipCases bold'>0</span>
@@ -148,6 +149,10 @@ const Visualization: React.FunctionComponent<{width:number,height:number}> = (pr
                 selectedKey={selectedKey}
                 index={index}
                 highlightNew={highlightNew}
+                hover={(country) => {
+                  setCountry(country)            
+                }}
+                selectedCountry = {selectedCountry}
                 value={value}
                 deathVisibility = {deathVisibility}
                 toggleDeathVisibility = {(e) => { setDeathVisibility(e) } }
@@ -283,6 +288,10 @@ const Visualization: React.FunctionComponent<{width:number,height:number}> = (pr
                   data={data}
                   country={country}
                   selectedKey={selectedKey}
+                  hover={(country) => {
+                    setCountry(country)            
+                  }}
+                  selectedCountry = {selectedCountry}
                   index={index}
                   highlightNew={highlightNew}
                   value={value}
@@ -368,6 +377,10 @@ const Visualization: React.FunctionComponent<{width:number,height:number}> = (pr
               windowWidth = {props.width}
               country={country}
               deathVisibility = {deathVisibility}
+              hover={(country) => {
+                setCountry(country)            
+              }}
+              selectedCountry = {selectedCountry}
               toggleDeathVisibility = {(e) => { setDeathVisibility(e) } }
               selectedKey={selectedKey}
               index={index}

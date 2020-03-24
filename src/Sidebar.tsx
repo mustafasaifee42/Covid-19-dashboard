@@ -5,12 +5,14 @@ import {formatNumber} from './utils';
 import './sidebar.css'
 
 let graphNode!: SVGSVGElement | null;
+let deathGraphNode!: SVGSVGElement | null;
 let dailyCasesGraphNode!: SVGSVGElement | null;
 let dailyDeathGraphNode!: SVGSVGElement | null;
 const Sidebar: React.FunctionComponent<{width:number , height:number, graphHeight:number, data:any ,country:string }> = (props) => {
 
   useEffect(() => {
     d3.select(graphNode).selectAll('g').remove()
+    d3.select(deathGraphNode).selectAll('g').remove()
     d3.select(dailyCasesGraphNode).selectAll('g').remove()
     d3.select(dailyDeathGraphNode).selectAll('g').remove()
     if(props.data[props.country]) {
@@ -91,6 +93,65 @@ const Sidebar: React.FunctionComponent<{width:number , height:number, graphHeigh
           .y1((d:any) =>  y(d.value))
         )
       // append the svg object to the body of the page
+
+      
+      let deathGraphG = d3.select(deathGraphNode)
+        .append('g')
+        .attr("transform",`translate(${margin.left},${margin.top})`);
+
+      // Add Y axis
+      y = d3.scaleLinear()
+        .domain([0, d3.max(props.data[props.country].deathData, (d:any) => d.value)])
+        .range([ height, 0 ]);
+
+      deathGraphG.append("g")
+        .call(d3.axisRight(y).tickSize(width).ticks(5));
+      deathGraphG.select(".domain").remove();
+      deathGraphG.selectAll(".tick line").filter(Number).attr("stroke", "#aaa").attr("stroke-dasharray", "2,2");
+      deathGraphG.selectAll(".tick text").attr("x", 4).attr("dy", -4).attr('font-family','IBM Plex Sans').attr('fill','#aaa').attr('font-size',10);
+      
+      deathGraphG.append('text')
+        .attr('font-family','IBM Plex Sans')
+        .attr('fill','#aaa')
+        .attr('font-size',10)
+        .text((d3.timeFormat("%d %b")(props.data[props.country]['confirmedData'][0].date)))
+        .attr('x',x(props.data[props.country]['confirmedData'][0].date))
+        .attr('y',height + 15)
+      deathGraphG.append('text')
+        .attr('font-family','IBM Plex Sans')
+        .attr('fill','#aaa')
+        .attr('font-size',10)
+        .text((d3.timeFormat("%d %b")(props.data[props.country]['confirmedData'][props.data[props.country]['confirmedData'].length - 1].date)))
+        .attr('x',x(props.data[props.country]['confirmedData'][props.data[props.country]['confirmedData'].length - 1].date))
+        .attr('text-anchor','end')
+        .attr('y',height + 15)
+      deathGraphG.append('text')
+        .attr('font-family','IBM Plex Sans')
+        .attr('fill','#aaa')
+        .attr('font-size',10)
+        .text((d3.timeFormat("%d %b")(d3.timeParse("%m/%d/%y")('2/1/20'))))
+        .attr('x',x(d3.timeParse("%m/%d/%y")('2/1/20')))
+        .attr('y',height + 15)
+      deathGraphG.append('text')
+        .attr('font-family','IBM Plex Sans')
+        .attr('fill','#aaa')
+        .attr('font-size',10)
+        .text((d3.timeFormat("%d %b")(d3.timeParse("%m/%d/%y")('3/1/20'))))
+        .attr('x',x(d3.timeParse("%m/%d/%y")('3/1/20')))
+        .attr('text-anchor','end')
+        .attr('y',height + 15)
+      
+      deathGraphG.append("path")
+        .datum(props.data[props.country].deathData)
+        .attr("fill", "#414141")
+        .attr('fill-opacity',0.25)
+        .attr("stroke", "#414141")
+        .attr("stroke-width", 1)
+        .attr("d", d3.area()
+          .x((d:any,i:number) => x(d.date))
+          .y0(y(0))
+          .y1((d:any) =>  y(d.value))
+        )
         let dailyeCasesG = d3.select(dailyCasesGraphNode)
           .append('g')
           .attr("transform",`translate(${margin.left},${margin.top})`);
@@ -303,6 +364,10 @@ const Sidebar: React.FunctionComponent<{width:number , height:number, graphHeigh
       <div className="graphContainer">
         <div className='cardTitle'>Daily Cases</div>
         <svg width={props.width - 5} height={props.graphHeight} ref={node => dailyCasesGraphNode = node}/>
+      </div>
+      <div className="graphContainer">
+        <div className='cardTitle'>Total Deaths</div>
+        <svg width={props.width - 5} height={props.graphHeight} ref={node => deathGraphNode = node}/>
       </div>
       <div className="graphContainer">
         <div className='cardTitle'>Daily Deaths</div>
