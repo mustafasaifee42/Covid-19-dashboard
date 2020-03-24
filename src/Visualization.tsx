@@ -39,7 +39,6 @@ const Visualization: React.FunctionComponent<{width:number,height:number}> = (pr
   const [country, setCountry] = useState('World')
   const [selectedCountry, setSelectedCountry] = useState('World')
   const [index, setIndex] = useState(0)
-  const [sorted, setSorted] = useState('confirmed')
   const [sortedBigTable, setSortedBigTable] = useState('Confirmed Cases')
   const [value, setValue] = useState('value')
   const [highlightNew, setHighlightNew] = useState(false)
@@ -149,10 +148,6 @@ const Visualization: React.FunctionComponent<{width:number,height:number}> = (pr
                 selectedKey={selectedKey}
                 index={index}
                 highlightNew={highlightNew}
-                hover={(country) => {
-                  setCountry(country)            
-                }}
-                selectedCountry = {selectedCountry}
                 value={value}
                 deathVisibility = {deathVisibility}
                 toggleDeathVisibility = {(e) => { setDeathVisibility(e) } }
@@ -236,15 +231,6 @@ const Visualization: React.FunctionComponent<{width:number,height:number}> = (pr
                 selectedCountry={selectedCountry}
                 country={country}
                 bigScreen={true}
-                hover={(country) => {
-                  setCountry(country)            
-                }}
-                click={(country) => {
-                  setSelectedCountry(country)
-                  setCountry(country)            
-                }}
-                sorted={sorted}
-                sortClick={ (d) => {setSorted(d)} }
               />
             </div>
           </div>
@@ -267,15 +253,6 @@ const Visualization: React.FunctionComponent<{width:number,height:number}> = (pr
                 bigScreen={false}
                 selectedCountry={selectedCountry}
                 country={country}
-                hover={(country) => {
-                  setCountry(country)            
-                }}
-                click={(country) => {
-                  setSelectedCountry(country)
-                  setCountry(country)            
-                }}
-                sorted={sorted}
-                sortClick={ (d) => {setSorted(d)} }
               />
             </div>
             <div className='rightSideMap'>
@@ -288,10 +265,6 @@ const Visualization: React.FunctionComponent<{width:number,height:number}> = (pr
                   data={data}
                   country={country}
                   selectedKey={selectedKey}
-                  hover={(country) => {
-                    setCountry(country)            
-                  }}
-                  selectedCountry = {selectedCountry}
                   index={index}
                   highlightNew={highlightNew}
                   value={value}
@@ -377,10 +350,6 @@ const Visualization: React.FunctionComponent<{width:number,height:number}> = (pr
               windowWidth = {props.width}
               country={country}
               deathVisibility = {deathVisibility}
-              hover={(country) => {
-                setCountry(country)            
-              }}
-              selectedCountry = {selectedCountry}
               toggleDeathVisibility = {(e) => { setDeathVisibility(e) } }
               selectedKey={selectedKey}
               index={index}
@@ -428,15 +397,6 @@ const Visualization: React.FunctionComponent<{width:number,height:number}> = (pr
                 data={data}
                 selectedCountry={selectedCountry}
                 country={country}
-                hover={(country) => {
-                  setCountry(country)            
-                }}
-                click={(country) => {
-                  setSelectedCountry(country)
-                  setCountry(country)            
-                }}
-                sorted={sorted}
-                sortClick={ (d) => {setSorted(d)} }
               />
             </div>
           </div>

@@ -13,7 +13,7 @@ const mapShapeData:any = topojson.feature(mapShape, mapShape.objects.countries)
 const disputedRegionsMapShapeData:any = topojson.feature(mapShape, mapShape.objects.ne_10m_admin_0_disputed_areas)
 
 let mapNode!: SVGSVGElement | null;
-const Map: React.FunctionComponent<{width:number , height:number , value:string,selectedCountry:string , deathVisibility:number , hover:(d:string) => void, toggleDeathVisibility:(e:number) => void, onValueToggle:(e:string) => void, windowWidth:number , index:any ,highlightNew:boolean,highlightNewClick:(e:boolean) => void, replay:()=> void, data:any , selectedKey:[string,number] , onToggleClick:(e:[string,number]) => void ,onCountryClick:(e:string) => void , country:string}> = (props) => {
+const Map: React.FunctionComponent<{width:number , height:number , value:string, deathVisibility:number , toggleDeathVisibility:(e:number) => void, onValueToggle:(e:string) => void, windowWidth:number , index:any ,highlightNew:boolean,highlightNewClick:(e:boolean) => void, replay:()=> void, data:any , selectedKey:[string,number] , onToggleClick:(e:[string,number]) => void ,onCountryClick:(e:string) => void , country:string}> = (props) => {
   const {
     height,
     width,
@@ -123,15 +123,11 @@ const Map: React.FunctionComponent<{width:number , height:number , value:string,
           .style("top", `${d3.event.pageY - 10}px`);	
         d3.select('.tooltipCountry')
           .html(d.properties.NAME_EN)
-        
         if(props.data[d.properties.NAME_EN]) {
           d3.select('.tooltipConfirmed')
             .html(`<span class="bold red">${formatNumber(props.data[d.properties.NAME_EN]['confirmedData'][props.data[d.properties.NAME_EN]['confirmedData'].length - 1]['value'])}</span> (<span class="bold red">${(props.data[d.properties.NAME_EN]['confirmedData'][props.data[d.properties.NAME_EN]['confirmedData'].length - 1]['valuePer100K']).toFixed(1)}</span> per 100 000)`)
           d3.select('.tooltipDeath')
             .html(`<span class="bold">${formatNumber(props.data[d.properties.NAME_EN]['deathData'][props.data[d.properties.NAME_EN]['deathData'].length - 1]['value'])}</span> (<span class="bold">${(props.data[d.properties.NAME_EN]['deathData'][props.data[d.properties.NAME_EN]['deathData'].length - 1]['value'] * 100 / props.data[d.properties.NAME_EN]['confirmedData'][props.data[d.properties.NAME_EN]['confirmedData'].length - 1]['value']).toFixed(1)}%</span> Mortality rate)`)
-          d3.select('.tooltipcases24').html(`<span class="bold">${formatNumber(props.data[d.properties.NAME_EN]['confirmedData'][props.data[d.properties.NAME_EN]['confirmedData'].length - 1]['new'])}`)
-          d3.select('.tooltipdeaths24').html(`<span class="bold">${formatNumber(props.data[d.properties.NAME_EN]['deathData'][props.data[d.properties.NAME_EN]['deathData'].length - 1]['new'])}`)
-          props.hover(d.properties.NAME_EN)
         } else {
           d3.select('.tooltipConfirmed')
             .html(`<span class="bold red">0</span>`)
@@ -147,7 +143,6 @@ const Map: React.FunctionComponent<{width:number , height:number , value:string,
       .on('mouseout',(d:any) => {
         d3.select('.tooltip')
           .style('display','none')
-          props.hover(props.selectedCountry)
       })
       .on('click',(d:any) => {
         let bounds = path.bounds(d),
