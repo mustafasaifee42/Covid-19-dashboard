@@ -11,7 +11,7 @@ let graphNode!: SVGSVGElement | null;
 const Sidebar: React.FunctionComponent<{width:number , height:number, bigScreen:boolean,  graphHeight:number, data:any ,country:string, sorted:string , sortClick:(e:string) => void, selectedCountry: string,click:(d:string) => void ,hover:(d:string) => void }> = (props) => {
 
   let dataArr:any = Object.keys(props.data).map((key:string) => {
-    return ({'countryName': key, 'confirmed':props.data[key]['confirmedData'][props.data[key]['confirmedData'].length - 1]['value'], 'confirmedPer1000':props.data[key]['confirmedData'][props.data[key]['confirmedData'].length - 1]['valuePer100K'], 'death':props.data[key]['deathData'][props.data[key]['deathData'].length - 1]['value'], 'recovery':props.data[key]['recoveryData'][props.data[key]['recoveryData'].length - 1]['value']})
+    return ({'countryName': key, 'confirmed':props.data[key]['confirmedData'][props.data[key]['confirmedData'].length - 1]['value'], 'confirmedPer1000':props.data[key]['confirmedData'][props.data[key]['confirmedData'].length - 1]['valuePer100K'], 'death':props.data[key]['deathData'][props.data[key]['deathData'].length - 1]['value']})
   })
   dataArr.sort((x:any, y:any) => d3.descending(x[props.sorted], y[props.sorted]))
 
@@ -47,21 +47,17 @@ const Sidebar: React.FunctionComponent<{width:number , height:number, bigScreen:
           {formatNumber(d.death)}<br />
           <span>({((d.death * 100) / d.confirmed).toFixed(1)}%)</span>
         </td>
-        <td className="countryRecovery numbers">
-          {formatNumber(d.recovery)}<br />
-          <span>({((d.recovery * 100) / d.confirmed).toFixed(1)}%)</span>
-        </td>
       </tr>
     );
   });
   useEffect(() => {
     let dataArr:any = Object.keys(props.data).map((key:string) => {
-      return ({'countryName': key, 'confirmed':props.data[key]['confirmedData'][props.data[key]['confirmedData'].length - 1]['value'], 'death':props.data[key]['deathData'][props.data[key]['deathData'].length - 1]['value'], 'recovery':props.data[key]['recoveryData'][props.data[key]['recoveryData'].length - 1]['value']})
+      return ({'countryName': key, 'confirmed':props.data[key]['confirmedData'][props.data[key]['confirmedData'].length - 1]['value'], 'death':props.data[key]['deathData'][props.data[key]['deathData'].length - 1]['value']})
     })
     dataArr.sort((x:any, y:any) => d3.descending(x['confirmed'], y['confirmed']))
     let countryList = dataArr.map((d:any) =>  d.countryName )
     d3.select(graphNode).selectAll('g').remove()
-    let margin = {top: 20, right: 10, bottom: 20, left: 10},
+    let margin = {top: 20, right: 10, bottom: 30, left: 10},
       width = props.width - 15 - margin.left - margin.right,
       height = props.graphHeight - margin.top - margin.bottom;
     let g = d3.select(graphNode)
@@ -100,6 +96,15 @@ const Sidebar: React.FunctionComponent<{width:number , height:number, bigScreen:
         .attr('font-family','IBM Plex Sans')
         .attr('font-size',10)
         .text((d:number) => d)
+      g.append('text')
+        .attr("fill", "#414141")
+        .attr('x',width / 2)
+        .attr('y',height + 10)
+        .attr("text-anchor", 'middle')
+        .attr('font-family','IBM Plex Sans')
+        .attr('font-size',10)
+        .attr('dy', 15)
+        .text(`Days since 100 cases`)
       
       g.append('text')
         .attr("fill", "#999")
@@ -109,7 +114,7 @@ const Sidebar: React.FunctionComponent<{width:number , height:number, bigScreen:
         .attr('font-family','IBM Plex Sans')
         .attr('font-size',10)
         .attr('dy', 12)
-        .text(`Day 1`)
+        .text(`1`)
       for (let i = 10; i < props.data[countryList[0]].confirmedData.length + 1; i= i + 10){
         g.append('text')
           .attr("fill", "#999")
@@ -278,6 +283,7 @@ const Sidebar: React.FunctionComponent<{width:number , height:number, bigScreen:
       }
     }
   },[props.width,props.graphHeight, props.data, props.country])
+  let cardTitleSubNotesubNote = props.graphHeight < 240 ? null : <span className="cardTitleSubNote">(Log scale starting from 100 cases)</span>
   let style = props.bigScreen ? `calc(100vh - 280px - ${props.graphHeight}px)`: 'auto'
   return ( 
     <div>
@@ -288,7 +294,7 @@ const Sidebar: React.FunctionComponent<{width:number , height:number, bigScreen:
         color='#0aa5c2' 
       />
       <div className="graphContainer">
-        <div className='cardTitle'>Epidemic Curve (Log Scale)</div>
+        <h2 className='cardTitle'>Epidemic Curve {cardTitleSubNotesubNote}</h2>
         <svg width={props.width - 5} height={props.graphHeight} ref={node => graphNode = node}/>
       </div>
       {/* Use a wrapper to allow the table to scroll.
@@ -343,23 +349,6 @@ const Sidebar: React.FunctionComponent<{width:number , height:number, bigScreen:
                   }}
                 />
               </th>
-              <th
-                scope="col"
-                role="columnheader"
-                className="countyrRecovery numbers"
-                aria-sort={props.sorted === "recovery" ? "descending" : "none"}
-                onClick={() => {
-                  props.sortClick("recovery");
-                }}
-              >
-                <SortButton
-                  label="Recovery"
-                  isSorted={props.sorted === "recovery"}
-                  onClick={() => {
-                    props.sortClick("recovery");
-                  }}
-                />
-              </th>
             </tr>
           </thead>
           <tbody>
@@ -385,19 +374,19 @@ const SortButton: React.FC<{
   const buttonLabel = `Sort by ${label}`;
 
   return (
-    <div className="sortButton">
-      <Button onClick={onClick} aria-label={buttonLabel}>
-        <span>{label}</span>
-        {/* NOTE: We set the purpose of the arrows as "decorative", hiding them
-        from assistive technologies. We do this because we have aria-label,
-        which supercedes the label from content. */}
-        {isSorted ? (
-          <SortArrowDown width="14px" height="14px" purpose="decorative" />
-        ) : (
-          <SortArrowUnset width="14px" height="14px" purpose="decorative" />
-        )}
-      </Button>
-    </div>
+    <Button onClick={onClick} aria-label={buttonLabel}> 
+      <div className="sortButton">       
+          <div className="sortButton tableTitleContainer">{label}</div>
+          {/* NOTE: We set the purpose of the arrows as "decorative", hiding them
+          from assistive technologies. We do this because we have aria-label,
+          which supercedes the label from content. */}
+          {isSorted ? (
+            <SortArrowDown width="14px" height="14px" purpose="decorative" />
+          ) : (
+            <SortArrowUnset width="14px" height="14px" purpose="decorative" />
+          )}
+      </div>
+    </Button>
   );
 };
 

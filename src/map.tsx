@@ -127,16 +127,12 @@ const Map: React.FunctionComponent<{width:number , height:number , value:string,
         if(props.data[d.properties.NAME_EN]) {
           d3.select('.tooltipConfirmed')
             .html(`<span class="bold red">${formatNumber(props.data[d.properties.NAME_EN]['confirmedData'][props.data[d.properties.NAME_EN]['confirmedData'].length - 1]['value'])}</span> (<span class="bold red">${(props.data[d.properties.NAME_EN]['confirmedData'][props.data[d.properties.NAME_EN]['confirmedData'].length - 1]['valuePer100K']).toFixed(1)}</span> per 100 000)`)
-          d3.select('.tooltipActive')
-            .html(`<span class="bold red">${formatNumber(props.data[d.properties.NAME_EN]['activeData'][props.data[d.properties.NAME_EN]['activeData'].length - 1]['value'])}</span>`)
           d3.select('.tooltipDeath')
             .html(`<span class="bold">${formatNumber(props.data[d.properties.NAME_EN]['deathData'][props.data[d.properties.NAME_EN]['deathData'].length - 1]['value'])}</span> (<span class="bold">${(props.data[d.properties.NAME_EN]['deathData'][props.data[d.properties.NAME_EN]['deathData'].length - 1]['value'] * 100 / props.data[d.properties.NAME_EN]['confirmedData'][props.data[d.properties.NAME_EN]['confirmedData'].length - 1]['value']).toFixed(1)}%</span> Mortality rate)`)
         } else {
           d3.select('.tooltipConfirmed')
             .html(`<span class="bold red">0</span>`)
           d3.select('.tooltipDeath')
-            .html(`<span class="bold red">0</span>`)
-          d3.select('.tooltipActive')
             .html(`<span class="bold red">0</span>`)
         }
       })
@@ -319,26 +315,6 @@ const Map: React.FunctionComponent<{width:number , height:number , value:string,
           </Button>
         </div>
         <div className='rightOptions'>
-          <div className='tabContainer'>
-            <Button
-              className="tab"
-              aria-pressed={props.selectedKey[0] === 'confirmedData' ? true : false}
-              onClick={() => props.onToggleClick(['confirmedData',100000])}
-            >
-              Total Cases
-            </Button>
-            <Button 
-              className="tab"
-              aria-pressed= {props.selectedKey[0] === 'activeData' ? true : false}
-              onClick={() => {
-                props.onToggleClick(['activeData',100000]);
-                props.highlightNewClick(false);
-                props.toggleDeathVisibility(0)
-              }}
-            >
-              Active Cases
-            </Button>
-          </div>
           <Button
             className="buttonTab"
             aria-pressed={props.selectedKey[0] === 'confirmedData' ? props.deathVisibility === 1 ? true : false : false}
@@ -369,7 +345,7 @@ const Map: React.FunctionComponent<{width:number , height:number , value:string,
         </div>
       </div>
       <div className='title'>
-        <div className='titleCountry'><span className='blue bold'>{props.country}</span><br />Active: <span className="bold red">{props.data[props.country] ? formatNumber(props.data[props.country]['activeData'][props.index - 1]['value']) : 0}</span></div>
+        <div className='titleCountry'><span className='blue bold'>{props.country}</span></div>
         <div className='confirmedTitleMap'> Confirmed: <span className='bold red'>{props.data[props.country] ? formatNumber(props.data[props.country]['confirmedData'][props.index - 1]['value']) : 0}</span> (<span className='bold red'>{props.data[props.country] ? (props.data[props.country]['confirmedData'][props.index - 1]['valuePer100K']).toFixed(1) : 0}</span> per 100 000)<br /><span className='italics small'>Last 24 hrs: <span className='bold red'>{props.data[props.country] ? formatNumber(props.data[props.country]['confirmedData'][props.index - 1]['new']) : 0}</span></span></div>
         <div className='deathTitleMap'> Deaths: <span className='deathTitle bold'>{props.data[props.country] ? formatNumber(props.data[props.country]['deathData'][props.index - 1]['value']) : 0}</span> (<span className='bold'>{props.data[props.country] ? (props.data[props.country]['deathData'][props.index - 1]['value'] * 100 / props.data[props.country]['confirmedData'][props.index - 1]['value'] ).toFixed(1) : 0}%</span> Mortality rate)<br /><span className='italics small'>Last 24 hrs: <span className='bold'>{props.data[props.country] ? formatNumber(props.data[props.country]['deathData'][props.index - 1]['new']) : 0}</span></span></div>
       </div>

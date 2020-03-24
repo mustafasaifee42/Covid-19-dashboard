@@ -82,15 +82,6 @@ const Sidebar: React.FunctionComponent<{width:number , height:number, graphHeigh
           .y1((d:any) =>  y(d.value))
           )
       g.append("path")
-        .datum(props.data[props.country].recoveryData)
-        .attr("fill", "#7BCFA9")
-        .attr("stroke-width", 1)
-        .attr("d", d3.area()
-          .x((d:any) => x(d.date))
-          .y0(y(0))
-          .y1((d:any,i:number) =>  y(d.value + props.data[props.country].deathData[i].value))
-        )
-      g.append("path")
         .datum(props.data[props.country].deathData)
         .attr("fill", "#414141")
         .attr("stroke-width", 1)
@@ -278,7 +269,7 @@ const Sidebar: React.FunctionComponent<{width:number , height:number, graphHeigh
     let confirmedDataFiltered = props.data[props.country]['confirmedData'].filter((d:any, i:number) => d.value >= 100)
     if(confirmedDataFiltered.length > 1){
       let rate = (Math.pow(confirmedDataFiltered[confirmedDataFiltered.length - 1].value / confirmedDataFiltered[0].value , 1 / (confirmedDataFiltered.length - 1)) - 1) * 100
-      doublingTime = parseFloat((70 / rate).toFixed(1))
+      doublingTime = parseFloat((69 / rate).toFixed(1))
     }
 
   }
@@ -288,12 +279,12 @@ const Sidebar: React.FunctionComponent<{width:number , height:number, graphHeigh
       <DataCards
         title="Total Confirmed"
         data={props.data[props.country] ? props.data[props.country]['confirmedData'][props.data[props.country]['confirmedData'].length - 1].value : 0}
-        subNote={props.data[props.country] ? props.data[props.country]['confirmedData'][props.data[props.country]['confirmedData'].length - 1].new : undefined}
+        subNote={props.data[props.country] ? `${props.data[props.country]['confirmedData'][props.data[props.country]['confirmedData'].length - 1].new}` : undefined}
         color='#e01a25' 
         outof100K= {props.data[props.country] ? props.data[props.country]['confirmedData'][props.data[props.country]['confirmedData'].length - 1]['valuePer100K'] : undefined}
       />
       <DataCards
-        title="Doubling Time (at least 100 cases)"
+        title="Doubling Time calculate as Day 1 at > 100 cases"
         data={doublingTime}
         note={doublingTime !== 0 ? 'days' : undefined}
         color='#414141' 
@@ -302,14 +293,8 @@ const Sidebar: React.FunctionComponent<{width:number , height:number, graphHeigh
         title="Total Death"
         data={props.data[props.country] ? props.data[props.country]['deathData'][props.data[props.country]['deathData'].length - 1].value : 0}
         percent={props.data[props.country] ? `${(props.data[props.country]['deathData'][props.data[props.country]['deathData'].length - 1].value * 100 / props.data[props.country]['confirmedData'][props.data[props.country]['confirmedData'].length - 1].value).toFixed(1)}% Mortality Rate` : '0%'}
-        subNote={props.data[props.country] ? props.data[props.country]['deathData'][props.data[props.country]['deathData'].length - 1].new : undefined}
+        subNote={props.data[props.country] ? `${props.data[props.country]['deathData'][props.data[props.country]['deathData'].length - 1].new }`: undefined}
         color='#414141' 
-      />
-      <DataCards
-        title="Total Recovered"
-        data={props.data[props.country] ? props.data[props.country]['recoveryData'][props.data[props.country]['recoveryData'].length - 1].value : 0}
-        percent={props.data[props.country] ? `${(props.data[props.country]['recoveryData'][props.data[props.country]['recoveryData'].length - 1].value * 100 / props.data[props.country]['confirmedData'][props.data[props.country]['confirmedData'].length - 1].value).toFixed(1)}% Recovery Rate` : '0%'}
-        color='#7BCFA9' 
       />
       <div className="graphContainer">
         <div className='cardTitle'>Total Cases</div>

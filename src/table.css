@@ -1,0 +1,21 @@
+th{
+    font-weight:normal;
+}
+
+.tableTitleContainer{
+    padding-right:5px;
+}
+
+.tableTitle{
+    font-weight: bold;
+    text-align: right;
+    font-size: 12px;
+}
+
+.tableTitleSublabel{
+    opacity:0.5;
+    font-weight: bold;
+    font-size: 12px;
+    text-align: right;
+
+}

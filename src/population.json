@@ -580,7 +580,7 @@
     "Population": 2540905
   },
   {
-    "Country": "Gambia, The",
+    "Country": "Gambia",
     "Population": 2416668
   },
   {
@@ -716,8 +716,12 @@
     "Population": 397628
   },
   {
-    "Country": "Bahamas, The",
+    "Country": "Bahamas",
     "Population": 393244
+  },
+  {
+    "Country":"Cruise Ship",
+    "Population":19586
   },
   {
     "Country": "Martinique",

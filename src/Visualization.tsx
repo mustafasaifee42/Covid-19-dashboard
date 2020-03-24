@@ -4,8 +4,10 @@ import Map from  './map';
 import 'whatwg-fetch'; 
 import './App.css';
 import './tooltip.css';
-import Sidebar from './Sidebar'
-import SidebarRight from './SidebarRight'
+import Sidebar from './Sidebar';
+import SidebarRight from './SidebarRight';
+import TableView from './TableView';
+import Button from "./Button";
 const populationData:any = require('./population.json');
 
 const dataManipulation = (confirmed:any) =>{
@@ -38,21 +40,21 @@ const Visualization: React.FunctionComponent<{width:number,height:number}> = (pr
   const [selectedCountry, setSelectedCountry] = useState('World')
   const [index, setIndex] = useState(0)
   const [sorted, setSorted] = useState('confirmed')
+  const [sortedBigTable, setSortedBigTable] = useState('Confirmed Cases')
   const [value, setValue] = useState('value')
   const [highlightNew, setHighlightNew] = useState(false)
   const [deathVisibility, setDeathVisibility] = useState(0)
+  const [visualizationType, setVisualizationType] = useState('table')
   let indexToUpdate = 1;
   const [selectedKey, setSelectedKey] = useState<[string,number]>(['confirmedData',100000])
   useEffect(() => {
     Promise.all([
-        d3.csv("https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_19-covid-Confirmed.csv"),
-        d3.csv("https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_19-covid-Deaths.csv"),
-        d3.csv("https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_19-covid-Recovered.csv")
+        d3.csv("https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_global.csv"),
+        d3.csv("https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_global.csv")
       ])
-      .then(([confirmed,death , recovered]) => {
+      .then(([confirmed,death]) => {
         let confirmedDataCombined = dataManipulation(confirmed);
         let deathDataCombined = dataManipulation(death);
-        let recoveredDataCombined = dataManipulation(recovered);
         let combinedDataObj:any = {};
         let keys = Object.keys(confirmedDataCombined[0]).slice(4)
         confirmedDataCombined.forEach((d:any) => {
@@ -70,35 +72,39 @@ const Visualization: React.FunctionComponent<{width:number,height:number}> = (pr
           })
           combinedDataObj[d['Country/Region']]['deathData'] = values
         })
-        recoveredDataCombined.forEach((d:any) => {
-          let values:any = []
-          keys.forEach((key:string) => {
-            values.push({"date":d3.timeParse("%m/%d/%y")(key),'value':d[key]})
-          })
-          combinedDataObj[d['Country/Region']]['recoveryData'] = values
-        })
         let counntryList = Object.keys(combinedDataObj)
         counntryList.forEach((country:string) => {
           let index = populationData.findIndex((obj:any) => obj.Country === country)
           if(index >= 0) combinedDataObj[country]['Population'] = populationData[index]['Population']
-          combinedDataObj[country]['activeData'] = []
           combinedDataObj[country]['confirmedData'].forEach((d:any,i:number) => {
             d['valuePer100K'] = +(d['value'] * 100000 / combinedDataObj[country]['Population'])
-            combinedDataObj[country]['activeData'].push({"value":d['value'] - combinedDataObj[country]['deathData'][i]['value']  - combinedDataObj[country]['recoveryData'][i]['value'],"valuePer100K": (d['value'] - combinedDataObj[country]['deathData'][i]['value']  - combinedDataObj[country]['recoveryData'][i]['value']) * 100000 / combinedDataObj[country]['Population']})
             d['new'] = i === 0 ? d['value'] : (d['value'] - combinedDataObj[country]['confirmedData'][i-1]['value'] < 0 ) ? 0 : d['value'] - combinedDataObj[country]['confirmedData'][i-1]['value']
           })
           combinedDataObj[country]['deathData'].forEach((d:any,i:number) => {
             d['valuePer100K'] = +(d['value'] * 100000 / combinedDataObj[country]['Population'])
             d['new'] = i === 0 ? d['value'] : (d['value'] - combinedDataObj[country]['deathData'][i-1]['value'] < 0 ) ? 0 : d['value'] - combinedDataObj[country]['deathData'][i-1]['value']
           })
-          combinedDataObj[country]['recoveryData'].forEach((d:any,i:number) => {
-            d['new'] = i === 0 ? d['value'] : (d['value'] - combinedDataObj[country]['recoveryData'][i-1]['value'] < 0 ) ? 0 : d['value'] - combinedDataObj[country]['recoveryData'][i-1]['value']
-          })
-
+          let doublingTime = 0;
+          let confirmedDataFiltered = [...combinedDataObj[country]['confirmedData']].filter((d:any, i:number) => d.value >= 100)
+          if(confirmedDataFiltered.length > 1){
+            let rate = (Math.pow(confirmedDataFiltered[confirmedDataFiltered.length - 1].value / confirmedDataFiltered[0].value , 1 / (confirmedDataFiltered.length - 1)) - 1) * 100
+            doublingTime = parseFloat((69 / rate).toFixed(1))
+          }
+          let date = [...combinedDataObj[country]['confirmedData']].filter((d:any, i:number) => d.value >= 1)[0].date
+          combinedDataObj[country]['latestData'] = {
+            'Confirmed Cases':combinedDataObj[country]['confirmedData'][combinedDataObj[country]['confirmedData'].length - 1]['value'],
+            'Confirmed Cases Per 100K':combinedDataObj[country]['confirmedData'][combinedDataObj[country]['confirmedData'].length - 1]['valuePer100K'],
+            'Confirmed Cases last 24hrs.':combinedDataObj[country]['confirmedData'][combinedDataObj[country]['confirmedData'].length - 1]['new'],
+            'Total Deaths':combinedDataObj[country]['deathData'][combinedDataObj[country]['deathData'].length - 1]['value'],
+            'Deaths Per 100K':combinedDataObj[country]['deathData'][combinedDataObj[country]['deathData'].length - 1]['valuePer100K'],
+            'Deaths last 24hrs.':combinedDataObj[country]['deathData'][combinedDataObj[country]['deathData'].length - 1]['new'],
+            'Mortality Rate':parseFloat((combinedDataObj[country]['deathData'][combinedDataObj[country]['deathData'].length - 1]['value'] * 100 / combinedDataObj[country]['confirmedData'][combinedDataObj[country]['confirmedData'].length - 1]['value']).toFixed(1)),
+            'Doubling Time':doublingTime,
+            'Date when it started':date,
+          }
         })
         setIndex(combinedDataObj[Object.keys(combinedDataObj)[0]]['confirmedData'].length)
         setData(combinedDataObj)
-
       })
   },[])
   if(!data){
@@ -114,7 +120,6 @@ const Visualization: React.FunctionComponent<{width:number,height:number}> = (pr
         <div className='tooltip'>
           <div className='tooltipCountryContainer'><span className='tooltipCountry'>Country</span><span className='tooltipSubnote'> Click to see details</span></div>
           <div className='tooltipConfirmedTitle'>Confirmed Cases: <span className='tooltipConfirmed'>0</span></div>
-          <div className='tooltipDeathTitle'>Active Cases: <span className='tooltipActive'>0</span></div>
           <div className='tooltipDeathTitle'>Deaths: <span className='tooltipDeath'>0</span></div>
         </div>
         <div className='barGraphtooltip'>
@@ -131,44 +136,92 @@ const Visualization: React.FunctionComponent<{width:number,height:number}> = (pr
                 country={country}
               />
             </div>
-            <Map
-              width={props.width - 360 - sidebarRightWidth}
-              height={props.height - 60}
-              data={data}
-              windowWidth = {props.width}
-              country={country}
-              selectedKey={selectedKey}
-              index={index}
-              highlightNew={highlightNew}
-              value={value}
-              deathVisibility = {deathVisibility}
-              toggleDeathVisibility = {(e) => { setDeathVisibility(e) } }
-              onValueToggle = {(e) => {setValue(e)} }
-              highlightNewClick = {(e) => {setHighlightNew(e)}}
-              onToggleClick={(value) => {
-                setSelectedKey(value) 
-              }}
-              onCountryClick={(country) => {
-                setSelectedCountry(country)
-                setCountry(country)            
-              }}
-              replay={()=> {
-                let replay  = setInterval(() => {
-                  if(indexToUpdate  === data[Object.keys(data)[0]]['confirmedData'].length){
-                    stopReplay();  
-                    setIndex(data[Object.keys(data)[0]]['confirmedData'].length)
+            <div>
+            {
+              visualizationType === 'map' ?
+              <Map
+                width={props.width - 360 - sidebarRightWidth}
+                height={props.height - 90}
+                data={data}
+                windowWidth = {props.width}
+                country={country}
+                selectedKey={selectedKey}
+                index={index}
+                highlightNew={highlightNew}
+                value={value}
+                deathVisibility = {deathVisibility}
+                toggleDeathVisibility = {(e) => { setDeathVisibility(e) } }
+                onValueToggle = {(e) => {setValue(e)} }
+                highlightNewClick = {(e) => {setHighlightNew(e)}}
+                onToggleClick={(value) => {
+                  setSelectedKey(value) 
+                }}
+                onCountryClick={(country) => {
+                  setSelectedCountry(country)
+                  setCountry(country)            
+                }}
+                replay={()=> {
+                  let replay  = setInterval(() => {
+                    if(indexToUpdate  === data[Object.keys(data)[0]]['confirmedData'].length){
+                      stopReplay();  
+                      setIndex(data[Object.keys(data)[0]]['confirmedData'].length)
+                    }
+                    else {
+                      indexToUpdate++;
+                      setIndex(indexToUpdate);
+                    }
+                  } , 200)
+                  function stopReplay(){
+                    indexToUpdate = 1
+                    clearInterval(replay)
                   }
-                  else {
-                    indexToUpdate++;
-                    setIndex(indexToUpdate);
-                  }
-                } , 200)
-                function stopReplay(){
-                  indexToUpdate = 1
-                  clearInterval(replay)
-                }
-              }}
-            />
+                }}
+              /> : 
+                <TableView 
+                  width={props.width - 360 - sidebarRightWidth}
+                  click={(country) => {
+                    setSelectedCountry(country)
+                    setCountry(country)            
+                  }}
+                  data={data}
+                  hover={(country) => {
+                    setCountry(country)            
+                  }}
+                  sorted={sortedBigTable}
+                  selectedCountry={selectedCountry}
+                  sortClick={ (d) => {setSortedBigTable(d)} }
+                />
+              }
+                <div className='tabs'> 
+                  <Button 
+                    aria-pressed={visualizationType === 'map' ?  true : false}
+                    className={visualizationType === 'map' ? "vizSelectionButtonSelected bottomTab" : "bottomTab"}
+                    onClick={() => { 
+                        if(visualizationType !== 'map'){
+                          setVisualizationType('map')
+                          setSelectedCountry('World')
+                        }
+                      }
+                    }
+                  >
+                    Map
+                  </Button>
+                  <Button 
+                    aria-pressed={visualizationType === 'table' ?  true : false}
+                    className={visualizationType === 'table' ? "vizSelectionButtonSelected bottomTab" : "bottomTab"}
+                    onClick={() => { 
+                        if(visualizationType !== 'table'){
+                          setVisualizationType('table')
+                          setSelectedCountry('World')
+                        }
+                      }
+                    }
+                  >
+                    Table
+                  </Button>
+
+                </div>
+              </div>
             <div style={{'flex':`0 0 ${sidebarRightWidth}px`, "height":'calc(100vh - 100px)','borderRight':'1px solid #f1f1f1','backgroundColor':'#fafafa', 'padding':'10px 10px 0 10px','overflow':'auto','overflowX':'hidden'}}>
               <SidebarRight
                 width={sidebarRightWidth}
@@ -220,43 +273,91 @@ const Visualization: React.FunctionComponent<{width:number,height:number}> = (pr
                 sortClick={ (d) => {setSorted(d)} }
               />
             </div>
-            <Map
-              width={props.width - sidebarLeftWidth - 30 }
-              height={props.height - 60}
-              windowWidth = {props.width}
-              data={data}
-              country={country}
-              selectedKey={selectedKey}
-              index={index}
-              highlightNew={highlightNew}
-              value={value}
-              deathVisibility = {deathVisibility}
-              toggleDeathVisibility = {(e) => { setDeathVisibility(e) } }
-              onValueToggle = {(e) => {setValue(e)} }
-              highlightNewClick = {(e) => {setHighlightNew(e)}}
-              onToggleClick={(value) => {
-                setSelectedKey(value) 
-              }}
-              onCountryClick={(country) => {
-                setCountry(country)            
-              }}
-              replay={()=> {
-                let replay  = setInterval(() => {
-                  if(indexToUpdate  === data[Object.keys(data)[0]]['confirmedData'].length){
-                    stopReplay();  
-                    setIndex(data[Object.keys(data)[0]]['confirmedData'].length)
-                  }
-                  else {
-                    indexToUpdate++;
-                    setIndex(indexToUpdate);
-                  }
-                } , 200)
-                function stopReplay(){
-                  indexToUpdate = 1
-                  clearInterval(replay)
-                }
-              }}
-            />
+            <div className='rightSideMap'>
+            {
+              visualizationType === 'map' ?
+                <Map
+                  width={props.width - sidebarLeftWidth - 30 }
+                  height={props.height - 90}
+                  windowWidth = {props.width}
+                  data={data}
+                  country={country}
+                  selectedKey={selectedKey}
+                  index={index}
+                  highlightNew={highlightNew}
+                  value={value}
+                  deathVisibility = {deathVisibility}
+                  toggleDeathVisibility = {(e) => { setDeathVisibility(e) } }
+                  onValueToggle = {(e) => {setValue(e)} }
+                  highlightNewClick = {(e) => {setHighlightNew(e)}}
+                  onToggleClick={(value) => {
+                    setSelectedKey(value) 
+                  }}
+                  onCountryClick={(country) => {
+                    setCountry(country)            
+                  }}
+                  replay={()=> {
+                    let replay  = setInterval(() => {
+                      if(indexToUpdate  === data[Object.keys(data)[0]]['confirmedData'].length){
+                        stopReplay();  
+                        setIndex(data[Object.keys(data)[0]]['confirmedData'].length)
+                      }
+                      else {
+                        indexToUpdate++;
+                        setIndex(indexToUpdate);
+                      }
+                    } , 200)
+                    function stopReplay(){
+                      indexToUpdate = 1
+                      clearInterval(replay)
+                    }
+                  }}
+                /> :
+                
+                <TableView 
+                  click={(country) => {
+                    setSelectedCountry(country)
+                    setCountry(country)            
+                  }}
+                  data={data}
+                  hover={(country) => {
+                    setCountry(country)            
+                  }}
+                  sorted={sortedBigTable}
+                  selectedCountry={selectedCountry}
+                  sortClick={ (d) => {setSortedBigTable(d)} }
+                />
+              }
+                <div className='tabs'> 
+                  <Button 
+                    aria-pressed={visualizationType === 'map' ?  true : false}
+                    className={visualizationType === 'map' ? "vizSelectionButtonSelected bottomTab" : "bottomTab"}
+                    onClick={() => { 
+                        if(visualizationType !== 'map'){
+                          setVisualizationType('map')
+                          setSelectedCountry('World')
+                        }
+                      }
+                    }
+                  >
+                    Map
+                  </Button>
+                  <Button 
+                    aria-pressed={visualizationType === 'table' ?  true : false}
+                    className={visualizationType === 'table' ? "vizSelectionButtonSelected bottomTab" : "bottomTab"}
+                    onClick={() => { 
+                        if(visualizationType !== 'table'){
+                          setVisualizationType('table')
+                          setSelectedCountry('World')
+                        }
+                      }
+                    }
+                  >
+                    Table
+                  </Button>
+
+                </div>
+              </div>
           </div>
         ) : (
           <div>

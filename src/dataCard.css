@@ -13,11 +13,17 @@
     text-align: center;
     background-color: #eee;
     margin: 0;
-    padding: 7px 0;
+    padding: 7px 10px;
     font-weight: bold;
 }
 
+.cardTitleSubNote{
+    font-weight: normal;
+    font-size: 14px;
+    font-style: italic;
+    text-transform: none;
 
+}
 .cardValue{
     font-family: 'IBM Plex Sans', sans-serif;
     font-size: 30px;

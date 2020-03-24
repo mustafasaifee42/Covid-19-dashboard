@@ -66,7 +66,6 @@ export const SortArrowDown: React.SFC<ISVG> = ({
         fill={fillColor}
         fillRule="nonzero"
       />
-      <path d="M0 0h14v14H0z" />
     </g>
   </svg>
 );
@@ -84,11 +83,13 @@ export const SortArrowUnset: React.SFC<ISVG> = ({
     role="img"
     focusable="false"
     {...rest}>
-    <g fill="none" fillRule="evenodd">
-      <g fill={fillColor} fillRule="nonzero" stroke={fillColor}>
-        <path d="M4.6 9.4364l2.2727 3.0303a.5.5 0 0 0 .8 0l2.2728-3.0303a.5.5 0 0 0-.4-.8H5a.5.5 0 0 0-.4.8zM9.9455 4.5636L7.6727 1.5333a.5.5 0 0 0-.8 0L4.6 4.5636a.5.5 0 0 0 .4.8h4.5455a.5.5 0 0 0 .4-.8z" />
-      </g>
-      <path d="M0 0h14v14H0z" />
+    <g fill="none" fillRule="evenodd" opacity={0.3}>
+      <path
+        d="M2.2 5.6l4 5.3333c.3314.4419.9582.5314 1.4.2a1 1 0 0 0 .2-.2l4-5.3333c.3314-.4418.2418-1.0686-.2-1.4A1 1 0 0 0 11 4H3c-.5523 0-1 .4477-1 1a1 1 0 0 0 .2.6z"
+        stroke={fillColor}
+        fill={fillColor}
+        fillRule="nonzero"
+      />
     </g>
   </svg>
 );
