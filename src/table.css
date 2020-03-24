@@ -19,3 +19,7 @@ th{
     text-align: right;
 
 }
+
+.selectedCountryRow{
+    background-color: #eaeaea;
+}

@@ -9,6 +9,7 @@ import SidebarRight from './SidebarRight';
 import TableView from './TableView';
 import Button from "./Button";
 const populationData:any = require('./population.json');
+const centroid:any = require('./centroidData.json');
 
 const dataManipulation = (confirmed:any) =>{
   
@@ -36,6 +37,7 @@ const dataManipulation = (confirmed:any) =>{
 
 const Visualization: React.FunctionComponent<{width:number,height:number}> = (props) => {
   const [data, setData] = useState<any>(undefined)
+  const [dataArr, setDataArr] = useState<any>(undefined)
   const [country, setCountry] = useState('World')
   const [selectedCountry, setSelectedCountry] = useState('World')
   const [index, setIndex] = useState(0)
@@ -45,7 +47,6 @@ const Visualization: React.FunctionComponent<{width:number,height:number}> = (pr
   const [deathVisibility, setDeathVisibility] = useState(0)
   const [visualizationType, setVisualizationType] = useState('map')
   let indexToUpdate = 1;
-  const [selectedKey, setSelectedKey] = useState<[string,number]>(['confirmedData',100000])
   useEffect(() => {
     Promise.all([
         d3.csv("https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_global.csv"),
@@ -103,10 +104,16 @@ const Visualization: React.FunctionComponent<{width:number,height:number}> = (pr
           }
         })
         setIndex(combinedDataObj[Object.keys(combinedDataObj)[0]]['confirmedData'].length)
+        
+        let dataArr:any = Object.keys(combinedDataObj).map((key:string) => {
+          return ({'countryName': key, 'confirmed':combinedDataObj[key]['confirmedData'][combinedDataObj[key]['confirmedData'].length - 1]['value'], 'death':combinedDataObj[key]['deathData'][combinedDataObj[key]['deathData'].length - 1]['value'],'centroid':centroid[key]})
+        })
+        dataArr.sort((x:any, y:any) => d3.descending(x['confirmed'], y['confirmed']))
+        setDataArr(dataArr.filter((d:any) => Object.keys(centroid).indexOf(d.countryName) !== -1))
         setData(combinedDataObj)
       })
   },[])
-  if(!data){
+  if(!data || !dataArr){
     return null
   }
   else{
@@ -143,22 +150,20 @@ const Visualization: React.FunctionComponent<{width:number,height:number}> = (pr
                 width={props.width - 360 - sidebarRightWidth}
                 height={props.height - 90}
                 data={data}
+                dataArr={dataArr}
                 windowWidth = {props.width}
                 country={country}
-                selectedKey={selectedKey}
                 index={index}
                 highlightNew={highlightNew}
                 value={value}
                 deathVisibility = {deathVisibility}
                 toggleDeathVisibility = {(e) => { setDeathVisibility(e) } }
                 onValueToggle = {(e) => {setValue(e)} }
-                highlightNewClick = {(e) => {setHighlightNew(e)}}
-                onToggleClick={(value) => {
-                  setSelectedKey(value) 
-                }}
-                onCountryClick={(country) => {
-                  setSelectedCountry(country)
-                  setCountry(country)            
+                highlightNewClick = {(e) => {setHighlightNew(e)}}   
+                onCountryClick={(country) => { setSelectedCountry(country); setCountry(country) }}
+                countryClicked ={selectedCountry}
+                hover={(e:string) => {
+                  setCountry(e)
                 }}
                 replay={()=> {
                   let replay  = setInterval(() => {
@@ -198,8 +203,9 @@ const Visualization: React.FunctionComponent<{width:number,height:number}> = (pr
                     className={visualizationType === 'map' ? "vizSelectionButtonSelected bottomTab" : "bottomTab"}
                     onClick={() => { 
                         if(visualizationType !== 'map'){
+                          setCountry('World');
+                          setSelectedCountry('World');
                           setVisualizationType('map')
-                          setSelectedCountry('World')
                         }
                       }
                     }
@@ -211,8 +217,9 @@ const Visualization: React.FunctionComponent<{width:number,height:number}> = (pr
                     className={visualizationType === 'table' ? "vizSelectionButtonSelected bottomTab" : "bottomTab"}
                     onClick={() => { 
                         if(visualizationType !== 'table'){
+                          setCountry('World')
+                          setCountry('World')
                           setVisualizationType('table')
-                          setSelectedCountry('World')
                         }
                       }
                     }
@@ -228,7 +235,6 @@ const Visualization: React.FunctionComponent<{width:number,height:number}> = (pr
                 height={props.height}
                 graphHeight={rightGraphHeight}
                 data={data}
-                selectedCountry={selectedCountry}
                 country={country}
                 bigScreen={true}
               />
@@ -251,7 +257,6 @@ const Visualization: React.FunctionComponent<{width:number,height:number}> = (pr
                 graphHeight={320}
                 data={data}
                 bigScreen={false}
-                selectedCountry={selectedCountry}
                 country={country}
               />
             </div>
@@ -263,8 +268,8 @@ const Visualization: React.FunctionComponent<{width:number,height:number}> = (pr
                   height={props.height - 90}
                   windowWidth = {props.width}
                   data={data}
+                  dataArr={dataArr}
                   country={country}
-                  selectedKey={selectedKey}
                   index={index}
                   highlightNew={highlightNew}
                   value={value}
@@ -272,12 +277,9 @@ const Visualization: React.FunctionComponent<{width:number,height:number}> = (pr
                   toggleDeathVisibility = {(e) => { setDeathVisibility(e) } }
                   onValueToggle = {(e) => {setValue(e)} }
                   highlightNewClick = {(e) => {setHighlightNew(e)}}
-                  onToggleClick={(value) => {
-                    setSelectedKey(value) 
-                  }}
-                  onCountryClick={(country) => {
-                    setCountry(country)            
-                  }}
+                  onCountryClick={(country) => { setSelectedCountry(country) }}
+                  countryClicked ={selectedCountry}
+                  hover={(e:string) => {setCountry(e)}}
                   replay={()=> {
                     let replay  = setInterval(() => {
                       if(indexToUpdate  === data[Object.keys(data)[0]]['confirmedData'].length){
@@ -316,8 +318,7 @@ const Visualization: React.FunctionComponent<{width:number,height:number}> = (pr
                     className={visualizationType === 'map' ? "vizSelectionButtonSelected bottomTab" : "bottomTab"}
                     onClick={() => { 
                         if(visualizationType !== 'map'){
-                          setVisualizationType('map')
-                          setSelectedCountry('World')
+                          setCountry('World')
                         }
                       }
                     }
@@ -329,8 +330,7 @@ const Visualization: React.FunctionComponent<{width:number,height:number}> = (pr
                     className={visualizationType === 'table' ? "vizSelectionButtonSelected bottomTab" : "bottomTab"}
                     onClick={() => { 
                         if(visualizationType !== 'table'){
-                          setVisualizationType('table')
-                          setSelectedCountry('World')
+                          setCountry('World')
                         }
                       }
                     }
@@ -347,21 +347,21 @@ const Visualization: React.FunctionComponent<{width:number,height:number}> = (pr
               width={props.width - 20 }
               height={5 * (props.width - 20) / 4}
               data={data}
+              dataArr={dataArr}
               windowWidth = {props.width}
               country={country}
               deathVisibility = {deathVisibility}
               toggleDeathVisibility = {(e) => { setDeathVisibility(e) } }
-              selectedKey={selectedKey}
               index={index}
               value={value}
               onValueToggle = {(e) => {setValue(e)} }
               highlightNew={highlightNew}
               highlightNewClick = {(e) => {setHighlightNew(e)}}
-              onToggleClick={(value) => {
-                setSelectedKey(value) 
-              }}
-              onCountryClick={(country) => {
-                setCountry(country)            
+              onCountryClick={(country) => { setSelectedCountry(country) }}
+              countryClicked ={selectedCountry}
+              hover={(e:string) => {
+                console.log('helloworld')
+                setCountry(e)
               }}
               replay={()=> {
                 let replay  = setInterval(() => {
@@ -395,7 +395,6 @@ const Visualization: React.FunctionComponent<{width:number,height:number}> = (pr
                 graphHeight={320}
                 bigScreen={false}
                 data={data}
-                selectedCountry={selectedCountry}
                 country={country}
               />
             </div>

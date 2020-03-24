@@ -6,33 +6,28 @@ import './sidebarRight.css'
 
 let graphNode!: SVGSVGElement | null;
 let deathGraphNode!: SVGSVGElement | null;
-const Sidebar: React.FunctionComponent<{ width:number , height:number, bigScreen:boolean,  graphHeight:number, data:any ,country:string, selectedCountry: string }> = (props) => {
+const Sidebar: React.FunctionComponent<{ width:number , height:number, bigScreen:boolean,  graphHeight:number, data:any ,country:string }> = (props) => {
 
   useEffect(() => {
-    let dataArr:any = Object.keys(props.data).map((key:string) => {
-      return ({'countryName': key, 'confirmed':props.data[key]['confirmedData'][props.data[key]['confirmedData'].length - 1]['value'], 'death':props.data[key]['deathData'][props.data[key]['deathData'].length - 1]['value']})
-    })
-    dataArr.sort((x:any, y:any) => d3.descending(x['confirmed'], y['confirmed']))
-    let countryList = dataArr.map((d:any) =>  d.countryName )
-    d3.select(graphNode).selectAll('g').remove()
+    d3.select(graphNode).selectAll('g').remove()  
     let margin = {top: 20, right: 10, bottom: 30, left: 10},
-      width = props.width - 15 - margin.left - margin.right,
-      height = props.graphHeight - margin.top - margin.bottom;
+    width = props.width - 15 - margin.left - margin.right,
+    height = props.graphHeight - margin.top - margin.bottom;
     let g = d3.select(graphNode)
       .append('g')
+      .attr('class','bg')
       .attr("transform",`translate(${margin.left},${margin.top})`);
-    let epidemicCurveData = countryList.map((d:string) => props.data[d].confirmedData.filter((d:any) => d.value >= 100))
-    if(countryList.indexOf(props.country) >= 0){
+
+      let doublingValue = 12.28;
+      let days = [1,2,3,4]
+      let scale = [100, 1000, 100000, 500000]
       let x = d3.scaleLinear()
-        .domain([0 , props.data[countryList[0]].confirmedData.length + 3])
+        .domain([0 , props.data['World'].confirmedData.length + 3])
         .range([ 0, width ]);
 
       let logScale = d3.scaleLog()
           .domain([100, 500000])
           .range([ height, 0 ])
-      let doublingValue = 12.28;
-      let days = [1,2,3,4]
-      let scale = [100, 1000, 100000, 500000]
       g.selectAll('.yAxisLines')
         .data(scale)
         .enter()
@@ -73,7 +68,49 @@ const Sidebar: React.FunctionComponent<{ width:number , height:number, bigScreen
         .attr('font-size',10)
         .attr('dy', 12)
         .text(`1`)
-      for (let i = 10; i < props.data[countryList[0]].confirmedData.length + 1; i= i + 10){
+        g.selectAll('.yAxisLines')
+          .data(scale)
+          .enter()
+          .append('line')
+          .attr("stroke", "#ddd")
+          .attr("stroke-dasharray", "2,2")
+          .attr('x1',0)
+          .attr('x2',width)
+          .attr('y1',(d:number) => logScale(d))
+          .attr('y2',(d:number) => logScale(d))
+        g.selectAll('.yAxisLabel')
+          .data(scale)
+          .enter()
+          .append('text')
+          .attr("fill", "#999")
+          .attr('x',0)
+          .attr('y',(d:number) => logScale(d))
+          .attr("dy", -4)
+          .attr('font-family','IBM Plex Sans')
+          .attr('font-size',10)
+          .text((d:number) => d)
+        g.append('text')
+          .attr("fill", "#414141")
+          .attr('x',width / 2)
+          .attr('y',height + 10)
+          .attr("text-anchor", 'middle')
+          .attr('font-family','IBM Plex Sans')
+          .attr('font-size',10)
+          .attr('dy', 15)
+          .text(`Days since 100 cases`)
+        
+        g.append('text')
+          .attr("fill", "#999")
+          .attr('x',0)
+          .attr('y',height)
+          .attr("text-anchor", 'start')
+          .attr('font-family','IBM Plex Sans')
+          .attr('font-size',10)
+          .attr('dy', 12)
+          .text(`1`)
+
+        
+      for (let i = 10; i < props.data['World'].confirmedData.length + 1; i= i + 10){
         g.append('text')
           .attr("fill", "#999")
           .attr('x',x(i))
@@ -93,7 +130,6 @@ const Sidebar: React.FunctionComponent<{ width:number , height:number, bigScreen
           .attr('x2',x(i))
           .attr('y1',0)
           .attr('y2',height)
-        
       }
       g.selectAll('.doublingLines')
         .data(days)
@@ -118,6 +154,175 @@ const Sidebar: React.FunctionComponent<{ width:number , height:number, bigScreen
         .attr('font-size', () => props.width > 340 ? 8 : 6)
         .attr('font-weight',() => props.width > 340 ? 'normal' : 'bold')
         .text((d:number) => `double in ${d} days`)
+
+  },[props.graphHeight, props.data,props.width])
+  useEffect(() => {
+    d3.select(deathGraphNode).selectAll('g').remove()  
+    let margin = {top: 20, right: 10, bottom: 30, left: 10},
+    width = props.width - 15 - margin.left - margin.right,
+    height = props.graphHeight - margin.top - margin.bottom;
+    let g = d3.select(deathGraphNode)
+      .append('g')
+      .attr('class','bg')
+      .attr("transform",`translate(${margin.left},${margin.top})`);
+
+      let doublingValue = 11.97;
+      let days = [1,2,3,4]
+      let logScale = d3.scaleLog()
+          .domain([10, 20000])
+          .range([ height, 0 ])
+      let scale = [10, 500 , 1000, 5000, 10000, 20000]
+      let x = d3.scaleLinear()
+        .domain([0 , props.data['World'].confirmedData.length + 3])
+        .range([ 0, width ]);
+
+      g.selectAll('.yAxisLines')
+        .data(scale)
+        .enter()
+        .append('line')
+        .attr("stroke", "#ddd")
+        .attr("stroke-dasharray", "2,2")
+        .attr('x1',0)
+        .attr('x2',width)
+        .attr('y1',(d:number) => logScale(d))
+        .attr('y2',(d:number) => logScale(d))
+      g.selectAll('.yAxisLabel')
+        .data(scale)
+        .enter()
+        .append('text')
+        .attr("fill", "#999")
+        .attr('x',0)
+        .attr('y',(d:number) => logScale(d))
+        .attr("dy", -4)
+        .attr('font-family','IBM Plex Sans')
+        .attr('font-size',10)
+        .text((d:number) => d)
+      g.append('text')
+        .attr("fill", "#414141")
+        .attr('x',width / 2)
+        .attr('y',height + 10)
+        .attr("text-anchor", 'middle')
+        .attr('font-family','IBM Plex Sans')
+        .attr('font-size',10)
+        .attr('dy', 15)
+        .text(`Days since 100 cases`)
+      
+      g.append('text')
+        .attr("fill", "#999")
+        .attr('x',0)
+        .attr('y',height)
+        .attr("text-anchor", 'start')
+        .attr('font-family','IBM Plex Sans')
+        .attr('font-size',10)
+        .attr('dy', 12)
+        .text(`1`)
+        g.selectAll('.yAxisLines')
+          .data(scale)
+          .enter()
+          .append('line')
+          .attr("stroke", "#ddd")
+          .attr("stroke-dasharray", "2,2")
+          .attr('x1',0)
+          .attr('x2',width)
+          .attr('y1',(d:number) => logScale(d))
+          .attr('y2',(d:number) => logScale(d))
+        g.selectAll('.yAxisLabel')
+          .data(scale)
+          .enter()
+          .append('text')
+          .attr("fill", "#999")
+          .attr('x',0)
+          .attr('y',(d:number) => logScale(d))
+          .attr("dy", -4)
+          .attr('font-family','IBM Plex Sans')
+          .attr('font-size',10)
+          .text((d:number) => d)
+        g.append('text')
+          .attr("fill", "#414141")
+          .attr('x',width / 2)
+          .attr('y',height + 10)
+          .attr("text-anchor", 'middle')
+          .attr('font-family','IBM Plex Sans')
+          .attr('font-size',10)
+          .attr('dy', 15)
+          .text(`Days since 10 deaths`)
+        
+        g.append('text')
+          .attr("fill", "#999")
+          .attr('x',0)
+          .attr('y',height)
+          .attr("text-anchor", 'start')
+          .attr('font-family','IBM Plex Sans')
+          .attr('font-size',10)
+          .attr('dy', 12)
+          .text(`1`)
+
+        
+      for (let i = 10; i < props.data['World'].confirmedData.length + 1; i= i + 10){
+        g.append('text')
+          .attr("fill", "#999")
+          .attr('x',x(i))
+          .attr('y',height)
+          .attr('dy', 12)
+          .attr("text-anchor", 'middle')
+          .attr('font-family','IBM Plex Sans')
+          .attr('font-size',10)
+          .text(`${i}`)
+        g.selectAll('.yAxisLines')
+          .data(scale)
+          .enter()
+          .append('line')
+          .attr("stroke", "#ddd")
+          .attr("stroke-dasharray", "2,2")
+          .attr('x1',x(i))
+          .attr('x2',x(i))
+          .attr('y1',0)
+          .attr('y2',height)
+      }
+      g.selectAll('.doublingLines')
+        .data(days)
+        .enter()
+        .append('line')
+        .attr("stroke", "#414141")
+        .attr("stroke-dasharray", "2,2")
+        .attr("stroke-width", "1")
+        .attr('x1',0)
+        .attr('x2',(d:number) => x((d - 1) * doublingValue + doublingValue + 1))
+        .attr('y1',height)
+        .attr('y2',logScale(20000))
+      g.selectAll('.doublingLabel')
+        .data(days)
+        .enter()
+        .append('text')
+        .attr("fill", "#414141")
+        .attr('x',(d:number) => x((d - 1) * doublingValue + doublingValue + 1) - 10)
+        .attr('y',logScale(20000))
+        .attr("dy", -4)
+        .attr('font-family','IBM Plex Sans')
+        .attr('font-size', () => props.width > 340 ? 8 : 6)
+        .attr('font-weight',() => props.width > 340 ? 'normal' : 'bold')
+        .text((d:number) => `double in ${d} days`)
+
+  },[props.graphHeight,props.data,props.width])
+  useEffect(() => {
+    d3.select(graphNode).select('.graphG').remove()
+    let dataArr:any = Object.keys(props.data).map((key:string) => {
+      return ({'countryName': key, 'confirmed':props.data[key]['confirmedData'][props.data[key]['confirmedData'].length - 1]['value'], 'death':props.data[key]['deathData'][props.data[key]['deathData'].length - 1]['value']})
+    })
+    dataArr.sort((x:any, y:any) => d3.descending(x['confirmed'], y['confirmed']))
+    let countryList = dataArr.map((d:any) =>  d.countryName )
+    let epidemicCurveData = countryList.map((d:string) => props.data[d].confirmedData.filter((d:any) => d.value >= 100))
+    let margin = {top: 20, right: 10, bottom: 30, left: 10},
+    width = props.width - 15 - margin.left - margin.right,
+    height = props.graphHeight - margin.top - margin.bottom;
+    let x = d3.scaleLinear()
+      .domain([0 , props.data[countryList[0]].confirmedData.length + 3])
+      .range([ 0, width ]);
+    let logScale = d3.scaleLog()
+      .domain([100, 500000])
+        .range([ height, 0 ])
+        let g = d3.select(graphNode).append('g').attr('class','graphG').attr("transform",`translate(${margin.left},${margin.top})`);
+    if(countryList.indexOf(props.country) >= 0){
       let epidemicCurveDataFiltered = epidemicCurveData.filter((d:any, i:number) => i < 12)
       let countryListFiltered = countryList.filter((d:any, i:number) => i < 12)
       if(props.country !== 'World') {
@@ -240,119 +445,28 @@ const Sidebar: React.FunctionComponent<{ width:number , height:number, bigScreen
           .text('Only Applicable for cases  > 100')
       }
     }
-  },[props.width,props.graphHeight, props.data, props.country])
+  },[props.width, props.graphHeight,props.data, props.country])
   useEffect(() => {
+    d3.select(deathGraphNode).select('.graphG').remove()
+    let margin = {top: 20, right: 10, bottom: 30, left: 10},
+    width = props.width - 15 - margin.left - margin.right,
+    height = props.graphHeight - margin.top - margin.bottom;
     let dataArr:any = Object.keys(props.data).map((key:string) => {
       return ({'countryName': key, 'confirmed':props.data[key]['confirmedData'][props.data[key]['confirmedData'].length - 1]['value'], 'death':props.data[key]['deathData'][props.data[key]['deathData'].length - 1]['value']})
     })
     
-    let doublingValue = 11.97;
-    let days = [1,2,3,4]
     dataArr.sort((x:any, y:any) => d3.descending(x['death'], y['death']))
     let countryList = dataArr.map((d:any) =>  d.countryName )
-    d3.select(deathGraphNode).selectAll('g').remove()
-    let margin = {top: 20, right: 10, bottom: 30, left: 10},
-      width = props.width - 15 - margin.left - margin.right,
-      height = props.graphHeight - margin.top - margin.bottom;
-    let g = d3.select(deathGraphNode)
-      .append('g')
-      .attr("transform",`translate(${margin.left},${margin.top})`);
+    let g = d3.select(deathGraphNode).append('g').attr('class','graphG').attr("transform",`translate(${margin.left},${margin.top})`);
+    let x = d3.scaleLinear()
+      .domain([0 , props.data[countryList[0]].deathData.length + 3])
+      .range([ 0, width ]);
+
+    let logScale = d3.scaleLog()
+        .domain([10, 20000])
+        .range([ height, 0 ])
     let epidemicCurveData = countryList.map((d:string) => props.data[d].deathData.filter((d:any) => d.value >= 10))
     if(countryList.indexOf(props.country) >= 0){
-      let x = d3.scaleLinear()
-        .domain([0 , props.data[countryList[0]].deathData.length + 3])
-        .range([ 0, width ]);
-
-      let logScale = d3.scaleLog()
-          .domain([10, 20000])
-          .range([ height, 0 ])
-      let scale = [10, 500 , 1000, 5000, 10000, 20000]
-      g.selectAll('.yAxisLines')
-        .data(scale)
-        .enter()
-        .append('line')
-        .attr("stroke", "#ddd")
-        .attr("stroke-dasharray", "2,2")
-        .attr('x1',0)
-        .attr('x2',width)
-        .attr('y1',(d:number) => logScale(d))
-        .attr('y2',(d:number) => logScale(d))
-      g.selectAll('.yAxisLabel')
-        .data(scale)
-        .enter()
-        .append('text')
-        .attr("fill", "#999")
-        .attr('x',0)
-        .attr('y',(d:number) => logScale(d))
-        .attr("dy", -4)
-        .attr('font-family','IBM Plex Sans')
-        .attr('font-size',10)
-        .text((d:number) => d)
-      
-      g.selectAll('.doublingLines')
-        .data(days)
-        .enter()
-        .append('line')
-        .attr("stroke", "#414141")
-        .attr("stroke-dasharray", "2,2")
-        .attr("stroke-width", "1")
-        .attr('x1',0)
-        .attr('x2',(d:number) => x((d - 1) * doublingValue + doublingValue + 1))
-        .attr('y1',height)
-        .attr('y2',logScale(20000))
-      g.selectAll('.doublingLabel')
-        .data(days)
-        .enter()
-        .append('text')
-        .attr("fill", "#414141")
-        .attr('x',(d:number) => x((d - 1) * doublingValue + doublingValue + 1) - 10)
-        .attr('y',logScale(20000))
-        .attr("dy", -4)
-        .attr('font-family','IBM Plex Sans')
-        .attr('font-size', () => props.width > 340 ? 8 : 6)
-        .attr('font-weight',() => props.width > 340 ? 'normal' : 'bold')
-        .text((d:number) => `double in ${d} days`)
-      g.append('text')
-        .attr("fill", "#414141")
-        .attr('x',width / 2)
-        .attr('y',height + 10)
-        .attr("text-anchor", 'middle')
-        .attr('font-family','IBM Plex Sans')
-        .attr('font-size',10)
-        .attr('dy', 15)
-        .text(`Days since 10 deaths`)
-      
-      g.append('text')
-        .attr("fill", "#999")
-        .attr('x',0)
-        .attr('y',height)
-        .attr("text-anchor", 'start')
-        .attr('font-family','IBM Plex Sans')
-        .attr('font-size',10)
-        .attr('dy', 12)
-        .text(`1`)
-      for (let i = 10; i < props.data[countryList[0]].confirmedData.length + 1; i= i + 10){
-        g.append('text')
-          .attr("fill", "#999")
-          .attr('x',x(i))
-          .attr('y',height)
-          .attr('dy', 12)
-          .attr("text-anchor", 'middle')
-          .attr('font-family','IBM Plex Sans')
-          .attr('font-size',10)
-          .text(`${i}`)
-        g.selectAll('.yAxisLines')
-          .data(scale)
-          .enter()
-          .append('line')
-          .attr("stroke", "#ddd")
-          .attr("stroke-dasharray", "2,2")
-          .attr('x1',x(i))
-          .attr('x2',x(i))
-          .attr('y1',0)
-          .attr('y2',height)
-        
-      }
       let epidemicCurveDataFiltered = epidemicCurveData.filter((d:any, i:number) => i < 12)
       let countryListFiltered = countryList.filter((d:any, i:number) => i < 12)
       if(props.country !== 'World') {
@@ -475,7 +589,9 @@ const Sidebar: React.FunctionComponent<{ width:number , height:number, bigScreen
           .text('Only Applicable for deaths  > 10')
       }
     }
-  },[props.width,props.graphHeight, props.data, props.country])
+  },[ props.width, props.graphHeight, props.data, props.country])
+
+
   let cardTitleSubNotesubNote = props.graphHeight < 240 ? null : <span className="cardTitleSubNote">(Log scale starting from 100 cases)</span>
   let cardTitleSubNotesubNoteDeaths = props.graphHeight < 240 ? null : <span className="cardTitleSubNote">(Log scale starting from 10 deaths)</span>
   return ( 

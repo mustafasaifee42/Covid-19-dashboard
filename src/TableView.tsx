@@ -72,10 +72,10 @@ const Sidebar: React.FunctionComponent<{width?:number, data:any , sorted:string 
     })
     return (
       <tr
-        className="countryRow"
+        className={props.selectedCountry === d.countryName ? 'countryRow selectedCountryRow': "countryRow"}
         key={i}
         onClick={() => {
-          props.click(d.countryName);
+          props.selectedCountry === d.countryName ? props.click("World") : props.click(d.countryName);
         }}
         onMouseEnter={() => {
           props.hover(d.countryName);
