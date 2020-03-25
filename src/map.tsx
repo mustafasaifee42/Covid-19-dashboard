@@ -10,7 +10,6 @@ import {formatNumber} from './utils';
 const mapShape:any = require('./topo.json');
 const mapShapeData:any = topojson.feature(mapShape, mapShape.objects.countries)
 const disputedRegionsMapShapeData:any = topojson.feature(mapShape, mapShape.objects.ne_10m_admin_0_disputed_areas)
-
 let mapNode!: SVGSVGElement | null;
 const Map: React.FunctionComponent<{width:number , countryClicked:string, height:number , dataArr:any, hover:(e:string) => void, value:string, deathVisibility:number , toggleDeathVisibility:(e:number) => void, onValueToggle:(e:string) => void, windowWidth:number , index:any ,highlightNew:boolean,highlightNewClick:(e:boolean) => void, replay:()=> void, data:any , onCountryClick:(e:string) => void , country:string}> = (props) => {
   const {
@@ -25,7 +24,7 @@ const Map: React.FunctionComponent<{width:number , countryClicked:string, height
     let countryinData = Object.keys(props.data)
     for (let i = 0; i < countryinData.length; i++){
       if(countryinTopo.indexOf(countryinData[i]) < 0){
-        if (countryinData[i] !== 'World' && countryinData[i] !== 'Cruise Ship') console.warn(`${countryinData[i]} not in World Map`)
+        if (countryinData[i] !== 'World' && countryinData[i] !== 'Cruise Ship' && countryinData[i] !== "The West Bank and Gaza") console.warn(`${countryinData[i]} not in World Map`)
       }
     }
   },[props.data])
@@ -63,7 +62,8 @@ const Map: React.FunctionComponent<{width:number , countryClicked:string, height
     function zoomed() {
       zoomGroup.attr('transform', d3.event.transform); // updated for d3 v4
     }
-
+    let features = [...mapShapeData.features]
+    features.push(disputedRegionsMapShapeData.features[4])
     zoomGroup
       .selectAll('.country')
       .data(mapShapeData.features)
@@ -100,12 +100,12 @@ const Map: React.FunctionComponent<{width:number , countryClicked:string, height
       })
     zoomGroup
       .selectAll('.disputedArea')
-      .data(disputedRegionsMapShapeData.features)
+      .data(disputedRegionsMapShapeData.features.filter((d:any,i:any) => i !== 4))
       .enter()
       .append('path')
       .attr('class', `disputedArea`)
       .attr('d', path)
-      .attr('fill', 'none')
+      .attr('fill',  'none')
       .attr('stroke','#666')
       .attr('stroke-width',0.5)
       .attr("stroke-dasharray", "2,2")
@@ -118,8 +118,8 @@ const Map: React.FunctionComponent<{width:number , countryClicked:string, height
       .append('g')
       .attr('class', `bubbleG`)
       .on('click',(d:any) =>{ 
-          let indx = mapShapeData.features.findIndex((obj:any) => obj.properties.NAME_EN === d.countryName)
-          let bounds = path.bounds(mapShapeData.features[indx]),
+          let indx = features.findIndex((obj:any) => obj.properties.NAME_EN === d.countryName)
+          let bounds = path.bounds(features[indx]),
           dx = bounds[1][0] - bounds[0][0],
           dy = bounds[1][1] - bounds[0][1],
           x = (bounds[0][0] + bounds[1][0]) / 2,
