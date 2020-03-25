@@ -86,7 +86,7 @@ const Map: React.FunctionComponent<{width:number , countryClicked:string, height
             1,
             Math.min(8, 0.9 / Math.max(dx / width, dy / height)),
           ),
-          translate = [width / 2 - zoomScale * x, height / 2 - zoomScale * y];
+          translate = [width / 2 - zoomScale * x, height / 2 - zoomScale * y - 50];
 
             props.onCountryClick(d.properties.NAME_EN);
         mapSVG
@@ -129,7 +129,7 @@ const Map: React.FunctionComponent<{width:number , countryClicked:string, height
             1,
             Math.min(8, 0.9 / Math.max(dx / width, dy / height)),
           ),
-          translate = [width / 2 - zoomScale * x, height / 2 - zoomScale * y];
+          translate = [width / 2 - zoomScale * x, height / 2 - zoomScale * y - 50];
 
             props.onCountryClick(d.countryName);
         mapSVG
@@ -372,15 +372,7 @@ const Map: React.FunctionComponent<{width:number , countryClicked:string, height
     <div>
       <div className='mapHeader'>
         <div className='dateContainer'>
-          <h2 className='date'>{d3.timeFormat("%b. %d")(props.data[Object.keys(props.data)[0]]['confirmedData'][props.index - 1]['date'])}</h2>
-          <Button className={props.index === props.data[Object.keys(props.data)[0]]['confirmedData'].length ? 'replay' : 'replay disabled'}
-            onClick={() => {
-              if(props.index === props.data[Object.keys(props.data)[0]]['confirmedData'].length) 
-                props.replay()
-            }}
-          >
-            <img src={Play} alt='' className='playIcon'/> Play Timelapse
-          </Button>
+          <h2 className='date blue'>{props.country}</h2>
         </div>
         <div className='rightOptions'>
           <Button
@@ -413,7 +405,17 @@ const Map: React.FunctionComponent<{width:number , countryClicked:string, height
         </div>
       </div>
       <div className='title'>
-        <div className='titleCountry'><span className='blue bold'>{props.country}</span></div>
+        <div className='titleCountry'>
+          <span className='bold'>{d3.timeFormat("%b. %d")(props.data[Object.keys(props.data)[0]]['confirmedData'][props.index - 1]['date'])}</span>
+          <Button className={props.index === props.data[Object.keys(props.data)[0]]['confirmedData'].length ? 'replay' : 'replay disabled'}
+            onClick={() => {
+              if(props.index === props.data[Object.keys(props.data)[0]]['confirmedData'].length) 
+                props.replay()
+            }}
+          >
+            <img src={Play} alt='' className='playIcon'/> Play Timelapse
+          </Button>
+        </div>
         <div className='confirmedTitleMap'> Confirmed: <span className='bold red'>{props.data[props.country] ? formatNumber(props.data[props.country]['confirmedData'][props.index - 1]['value']) : 0}</span> (<span className='bold red'>{props.data[props.country] ? (props.data[props.country]['confirmedData'][props.index - 1]['valuePer100K']).toFixed(1) : 0}</span> per 100 000)<br /><span className='italics small'>Last 24 hrs: <span className='bold red'>{props.data[props.country] ? formatNumber(props.data[props.country]['confirmedData'][props.index - 1]['new']) : 0}</span></span></div>
         <div className='deathTitleMap'> Deaths: <span className='deathTitle bold'>{props.data[props.country] ? formatNumber(props.data[props.country]['deathData'][props.index - 1]['value']) : 0}</span> (<span className='bold'>{props.data[props.country] ? (props.data[props.country]['deathData'][props.index - 1]['value'] * 100 / props.data[props.country]['confirmedData'][props.index - 1]['value'] ).toFixed(1) : 0}%</span> Mortality rate)<br /><span className='italics small'>Last 24 hrs: <span className='bold'>{props.data[props.country] ? formatNumber(props.data[props.country]['deathData'][props.index - 1]['new']) : 0}</span></span></div>
       </div>
@@ -421,7 +423,7 @@ const Map: React.FunctionComponent<{width:number , countryClicked:string, height
         <div className='buttonContainer'>
           <div className='backToWorld'>Back to World</div>
         </div>
-        <svg width={props.width} height={props.height - 190} ref={node => mapNode = node} />
+        <svg width={props.width} height={props.height - 180} ref={node => mapNode = node} />
       </div>
     </div>
   )

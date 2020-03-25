@@ -360,7 +360,6 @@ const Visualization: React.FunctionComponent<{width:number,height:number}> = (pr
               onCountryClick={(country) => { setSelectedCountry(country) }}
               countryClicked ={selectedCountry}
               hover={(e:string) => {
-                console.log('helloworld')
                 setCountry(e)
               }}
               replay={()=> {

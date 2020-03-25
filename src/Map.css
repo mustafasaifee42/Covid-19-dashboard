@@ -1,8 +1,8 @@
 .mapHeader{
     display:flex;
     justify-content: space-between;
-    padding: 0 20px;
-    height: 80px;
+    padding: 10px 20px 0 20px;
+    height: 60px;
     align-items: center;
 }
 .dateContainer{
@@ -12,19 +12,19 @@
 
 .date{
     margin: 0;
-    font-size: 24px;
+    font-size: 32px;
     font-weight: bold;
     margin-right: 20px;
 }
 
 .replay{
-    margin-right: 20px;
-    padding: 10px;
+    margin-right: 10px;
+    padding: 10px 5px;
     background-color: #eaeaea;
     border: 1px solid #f1f1f1;
     border-radius: 4px;
     font-size: 14px;
-    margin-right: 20px;
+    margin-left: 10px;
     cursor: pointer;
     display: flex;
     align-items: center;
@@ -35,9 +35,9 @@
     opacity: 0.2;
 }
 .playIcon{
-    margin-right:10px;
-    width:20px;
-    height:20px;
+    margin-right:5px;
+    width:16px;
+    height:16px;
 }
 
 .tabContainer{
@@ -134,13 +134,14 @@
     font-size:14px;
 }
 .titleCountry{
-    font-size: 16px;
+    font-size: 24px;
     text-align: left;
+    display: flex;
+    align-items: center;
 }
 
 .blue{
     color:#0aa5c2;
-    font-size:20px;
 }
 .red{
     color:#e01a25;
