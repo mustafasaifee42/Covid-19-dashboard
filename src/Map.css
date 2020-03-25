@@ -19,20 +19,26 @@
 
 .replay{
     margin-right: 10px;
-    padding: 10px 5px;
-    background-color: #eaeaea;
-    border: 1px solid #f1f1f1;
     border-radius: 4px;
     font-size: 14px;
-    margin-left: 10px;
     cursor: pointer;
     display: flex;
     align-items: center;
-    text-align: left;;
+    text-align: left;
+    font-style: italic;
+    color:#999;
+}
+
+.replay:hover{
+    font-weight: #414141;
 }
 
 .disabled{
     opacity: 0.2;
+}
+
+.disabled:hover{
+    font-weight: #999;
 }
 .playIcon{
     margin-right:5px;
@@ -134,10 +140,8 @@
     font-size:14px;
 }
 .titleCountry{
-    font-size: 24px;
+    font-size: 18px;
     text-align: left;
-    display: flex;
-    align-items: center;
 }
 
 .blue{
@@ -148,7 +152,7 @@
 }
 
 .confirmedTitleMap{
-    margin: 0 40px;
+    margin: 0 20px;
 }
 
 .rightOptions{
@@ -177,6 +181,16 @@
         text-align: center;
     }
   }
+
+@media only screen and (max-width: 1600px) {
+    .date{
+        font-size: 24px;
+    }
+}
+
+.button-replay{
+    text-align: left;
+}
 
 .buttonTab:hover{
     color: rgb(224, 26, 37)

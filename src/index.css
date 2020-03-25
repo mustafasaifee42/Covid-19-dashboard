@@ -15,6 +15,7 @@ code {
 /* Button reset; use this as the base for buttons, to style them further
 */
 .button-reset {
+  text-align: left;
   width: auto;
   margin: 0;
   padding: 0;

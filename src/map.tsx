@@ -3,7 +3,6 @@ import * as d3GeoProjection from 'd3-geo-projection';
 import './Map.css';
 import * as topojson from 'topojson';
 import * as d3 from 'd3';
-import Play from './play.svg';
 import Tick from './tick.svg';
 import Button from "./Button";
 import {formatNumber} from './utils';
@@ -406,14 +405,14 @@ const Map: React.FunctionComponent<{width:number , countryClicked:string, height
       </div>
       <div className='title'>
         <div className='titleCountry'>
-          <span className='bold'>{d3.timeFormat("%b. %d")(props.data[Object.keys(props.data)[0]]['confirmedData'][props.index - 1]['date'])}</span>
-          <Button className={props.index === props.data[Object.keys(props.data)[0]]['confirmedData'].length ? 'replay' : 'replay disabled'}
+          <Button 
             onClick={() => {
               if(props.index === props.data[Object.keys(props.data)[0]]['confirmedData'].length) 
                 props.replay()
             }}
           >
-            <img src={Play} alt='' className='playIcon'/> Play Timelapse
+            <div className='bold'>{d3.timeFormat("%b. %d")(props.data[Object.keys(props.data)[0]]['confirmedData'][props.index - 1]['date'])}</div>
+            <span className={props.index === props.data[Object.keys(props.data)[0]]['confirmedData'].length ? 'replay' : 'replay disabled'}>Play timelapse</span>
           </Button>
         </div>
         <div className='confirmedTitleMap'> Confirmed: <span className='bold red'>{props.data[props.country] ? formatNumber(props.data[props.country]['confirmedData'][props.index - 1]['value']) : 0}</span> (<span className='bold red'>{props.data[props.country] ? (props.data[props.country]['confirmedData'][props.index - 1]['valuePer100K']).toFixed(1) : 0}</span> per 100 000)<br /><span className='italics small'>Last 24 hrs: <span className='bold red'>{props.data[props.country] ? formatNumber(props.data[props.country]['confirmedData'][props.index - 1]['new']) : 0}</span></span></div>
