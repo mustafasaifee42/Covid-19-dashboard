@@ -327,7 +327,7 @@ const Sidebar: React.FunctionComponent<{ width:number , height:number, bigScreen
       var voronoi = d3.voronoi()
           .x((d:any,i:number) => x(d.dayNo))
           .y((d:any) => logScale(d.value))
-          .extent([[0, 0], [width, height]]);
+          .extent([[0, 0], [width-20, height]]);
       let epidemicCurveDataFiltered = epidemicCurveData.filter((d:any, i:number) => i < 12)
       let countryListFiltered = countryList.filter((d:any, i:number) => i < 12)
       if(props.country !== 'World') {
@@ -345,6 +345,45 @@ const Sidebar: React.FunctionComponent<{ width:number , height:number, bigScreen
         .y((d:any,i:number) => logScale(d.value))
         .curve(d3.curveMonotoneX)
       if(epidemicCurveDataFiltered[0].length > 1) {
+        
+        let mouseover = (d:any) => {
+          g.selectAll(`.lineG`).attr('opacity',0.4)
+          g.selectAll(`.line`).attr('stroke', '#aaa')
+          g.selectAll(`.pandemicText`).attr('fill', '#aaa')
+          g.selectAll(`.pandemicCircle`).attr('fill', '#aaa')
+          g.selectAll(`.connectorLine`).attr('stroke', '#aaa')
+          g.selectAll(`.${d.replace(/ /g,"_").replace(/,/g,"_")}lineG`)
+            .attr('opacity', 1)
+          g.selectAll(`.${d.replace(/ /g,"_").replace(/,/g,"_")}line`)
+            .attr('opacity', 1)
+            .attr('stroke', '#e01a25')
+          g.selectAll(`.${d.replace(/ /g,"_").replace(/,/g,"_")}pandemicText`)
+            .attr('fill', '#e01a25')
+          g.selectAll(`.${d.replace(/ /g,"_").replace(/,/g,"_")}pandemicCircle`)
+            .attr('fill', '#e01a25')
+          g.selectAll(`.${d.replace(/ /g,"_").replace(/,/g,"_")}connectorLine`)
+            .attr('stroke', '#e01a25')
+        }
+
+        
+        let mouseout = () => {
+          g.selectAll(`.lineG`).attr('opacity',0.4)
+          g.selectAll(`.line`).attr('stroke', '#aaa')
+          g.selectAll(`.pandemicText`).attr('fill', '#aaa')
+          g.selectAll(`.pandemicCircle`).attr('fill', '#aaa')
+          g.selectAll(`.connectorLine`).attr('stroke', '#aaa')
+          g.selectAll(`.${props.country.replace(/,/g,"_")}lineG`)
+            .attr('opacity', 1)
+          g.selectAll(`.${props.country.replace(/,/g,"_")}line`)
+            .attr('stroke', '#e01a25')
+          g.selectAll(`.${props.country.replace(/,/g,"_")}pandemicText`)
+            .attr('fill', '#e01a25')
+          g.selectAll(`.${props.country.replace(/,/g,"_")}pandemicCircle`)
+            .attr('fill', '#e01a25')
+          g.selectAll(`.${props.country.replace(/,/g,"_")}connectorLine`)
+            .attr('stroke', '#e01a25')
+        
+        }
         let lineG = g.selectAll(".lineG")
           .data(epidemicCurveDataFiltered)
           .enter()
@@ -383,50 +422,12 @@ const Sidebar: React.FunctionComponent<{ width:number , height:number, bigScreen
             return index < 0 ? countryListFiltered[i] : CountryNameData[index].countryShortCode
           })
           .style('cursor','pointer')
+          .on('mouseover',(d:any) => { mouseover(d[0].country) })
+          .on("mouseout", mouseout)
         
 
           let voronoiGroup = g.append("g")
             .attr("class", "voronoi");
-          let mouseover = (d:any) => {
-            g.selectAll(`.lineG`).attr('opacity',0.4)
-            g.selectAll(`.line`).attr('stroke', '#aaa')
-            g.selectAll(`.pandemicText`).attr('fill', '#aaa')
-            g.selectAll(`.pandemicCircle`).attr('fill', '#aaa')
-            g.selectAll(`.connectorLine`).attr('stroke', '#aaa')
-            g.selectAll(`.${d.replace(/ /g,"_").replace(/,/g,"_")}lineG`)
-              .attr('opacity', 1)
-            g.selectAll(`.${d.replace(/ /g,"_").replace(/,/g,"_")}line`)
-              .attr('opacity', 1)
-              .attr('stroke', '#e01a25')
-            g.selectAll(`.${d.replace(/ /g,"_").replace(/,/g,"_")}pandemicText`)
-              .attr('fill', '#e01a25')
-            g.selectAll(`.${d.replace(/ /g,"_").replace(/,/g,"_")}pandemicCircle`)
-              .attr('fill', '#e01a25')
-            g.selectAll(`.${d.replace(/ /g,"_").replace(/,/g,"_")}connectorLine`)
-              .attr('stroke', '#e01a25')
-          }
-
-          
-          let mouseout = () => {
-            g.selectAll(`.lineG`).attr('opacity',0.4)
-            g.selectAll(`.line`).attr('stroke', '#aaa')
-            g.selectAll(`.pandemicText`).attr('fill', '#aaa')
-            g.selectAll(`.pandemicCircle`).attr('fill', '#aaa')
-            g.selectAll(`.connectorLine`).attr('stroke', '#aaa')
-            g.selectAll(`.${props.country.replace(/,/g,"_")}lineG`)
-              .attr('opacity', 1)
-            g.selectAll(`.${props.country.replace(/,/g,"_")}line`)
-              .attr('stroke', '#e01a25')
-            g.selectAll(`.${props.country.replace(/,/g,"_")}pandemicText`)
-              .attr('fill', '#e01a25')
-            g.selectAll(`.${props.country.replace(/,/g,"_")}pandemicCircle`)
-              .attr('fill', '#e01a25')
-            g.selectAll(`.${props.country.replace(/,/g,"_")}connectorLine`)
-              .attr('stroke', '#e01a25')
-          
-          }
-
-          console.log(d3.merge(epidemicCurveDataFiltered.map((d:any) => d)))
 
           voronoiGroup.selectAll("path")
             .data(voronoi.polygons(d3.merge(epidemicCurveDataFiltered.map((d:any) => d))))
@@ -474,7 +475,7 @@ const Sidebar: React.FunctionComponent<{ width:number , height:number, bigScreen
       var voronoi = d3.voronoi()
           .x((d:any,i:number) => x(d.dayNo))
           .y((d:any) => logScale(d.value))
-          .extent([[0, 0], [width, height]]);
+          .extent([[0, 0], [width-20, height]]);
       let epidemicCurveDataFiltered = epidemicCurveData.filter((d:any, i:number) => i < 12)
       let countryListFiltered = countryList.filter((d:any, i:number) => i < 12)
       if(props.country !== 'World') {
@@ -491,7 +492,47 @@ const Sidebar: React.FunctionComponent<{ width:number , height:number, bigScreen
         .x((d:any,i:number) => x(d.dayNo))
         .y((d:any,i:number) => logScale(d.value))
         .curve(d3.curveMonotoneX)
+
       if(epidemicCurveDataFiltered[0].length > 1) {
+              
+        let mouseover = (d:any) => {
+          g.selectAll(`.lineG`).attr('opacity',0.4)
+          g.selectAll(`.line`).attr('stroke', '#aaa')
+          g.selectAll(`.pandemicText`).attr('fill', '#aaa')
+          g.selectAll(`.pandemicCircle`).attr('fill', '#aaa')
+          g.selectAll(`.connectorLine`).attr('stroke', '#aaa')
+          g.selectAll(`.${d.replace(/ /g,"_").replace(/,/g,"_")}lineG`)
+            .attr('opacity', 1)
+          g.selectAll(`.${d.replace(/ /g,"_").replace(/,/g,"_")}line`)
+            .attr('opacity', 1)
+            .attr('stroke', '#e01a25')
+          g.selectAll(`.${d.replace(/ /g,"_").replace(/,/g,"_")}pandemicText`)
+            .attr('fill', '#e01a25')
+          g.selectAll(`.${d.replace(/ /g,"_").replace(/,/g,"_")}pandemicCircle`)
+            .attr('fill', '#e01a25')
+          g.selectAll(`.${d.replace(/ /g,"_").replace(/,/g,"_")}connectorLine`)
+            .attr('stroke', '#e01a25')
+        }
+
+        
+        let mouseout = () => {
+          g.selectAll(`.lineG`).attr('opacity',0.4)
+          g.selectAll(`.line`).attr('stroke', '#aaa')
+          g.selectAll(`.pandemicText`).attr('fill', '#aaa')
+          g.selectAll(`.pandemicCircle`).attr('fill', '#aaa')
+          g.selectAll(`.connectorLine`).attr('stroke', '#aaa')
+          g.selectAll(`.${props.country.replace(/,/g,"_")}lineG`)
+            .attr('opacity', 1)
+          g.selectAll(`.${props.country.replace(/,/g,"_")}line`)
+            .attr('stroke', '#e01a25')
+          g.selectAll(`.${props.country.replace(/,/g,"_")}pandemicText`)
+            .attr('fill', '#e01a25')
+          g.selectAll(`.${props.country.replace(/,/g,"_")}pandemicCircle`)
+            .attr('fill', '#e01a25')
+          g.selectAll(`.${props.country.replace(/,/g,"_")}connectorLine`)
+            .attr('stroke', '#e01a25')
+        
+        }
         let lineG = g.selectAll(".lineG")
           .data(epidemicCurveDataFiltered)
           .enter()
@@ -530,48 +571,12 @@ const Sidebar: React.FunctionComponent<{ width:number , height:number, bigScreen
             return index < 0 ? countryListFiltered[i] : CountryNameData[index].countryShortCode
           })
           .style('cursor','pointer')
+          .on('mouseover',(d:any) => { mouseover(d[0].country) })
+          .on("mouseout", mouseout)
         
 
           let voronoiGroup = g.append("g")
             .attr("class", "voronoi");
-          let mouseover = (d:any) => {
-            g.selectAll(`.lineG`).attr('opacity',0.4)
-            g.selectAll(`.line`).attr('stroke', '#aaa')
-            g.selectAll(`.pandemicText`).attr('fill', '#aaa')
-            g.selectAll(`.pandemicCircle`).attr('fill', '#aaa')
-            g.selectAll(`.connectorLine`).attr('stroke', '#aaa')
-            g.selectAll(`.${d.replace(/ /g,"_").replace(/,/g,"_")}lineG`)
-              .attr('opacity', 1)
-            g.selectAll(`.${d.replace(/ /g,"_").replace(/,/g,"_")}line`)
-              .attr('opacity', 1)
-              .attr('stroke', '#e01a25')
-            g.selectAll(`.${d.replace(/ /g,"_").replace(/,/g,"_")}pandemicText`)
-              .attr('fill', '#e01a25')
-            g.selectAll(`.${d.replace(/ /g,"_").replace(/,/g,"_")}pandemicCircle`)
-              .attr('fill', '#e01a25')
-            g.selectAll(`.${d.replace(/ /g,"_").replace(/,/g,"_")}connectorLine`)
-              .attr('stroke', '#e01a25')
-          }
-
-          
-          let mouseout = () => {
-            g.selectAll(`.lineG`).attr('opacity',0.4)
-            g.selectAll(`.line`).attr('stroke', '#aaa')
-            g.selectAll(`.pandemicText`).attr('fill', '#aaa')
-            g.selectAll(`.pandemicCircle`).attr('fill', '#aaa')
-            g.selectAll(`.connectorLine`).attr('stroke', '#aaa')
-            g.selectAll(`.${props.country.replace(/,/g,"_")}lineG`)
-              .attr('opacity', 1)
-            g.selectAll(`.${props.country.replace(/,/g,"_")}line`)
-              .attr('stroke', '#e01a25')
-            g.selectAll(`.${props.country.replace(/,/g,"_")}pandemicText`)
-              .attr('fill', '#e01a25')
-            g.selectAll(`.${props.country.replace(/,/g,"_")}pandemicCircle`)
-              .attr('fill', '#e01a25')
-            g.selectAll(`.${props.country.replace(/,/g,"_")}connectorLine`)
-              .attr('stroke', '#e01a25')
-          
-          }
 
 
           voronoiGroup.selectAll("path")
