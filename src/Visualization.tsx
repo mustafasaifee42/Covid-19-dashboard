@@ -53,37 +53,55 @@ const Visualization: React.FunctionComponent<{width:number,height:number}> = (pr
         d3.csv("https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_global.csv")
       ])
       .then(([confirmed,death]) => {
+        
         let confirmedDataCombined = dataManipulation(confirmed);
         let deathDataCombined = dataManipulation(death);
         let combinedDataObj:any = {};
         let keys = Object.keys(confirmedDataCombined[0]).slice(4)
+        let keyDeath= Object.keys(deathDataCombined[0]).slice(4)
         confirmedDataCombined.forEach((d:any) => {
           let values:any = []
           keys.forEach((key:string) => {
-            values.push({"date":d3.timeParse("%m/%d/%y")(key),'value':d[key]})
+            let dt = key
+            if(d3.timeParse("%m/%d/%y")(key) === null || d3.timeParse("%m/%d/%y")(key) === undefined) {
+              console.warn(`Error in date format for ${key}`)
+            }
+            values.push({"date":d3.timeParse("%m/%d/%y")(dt),'value':d[key]})
           })
           combinedDataObj[d['Country/Region']] =  {}
           combinedDataObj[d['Country/Region']]['confirmedData'] = values
         })
         deathDataCombined.forEach((d:any) => {
           let values:any = []
-          keys.forEach((key:string) => {
-            values.push({"date":d3.timeParse("%m/%d/%y")(key),'value':d[key]})
+          keyDeath.forEach((key:string) => {
+            let dt = key
+            if(d3.timeParse("%m/%d/%y")(key) === null || d3.timeParse("%m/%d/%y")(key) === undefined) {
+              console.warn(`Error in date format for ${key}`)
+            }
+            values.push({"date":d3.timeParse("%m/%d/%y")(dt),'value':d[key]})
           })
           combinedDataObj[d['Country/Region']]['deathData'] = values
         })
-        let counntryList = Object.keys(combinedDataObj)
-        counntryList.forEach((country:string) => {
+        let countryList = Object.keys(combinedDataObj)
+        countryList.forEach((country:string) => {
           let index = populationData.findIndex((obj:any) => obj.Country === country)
           if(index >= 0) combinedDataObj[country]['Population'] = populationData[index]['Population']
           combinedDataObj[country]['confirmedData'].forEach((d:any,i:number) => {
             d['valuePer100K'] = +(d['value'] * 100000 / combinedDataObj[country]['Population'])
             d['new'] = i === 0 ? d['value'] : (d['value'] - combinedDataObj[country]['confirmedData'][i-1]['value'] < 0 ) ? 0 : d['value'] - combinedDataObj[country]['confirmedData'][i-1]['value']
           })
-          combinedDataObj[country]['deathData'].forEach((d:any,i:number) => {
-            d['valuePer100K'] = +(d['value'] * 100000 / combinedDataObj[country]['Population'])
-            d['new'] = i === 0 ? d['value'] : (d['value'] - combinedDataObj[country]['deathData'][i-1]['value'] < 0 ) ? 0 : d['value'] - combinedDataObj[country]['deathData'][i-1]['value']
-          })
+          if(combinedDataObj[country]['deathData']){
+            combinedDataObj[country]['deathData'].forEach((d:any,i:number) => {
+              d['valuePer100K'] = +(d['value'] * 100000 / combinedDataObj[country]['Population'])
+              d['new'] = i === 0 ? d['value'] : (d['value'] - combinedDataObj[country]['deathData'][i-1]['value'] < 0 ) ? 0 : d['value'] - combinedDataObj[country]['deathData'][i-1]['value']
+            })
+          }
+          else {
+            let objCombined = combinedDataObj[countryList[0]]['deathData'].map((el:any,i:number) => {
+              return {date:el.date, value:0 , valuePer100K:0, new:0} 
+            })
+            combinedDataObj[country]['deathData'] = objCombined
+          }
           let doublingTime = 0;
           let confirmedDataFiltered = [...combinedDataObj[country]['confirmedData']].filter((d:any, i:number) => d.value >= 100)
           if(confirmedDataFiltered.length > 1){

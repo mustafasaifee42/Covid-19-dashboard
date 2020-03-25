@@ -589,7 +589,7 @@ const Sidebar: React.FunctionComponent<{ width:number , height:number, bigScreen
   return ( 
     <div>
       <DataCards
-        title="Total Countries Infected"
+        title="# Countries/Regions Infected"
         data={Object.keys(props.data).length - 2}
         note={'out of 195'}
         color='#0aa5c2' 
