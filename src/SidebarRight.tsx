@@ -1,12 +1,12 @@
 import React, { useEffect } from 'react';
 import * as d3 from 'd3';
-import DataCards from './DataCards';
 import CountryNameData from './countryNameData.json';
 import './sidebarRight.css'
 
 let graphNode!: SVGSVGElement | null;
 let deathGraphNode!: SVGSVGElement | null;
 const Sidebar: React.FunctionComponent<{ width:number , height:number, bigScreen:boolean,  graphHeight:number, data:any ,country:string }> = (props) => {
+  let maxDeath = 50000, maxConfirmed = 1000000;
 
   useEffect(() => {
     d3.select(graphNode).selectAll('g').remove()  
@@ -17,16 +17,16 @@ const Sidebar: React.FunctionComponent<{ width:number , height:number, bigScreen
       .append('g')
       .attr('class','bg')
       .attr("transform",`translate(${margin.left},${margin.top})`);
-
-      let doublingValue = 12.28;
+      let doublingValue = 1 + Math.log2((maxConfirmed/100) + 1)
+      //let doublingValue = 12.28;
       let days = [1,2,3,4]
-      let scale = [100, 1000, 100000, 500000]
+      let scale = [100, 1000, 100000, maxConfirmed]
       let x = d3.scaleLinear()
         .domain([0 , props.data['World'].confirmedData.length + 3])
         .range([ 0, width ]);
 
       let logScale = d3.scaleLog()
-          .domain([100, 500000])
+          .domain([100, maxConfirmed])
           .range([ height, 0 ])
       g.selectAll('.yAxisLines')
         .data(scale)
@@ -132,21 +132,21 @@ const Sidebar: React.FunctionComponent<{ width:number , height:number, bigScreen
         .attr('x1',0)
         .attr('x2',(d:number) => x((d - 1) * doublingValue + doublingValue + 1))
         .attr('y1',height)
-        .attr('y2',logScale(500000))
+        .attr('y2',logScale(maxConfirmed))
       g.selectAll('.doublingLabel')
         .data(days)
         .enter()
         .append('text')
         .attr("fill", "#414141")
         .attr('x',(d:number) => x((d - 1) * doublingValue + doublingValue + 1) - 10)
-        .attr('y',logScale(500000))
+        .attr('y',logScale(maxConfirmed))
         .attr("dy", -4)
         .attr('font-family','IBM Plex Sans')
         .attr('font-size', () => props.width > 340 ? 8 : 6)
         .attr('font-weight',() => props.width > 340 ? 'normal' : 'bold')
         .text((d:number) => `double in ${d} days`)
 
-  },[props.graphHeight, props.data,props.width])
+  },[props.graphHeight, props.data,props.width, maxConfirmed])
   useEffect(() => {
     d3.select(deathGraphNode).selectAll('g').remove()  
     let margin = {top: 20, right: 10, bottom: 30, left: 10},
@@ -156,13 +156,13 @@ const Sidebar: React.FunctionComponent<{ width:number , height:number, bigScreen
       .append('g')
       .attr('class','bg')
       .attr("transform",`translate(${margin.left},${margin.top})`);
-
-      let doublingValue = 11.97;
+      let doublingValue = 1 + Math.log2(maxDeath  / 10)
+      //let doublingValue = 11.97;
       let days = [1,2,3,4]
       let logScale = d3.scaleLog()
-          .domain([10, 20000])
+          .domain([10, maxDeath])
           .range([ height, 0 ])
-      let scale = [10, 500 , 1000, 5000, 10000, 20000]
+      let scale = [10, 500 , 1000, 5000, 20000, maxDeath]
       let x = d3.scaleLinear()
         .domain([0 , props.data['World'].confirmedData.length + 3])
         .range([ 0, width ]);
@@ -270,21 +270,21 @@ const Sidebar: React.FunctionComponent<{ width:number , height:number, bigScreen
         .attr('x1',0)
         .attr('x2',(d:number) => x((d - 1) * doublingValue + doublingValue + 1))
         .attr('y1',height)
-        .attr('y2',logScale(20000))
+        .attr('y2',logScale(maxDeath))
       g.selectAll('.doublingLabel')
         .data(days)
         .enter()
         .append('text')
         .attr("fill", "#414141")
         .attr('x',(d:number) => x((d - 1) * doublingValue + doublingValue + 1) - 10)
-        .attr('y',logScale(20000))
+        .attr('y',logScale(maxDeath))
         .attr("dy", -4)
         .attr('font-family','IBM Plex Sans')
         .attr('font-size', () => props.width > 340 ? 8 : 6)
         .attr('font-weight',() => props.width > 340 ? 'normal' : 'bold')
         .text((d:number) => `double in ${d} days`)
 
-  },[props.graphHeight,props.data,props.width])
+  },[props.graphHeight,props.data,maxDeath,props.width])
   useEffect(() => {
     d3.select(graphNode).select('.graphG').remove()
     let dataArr:any = Object.keys(props.data).map((key:string) => {
@@ -300,7 +300,7 @@ const Sidebar: React.FunctionComponent<{ width:number , height:number, bigScreen
       .domain([0 , props.data[countryList[0]].confirmedData.length + 3])
       .range([ 0, width ]);
     let logScale = d3.scaleLog()
-      .domain([100, 500000])
+      .domain([100, maxConfirmed])
         .range([ height, 0 ])
         let g = d3.select(graphNode).append('g').attr('class','graphG').attr("transform",`translate(${margin.left},${margin.top})`);
     if(countryList.indexOf(props.country) >= 0){
@@ -445,7 +445,7 @@ const Sidebar: React.FunctionComponent<{ width:number , height:number, bigScreen
           .text('Only Applicable for cases  > 100')
       }
     }
-  },[props.width, props.graphHeight,props.data, props.country])
+  },[props.width, props.graphHeight,props.data, props.country, maxConfirmed])
   useEffect(() => {
     d3.select(deathGraphNode).select('.graphG').remove()
     let margin = {top: 20, right: 10, bottom: 30, left: 10},
@@ -463,7 +463,7 @@ const Sidebar: React.FunctionComponent<{ width:number , height:number, bigScreen
       .range([ 0, width ]);
 
     let logScale = d3.scaleLog()
-        .domain([10, 20000])
+        .domain([10, maxDeath])
         .range([ height, 0 ])
     let epidemicCurveData = countryList.map((d:string) => props.data[d].deathData.filter((d:any) => d.value >= 10))
     if(countryList.indexOf(props.country) >= 0){
@@ -608,7 +608,7 @@ const Sidebar: React.FunctionComponent<{ width:number , height:number, bigScreen
           .text('Only Applicable for deaths  > 10')
       }
     }
-  },[ props.width, props.graphHeight, props.data, props.country])
+  },[ props.width, props.graphHeight, maxDeath, props.data, props.country])
 
 
   let cardTitleSubNotesubNote = props.graphHeight < 240 ? null : <span className="cardTitleSubNote">(Log scale starting from 100 cases)</span>

@@ -64,7 +64,6 @@ const Map: React.FunctionComponent<{width:number , countryClicked:string, height
     }
     let features = [...mapShapeData.features]
     features.push(disputedRegionsMapShapeData.features[4])
-    console.log(features)
     zoomGroup
       .selectAll('.country')
       .data(mapShapeData.features)
