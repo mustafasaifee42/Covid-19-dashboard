@@ -46,6 +46,7 @@ const Visualization: React.FunctionComponent<{width:number,height:number}> = (pr
   const [highlightNew, setHighlightNew] = useState(false)
   const [deathVisibility, setDeathVisibility] = useState(0)
   const [visualizationType, setVisualizationType] = useState('map')
+  const [countryCount, setCountryCount] = useState([0])
   let indexToUpdate = 1;
   useEffect(() => {
     Promise.all([
@@ -59,6 +60,9 @@ const Visualization: React.FunctionComponent<{width:number,height:number}> = (pr
         let combinedDataObj:any = {};
         let keys = Object.keys(confirmedDataCombined[0]).slice(4)
         let keyDeath= Object.keys(deathDataCombined[0]).slice(4)
+        let countryCount = keys.map((key:string) =>  [...confirmedDataCombined].filter((d:any) => d[key] > 0 && d['Country/Region'] !== 'World' && d['Country/Region'] !=='Diamond Princess').length)
+        setCountryCount(countryCount)
+
         confirmedDataCombined.forEach((d:any) => {
           let values:any = []
           keys.forEach((key:string) => {
@@ -170,6 +174,7 @@ const Visualization: React.FunctionComponent<{width:number,height:number}> = (pr
                 data={data}
                 dataArr={dataArr}
                 windowWidth = {props.width}
+                countryCount={countryCount}
                 country={country}
                 index={index}
                 highlightNew={highlightNew}
@@ -290,6 +295,7 @@ const Visualization: React.FunctionComponent<{width:number,height:number}> = (pr
                   country={country}
                   index={index}
                   highlightNew={highlightNew}
+                  countryCount={countryCount}
                   value={value}
                   deathVisibility = {deathVisibility}
                   toggleDeathVisibility = {(e) => { setDeathVisibility(e) } }
@@ -367,6 +373,7 @@ const Visualization: React.FunctionComponent<{width:number,height:number}> = (pr
               data={data}
               dataArr={dataArr}
               windowWidth = {props.width}
+              countryCount={countryCount}
               country={country}
               deathVisibility = {deathVisibility}
               toggleDeathVisibility = {(e) => { setDeathVisibility(e) } }

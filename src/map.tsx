@@ -11,7 +11,7 @@ const mapShape:any = require('./topo.json');
 const mapShapeData:any = topojson.feature(mapShape, mapShape.objects.countries)
 const disputedRegionsMapShapeData:any = topojson.feature(mapShape, mapShape.objects.ne_10m_admin_0_disputed_areas)
 let mapNode!: SVGSVGElement | null;
-const Map: React.FunctionComponent<{width:number , countryClicked:string, height:number , dataArr:any, hover:(e:string) => void, value:string, deathVisibility:number , toggleDeathVisibility:(e:number) => void, onValueToggle:(e:string) => void, windowWidth:number , index:any ,highlightNew:boolean,highlightNewClick:(e:boolean) => void, replay:()=> void, data:any , onCountryClick:(e:string) => void , country:string}> = (props) => {
+const Map: React.FunctionComponent<{width:number , countryClicked:string, height:number , countryCount:number[], dataArr:any, hover:(e:string) => void, value:string, deathVisibility:number , toggleDeathVisibility:(e:number) => void, onValueToggle:(e:string) => void, windowWidth:number , index:any ,highlightNew:boolean,highlightNewClick:(e:boolean) => void, replay:()=> void, data:any , onCountryClick:(e:string) => void , country:string}> = (props) => {
   const {
     height,
     width,
@@ -24,7 +24,7 @@ const Map: React.FunctionComponent<{width:number , countryClicked:string, height
     let countryinData = Object.keys(props.data)
     for (let i = 0; i < countryinData.length; i++){
       if(countryinTopo.indexOf(countryinData[i]) < 0){
-        if (countryinData[i] !== 'World' && countryinData[i] !== 'Cruise Ship' && countryinData[i] !== "The West Bank and Gaza") console.warn(`${countryinData[i]} not in World Map`)
+        if (countryinData[i] !== 'World' && countryinData[i] !== 'Cruise Ship' && countryinData[i] !== "West Bank and Gaza") console.warn(`${countryinData[i]} not in World Map`)
       }
     }
   },[props.data])
@@ -64,6 +64,7 @@ const Map: React.FunctionComponent<{width:number , countryClicked:string, height
     }
     let features = [...mapShapeData.features]
     features.push(disputedRegionsMapShapeData.features[4])
+    console.log(features)
     zoomGroup
       .selectAll('.country')
       .data(mapShapeData.features)
@@ -366,12 +367,12 @@ const Map: React.FunctionComponent<{width:number , countryClicked:string, height
             .style('display','none')
         })
   })
-
+  let worldTitle = <span> {props.country} <span className="title-Subnote"> (<span className="blue bold">{props.countryCount[props.index - 1]}</span> out of 195 countries infected)</span></span>
   return ( 
     <div>
       <div className='mapHeader'>
         <div className='dateContainer'>
-          <h2 className='date blue'>{props.country}</h2>
+          <h2 className='date blue'>{props.country === "World" ? worldTitle : props.country}</h2>
         </div>
         <div className='rightOptions'>
           <Button

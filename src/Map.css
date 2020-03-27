@@ -159,6 +159,13 @@
     display: flex;
 }
 
+.title-Subnote{
+    font-size: 22px;
+    color:#414141;
+    font-style:italic;
+    font-weight:normal;
+}
+
 
 @media only screen and (max-width: 1024px) {
     .mapHeader {
@@ -185,6 +192,9 @@
 @media only screen and (max-width: 1600px) {
     .date{
         font-size: 24px;
+    }
+    .title-Subnote{
+        font-size: 18px;
     }
 }
 

@@ -330,6 +330,7 @@ const Sidebar: React.FunctionComponent<{ width:number , height:number, bigScreen
         let mouseover = (d:any) => {
           g.selectAll(`.lineG`).attr('opacity',0.4)
           g.selectAll(`.line`).attr('stroke', '#aaa')
+          g.selectAll(`.countryText`).attr('opacity', 0)
           g.selectAll(`.pandemicText`).attr('fill', '#aaa')
           g.selectAll(`.pandemicCircle`).attr('fill', '#aaa')
           g.selectAll(`.connectorLine`).attr('stroke', '#aaa')
@@ -342,17 +343,20 @@ const Sidebar: React.FunctionComponent<{ width:number , height:number, bigScreen
             .attr('fill', '#e01a25')
           g.selectAll(`.${d.replace(/ /g,"_").replace(/,/g,"_")}pandemicCircle`)
             .attr('fill', '#e01a25')
-          g.selectAll(`.${d.replace(/ /g,"_").replace(/,/g,"_")}connectorLine`)
-            .attr('stroke', '#e01a25')
+          g.selectAll(`.${d.replace(/ /g,"_").replace(/,/g,"_")}countryText`)
+            .attr('opacity',1)
         }
 
         
         let mouseout = () => {
           g.selectAll(`.lineG`).attr('opacity',0.4)
+          g.selectAll('.countryText').attr('opacity',0)
           g.selectAll(`.line`).attr('stroke', '#aaa')
           g.selectAll(`.pandemicText`).attr('fill', '#aaa')
           g.selectAll(`.pandemicCircle`).attr('fill', '#aaa')
           g.selectAll(`.connectorLine`).attr('stroke', '#aaa')
+          g.selectAll(`.${props.country.replace(/,/g,"_")}countryText`)
+            .attr('opacity', 1)
           g.selectAll(`.${props.country.replace(/,/g,"_")}lineG`)
             .attr('opacity', 1)
           g.selectAll(`.${props.country.replace(/,/g,"_")}line`)
@@ -377,6 +381,16 @@ const Sidebar: React.FunctionComponent<{ width:number , height:number, bigScreen
           .attr('stroke',(d:any,i:number) => i === 0 ? '#e01a25': '#aaa')
           .attr('fill','none')
           .attr("stroke-width", 2)
+
+        lineG.append("text")
+          .attr('class',(d:any) => `${d[0].country.replace(/ /g,"_").replace(/,/g,"_")}countryText countryText`)
+          .attr("y", (d:any) =>  logScale(d[d.length - 1].value) - 5)
+          .attr('x',(d:any,i:number) => x(d.length))
+          .attr('fill','#e01a25')
+          .attr('font-size',12)
+          .attr('text-anchor','middle')
+          .text((d:{country:string}[]) => d[0].country)
+          .attr('opacity',(d:any,i:number) => i === 0 ? 1: 0)
 
         lineG.append("line")
           .attr('class',(d:any) => `${d[0].country.replace(/ /g,"_").replace(/,/g,"_")}connectorLine connectorLine`)
@@ -478,6 +492,7 @@ const Sidebar: React.FunctionComponent<{ width:number , height:number, bigScreen
               
         let mouseover = (d:any) => {
           g.selectAll(`.lineG`).attr('opacity',0.4)
+          g.selectAll('.countryText').attr('opacity',0)
           g.selectAll(`.line`).attr('stroke', '#aaa')
           g.selectAll(`.pandemicText`).attr('fill', '#aaa')
           g.selectAll(`.pandemicCircle`).attr('fill', '#aaa')
@@ -493,12 +508,15 @@ const Sidebar: React.FunctionComponent<{ width:number , height:number, bigScreen
             .attr('fill', '#e01a25')
           g.selectAll(`.${d.replace(/ /g,"_").replace(/,/g,"_")}connectorLine`)
             .attr('stroke', '#e01a25')
+          g.selectAll(`.${d.replace(/ /g,"_").replace(/,/g,"_")}countryText`)
+            .attr('opacity',1)
         }
 
         
         let mouseout = () => {
           g.selectAll(`.lineG`).attr('opacity',0.4)
           g.selectAll(`.line`).attr('stroke', '#aaa')
+          g.selectAll('.countryText').attr('opacity',0)
           g.selectAll(`.pandemicText`).attr('fill', '#aaa')
           g.selectAll(`.pandemicCircle`).attr('fill', '#aaa')
           g.selectAll(`.connectorLine`).attr('stroke', '#aaa')
@@ -510,8 +528,8 @@ const Sidebar: React.FunctionComponent<{ width:number , height:number, bigScreen
             .attr('fill', '#e01a25')
           g.selectAll(`.${props.country.replace(/,/g,"_")}pandemicCircle`)
             .attr('fill', '#e01a25')
-          g.selectAll(`.${props.country.replace(/,/g,"_")}connectorLine`)
-            .attr('stroke', '#e01a25')
+          g.selectAll(`.${props.country.replace(/,/g,"_")}countryText`)
+            .attr('opacity',1)
         
         }
         let lineG = g.selectAll(".lineG")
@@ -534,6 +552,15 @@ const Sidebar: React.FunctionComponent<{ width:number , height:number, bigScreen
           .attr("y1",(d:any,i:number) => logScale(d[d.length - 1].value))
           .attr("x2",width - 20)
           .attr("y2",(d:any,i:number) => logScale(d[d.length - 1].value))
+        lineG.append("text")
+          .attr('class',(d:any) => `${d[0].country.replace(/ /g,"_").replace(/,/g,"_")}countryText countryText`)
+          .attr("y", (d:any) =>  logScale(d[d.length - 1].value) - 5)
+          .attr('x',(d:any,i:number) => x(d.length))
+          .attr('fill','#e01a25')
+          .attr('font-size',12)
+          .attr('text-anchor','middle')
+          .text((d:{country:string}[]) => d[0].country)
+          .attr('opacity',(d:any,i:number) => i === 0 ? 1: 0)
         lineG.append("circle")
           .attr('class',(d:any) => `${d[0].country.replace(/ /g,"_").replace(/,/g,"_")}pandemicCircle pandemicCircle`)
           .attr("fill", (d:any,i:number) => i === 0 ? '#e01a25' : '#aaa')
@@ -588,12 +615,6 @@ const Sidebar: React.FunctionComponent<{ width:number , height:number, bigScreen
   let cardTitleSubNotesubNoteDeaths = props.graphHeight < 240 ? null : <span className="cardTitleSubNote">(Log scale starting from 10 deaths)</span>
   return ( 
     <div>
-      <DataCards
-        title="# Countries/Regions Infected"
-        data={Object.keys(props.data).length - 2}
-        note={'out of 195'}
-        color='#0aa5c2' 
-      />
       <div className="graphContainer">
         <h2 className='cardTitle'>Epidemic Curve {cardTitleSubNotesubNote}</h2>
         <svg width={props.width - 5} height={props.graphHeight} ref={node => graphNode = node}/>
