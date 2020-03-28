@@ -100,7 +100,7 @@
     "Population": 59308690
   },
   {
-    "Country": "Myanmar",
+    "Country": "Burma",
     "Population": 54409800
   },
   {
@@ -680,6 +680,14 @@
     "Population": 628066
   },
   {
+    "Country":"Daimond Princess",
+    "Population":	2670
+  },
+  {
+    "Country":"Daimond Princess",
+    "Population":	2670
+  },
+  {
     "Country": "Luxembourg",
     "Population": 625978
   },
@@ -856,7 +864,7 @@
     "Population": 55191
   },
   {
-    "Country": "Saint Kitts & Nevis",
+    "Country": "Saint Kitts and Nevis",
     "Population": 53199
   },
   {

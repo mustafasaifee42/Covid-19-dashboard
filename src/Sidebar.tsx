@@ -353,7 +353,7 @@ const Sidebar: React.FunctionComponent<{width:number , height:number, graphHeigh
       <DataCards
         title="Total Death"
         data={props.data[props.country] ? props.data[props.country]['deathData'][props.data[props.country]['deathData'].length - 1].value : 0}
-        percent={props.data[props.country] ? `${(props.data[props.country]['deathData'][props.data[props.country]['deathData'].length - 1].value * 100 / props.data[props.country]['confirmedData'][props.data[props.country]['confirmedData'].length - 1].value).toFixed(1)}% Mortality Rate` : '0%'}
+        percent={props.data[props.country] ? `${(props.data[props.country]['deathData'][props.data[props.country]['deathData'].length - 1].value * 100 / props.data[props.country]['confirmedData'][props.data[props.country]['confirmedData'].length - 1].value).toFixed(1)}% Case Fatality Rt.` : '0%'}
         subNote={props.data[props.country] ? `${props.data[props.country]['deathData'][props.data[props.country]['deathData'].length - 1].new }`: undefined}
         color='#414141' 
       />
