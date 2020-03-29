@@ -11,7 +11,7 @@ const mapShape:any = require('./topo.json');
 const mapShapeData:any = topojson.feature(mapShape, mapShape.objects.countries)
 const disputedRegionsMapShapeData:any = topojson.feature(mapShape, mapShape.objects.ne_10m_admin_0_disputed_areas)
 let mapNode!: SVGSVGElement | null;
-const Map: React.FunctionComponent<{width:number , countryClicked:string, height:number , countryCount:number[], dataArr:any, hover:(e:string) => void, value:string, deathVisibility:number , toggleDeathVisibility:(e:number) => void, onValueToggle:(e:string) => void, windowWidth:number , index:any ,highlightNew:boolean,highlightNewClick:(e:boolean) => void, replay:()=> void, data:any , onCountryClick:(e:string) => void , country:string}> = (props) => {
+const Map: React.FunctionComponent<{width:number , countryClicked:string, height:number , changeCaseType:(e:string) => void, countryCount:number[], caseType:string, dataArr:any, hover:(e:string) => void, value:string, deathVisibility:number , toggleDeathVisibility:(e:number) => void, onValueToggle:(e:string) => void, windowWidth:number , index:any ,highlightNew:boolean,highlightNewClick:(e:boolean) => void, replay:()=> void, data:any , onCountryClick:(e:string) => void , country:string}> = (props) => {
   const {
     height,
     width,
@@ -222,14 +222,14 @@ const Map: React.FunctionComponent<{width:number , countryClicked:string, height
       .duration(100)
       .attr('fill', (d:any) => {
         if(props.data[d.properties.NAME_EN]) {
-          if(props.data[d.properties.NAME_EN]['confirmedData'][props.index - 1][props.value] > 0)
+          if(props.data[d.properties.NAME_EN][props.caseType][props.index - 1][props.value] > 0)
             return '#0aa5c2'
         }
         return'#ddd'
       })
       .attr('stroke',(d:any) => {
         if(props.data[d.properties.NAME_EN])
-        if(props.data[d.properties.NAME_EN]['confirmedData'][props.index - 1][props.value] > 0)
+        if(props.data[d.properties.NAME_EN][props.caseType][props.index - 1][props.value] > 0)
             return '#0aa5c2'
         return'#999'
       })
@@ -244,15 +244,15 @@ const Map: React.FunctionComponent<{width:number , countryClicked:string, height
       .attr('r', (d:any) => {
         if(props.data[d.countryName]){
           if(props.highlightNew)
-            return rScale(props.data[d.countryName]['confirmedData'][props.index - 1][props.value]) - rScale(props.data[d.countryName]['confirmedData'][props.index - 1]['new']) / 2
-          return rScale(props.data[d.countryName]['confirmedData'][props.index - 1][props.value])
+            return rScale(props.data[d.countryName][props.caseType][props.index - 1][props.value]) - rScale(props.data[d.countryName][props.caseType][props.index - 1]['new']) / 2
+          return rScale(props.data[d.countryName][props.caseType][props.index - 1][props.value])
         }
         return 0
       })
       .attr('stroke-width',(d:any) => {
         if(props.data[d.countryName]){
           if(props.highlightNew)
-            return rScale(props.data[d.countryName]['confirmedData'][props.index - 1]['new']) 
+            return rScale(props.data[d.countryName][props.caseType][props.index - 1]['new']) 
           return 0.5
         }
         return 0
@@ -374,6 +374,22 @@ const Map: React.FunctionComponent<{width:number , countryClicked:string, height
           <h2 className='date blue'>{props.country === "World" ? worldTitle : props.country}</h2>
         </div>
         <div className='rightOptions'>
+          <div className="buttonTabSwitchContainer">
+            <Button
+              className="buttonTabSwitch"
+              aria-pressed={props.caseType === 'confirmedData' ? true : false}
+              onClick={() => { props.changeCaseType('confirmedData') }}
+            >
+              All
+            </Button>
+            <Button
+              className="buttonTabSwitch"
+              aria-pressed={props.caseType === 'activeData' ? true : false}
+              onClick={() => { props.changeCaseType('activeData') ; props.highlightNewClick(false) }}
+            >
+              Active
+            </Button>
+          </div>
           <Button
             className="buttonTab"
             aria-pressed={props.deathVisibility === 1 ? true : false}
@@ -394,9 +410,9 @@ const Map: React.FunctionComponent<{width:number , countryClicked:string, height
           </Button>
           <Button 
             className="buttonTab"
-            aria-pressed={props.value === 'valuePer100K' ? false : props.highlightNew ? true : false}
-            disabled={props.value === 'valuePer100K' ? true : props.highlightNew ? false : false}
-            onClick={() => props.value !== 'valuePer100K' ? props.highlightNew ? props.highlightNewClick(false) : props.highlightNewClick(true) : null}
+            aria-pressed={props.value === 'valuePer100K'  || props.caseType === 'activeData'? false : props.highlightNew ? true : false}
+            disabled={props.value === 'valuePer100K' || props.caseType === 'activeData' ? true : props.highlightNew ? false : false}
+            onClick={() => props.value !== 'valuePer100K' && props.caseType !== 'activeData' ? props.highlightNew ? props.highlightNewClick(false) : props.highlightNewClick(true) : null}
           >
             <div className='checkBox'><img src={Tick} alt='' className='tickIcon'/></div>
             Highlight last 24 Hrs

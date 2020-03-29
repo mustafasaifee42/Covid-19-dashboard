@@ -240,3 +240,39 @@
     opacity: 1;
     pointer-events: auto;
 }
+
+.buttonTabSwitchContainer{
+    margin:0 10px;
+    display: flex;
+    align-items: center;
+}
+
+.buttonTabSwitch{
+    background-color: #fafafa;
+    border: 1px solid #aaa;
+    font-size: 14px;
+    color:rgba(65,65,65,1);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    padding:10px;
+}
+.buttonTabSwitch:first-of-type{
+    border-radius:3px  0 0 3px;
+    border-right: 0;
+}
+
+
+.buttonTabSwitch:last-of-type{
+    border-radius: 0 3px 3px 0;
+    border-left: 0;
+}
+
+.buttonTabSwitch:hover{
+    background-color: #eaeaea;
+}
+.buttonTabSwitch[aria-pressed="true"] {
+    font-weight: bold;
+    background-color: #414141;
+    color: #fafafa;
+}

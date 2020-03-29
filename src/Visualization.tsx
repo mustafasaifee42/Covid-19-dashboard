@@ -39,6 +39,7 @@ const Visualization: React.FunctionComponent<{width:number,height:number}> = (pr
   const [data, setData] = useState<any>(undefined)
   const [dataArr, setDataArr] = useState<any>(undefined)
   const [country, setCountry] = useState('World')
+  const [caseType, setCaseType] = useState('confirmedData')
   const [selectedCountry, setSelectedCountry] = useState('World')
   const [index, setIndex] = useState(0)
   const [sortedBigTable, setSortedBigTable] = useState('Confirmed Cases')
@@ -216,6 +217,8 @@ const Visualization: React.FunctionComponent<{width:number,height:number}> = (pr
                 highlightNew={highlightNew}
                 value={value}
                 deathVisibility = {deathVisibility}
+                caseType={caseType}
+                changeCaseType = {(e:string) => { setCaseType(e) }}
                 toggleDeathVisibility = {(e) => { setDeathVisibility(e) } }
                 onValueToggle = {(e) => {setValue(e)} }
                 highlightNewClick = {(e) => {setHighlightNew(e)}}   
@@ -332,6 +335,8 @@ const Visualization: React.FunctionComponent<{width:number,height:number}> = (pr
                   index={index}
                   highlightNew={highlightNew}
                   countryCount={countryCount}
+                  caseType={caseType}
+                  changeCaseType = {(e:string) => { setCaseType(e) }}
                   value={value}
                   deathVisibility = {deathVisibility}
                   toggleDeathVisibility = {(e) => { setDeathVisibility(e) } }
@@ -411,6 +416,8 @@ const Visualization: React.FunctionComponent<{width:number,height:number}> = (pr
               windowWidth = {props.width}
               countryCount={countryCount}
               country={country}
+              caseType={caseType}
+              changeCaseType = {(e:string) => { setCaseType(e) }}
               deathVisibility = {deathVisibility}
               toggleDeathVisibility = {(e) => { setDeathVisibility(e) } }
               index={index}
