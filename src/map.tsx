@@ -311,6 +311,7 @@ const Map: React.FunctionComponent<{width:number , countryClicked:string, height
             .html(`<span class="bold">${formatNumber(props.data[d.countryName]['deathData'][props.data[d.countryName]['deathData'].length - 1]['value'])}</span> (<span class="bold">${(props.data[d.countryName]['deathData'][props.data[d.countryName]['deathData'].length - 1]['value'] * 100 / props.data[d.countryName]['confirmedData'][props.data[d.countryName]['confirmedData'].length - 1]['value']).toFixed(1)}%</span> Case fatality rt.)`)
           d3.select('.tooltipcases24').html(formatNumber(props.data[d.countryName]['confirmedData'][props.data[d.countryName]['confirmedData'].length - 1]['new']))
           d3.select('.tooltipdeaths24').html(formatNumber(props.data[d.countryName]['deathData'][props.data[d.countryName]['deathData'].length - 1]['new']))
+          d3.select('.tooltipActive').html(formatNumber(props.data[d.countryName]['activeData'][props.data[d.countryName]['activeData'].length - 1]['value']))
         } else {
           d3.select('.tooltipConfirmed')
             .html(`<span class="bold red">0</span>`)
@@ -318,6 +319,7 @@ const Map: React.FunctionComponent<{width:number , countryClicked:string, height
             .html(`<span class="bold red">0</span>`)
           d3.select('.tooltipcases24').html(0)
           d3.select('.tooltipdeaths24').html(0)
+          d3.select('.tooltipActive').html(0)
         }
       })
       .on('mousemove',(d:any) => {
@@ -346,6 +348,7 @@ const Map: React.FunctionComponent<{width:number , countryClicked:string, height
               .html(`<span class="bold">${formatNumber(props.data[d.properties.NAME_EN]['deathData'][props.data[d.properties.NAME_EN]['deathData'].length - 1]['value'])}</span> (<span class="bold">${(props.data[d.properties.NAME_EN]['deathData'][props.data[d.properties.NAME_EN]['deathData'].length - 1]['value'] * 100 / props.data[d.properties.NAME_EN]['confirmedData'][props.data[d.properties.NAME_EN]['confirmedData'].length - 1]['value']).toFixed(1)}%</span> Case fatality rt.)`)
             d3.select('.tooltipcases24').html(formatNumber(props.data[d.properties.NAME_EN]['confirmedData'][props.data[d.properties.NAME_EN]['confirmedData'].length - 1]['new']))
             d3.select('.tooltipdeaths24').html(formatNumber(props.data[d.properties.NAME_EN]['deathData'][props.data[d.properties.NAME_EN]['deathData'].length - 1]['new']))
+            d3.select('.tooltipActive').html(formatNumber(props.data[d.properties.NAME_EN]['activeData'][props.data[d.properties.NAME_EN]['activeData'].length - 1]['value']))
           } else {
             d3.select('.tooltipConfirmed')
               .html(`<span class="bold red">0</span>`)
@@ -353,6 +356,7 @@ const Map: React.FunctionComponent<{width:number , countryClicked:string, height
               .html(`<span class="bold red">0</span>`)
             d3.select('.tooltipcases24').html(0)
             d3.select('.tooltipdeaths24').html(0)
+            d3.select('.tooltipActive').html(0)
           }
         })
         .on('mousemove',(d:any) => {

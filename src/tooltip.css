@@ -26,11 +26,16 @@
 .tooltipCountry{
     font-weight: bold;
 }
+
 .tooltipConfirmedTitle{
     padding:10px;
     border-bottom: 1px solid #f1f1f1; 
 }
 .tooltipDeathTitle{
+    padding:10px;
+    border-bottom: 1px solid #f1f1f1; 
+}
+.tooltipActiveTitle{
     padding:10px;
     border-bottom: 1px solid #f1f1f1; 
 }

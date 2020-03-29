@@ -186,6 +186,7 @@ const Visualization: React.FunctionComponent<{width:number,height:number}> = (pr
           <div className='tooltipCountryContainer'><span className='tooltipCountry'>Country</span><span className='tooltipSubnote'> Click to see details</span></div>
           <div className='tooltipConfirmedTitle'>Confirmed Cases: <span className='tooltipConfirmed'>0</span></div>
           <div className='tooltipDeathTitle'>Deaths: <span className='tooltipDeath'>0</span></div>
+          <div className='tooltipActiveTitle'>Active Cases: <span className='tooltipActive red bold'>0</span></div>
           <div className='tooltipLast24Hrs'>Last 24 Hrs.: <span className='tooltipcases24 red bold'>0</span> new cases and <span className='tooltipdeaths24 bold'>0</span> deaths</div>
         </div>
         <div className='barGraphtooltip'>
