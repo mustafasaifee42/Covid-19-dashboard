@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import * as d3 from 'd3';
 import CountryNameData from './countryNameData.json';
+import DataCardsTest from './DataCardsTest';
 import './sidebarRight.css'
 
 let graphNode!: SVGSVGElement | null;
@@ -615,6 +616,14 @@ const Sidebar: React.FunctionComponent<{ width:number , height:number, bigScreen
   let cardTitleSubNotesubNoteDeaths = props.graphHeight < 240 ? null : <span className="cardTitleSubNote">(Log scale starting from 10 deaths)</span>
   return ( 
     <div>
+      <DataCardsTest
+        title="Testing Data"
+        data={props.data[props.country] ? props.data[props.country]['latestData']['Testing Data'] === 0 ? 'NA' : props.data[props.country]['latestData']['Testing Data'] : 'NA'}
+        subNote={props.data[props.country] ? props.data[props.country]['latestData']['Testing Data'] === 0 ? undefined : `${props.data[props.country]['latestData']['Positive Tests']}` : undefined}
+        color='#414141' 
+        outof100K= {props.data[props.country] ? props.data[props.country]['latestData']['Testing Data'] === 0 ? undefined : props.data[props.country]['latestData']['Testing Data Per 100K'] : undefined}
+        lastUpdate = {props.data[props.country] ? props.data[props.country]['latestData']['Testing Data'] === 0 ? undefined : props.data[props.country]['latestData']['Test Data Last Update'] : undefined}
+      />
       <div className="graphContainer">
         <h2 className='cardTitle'>Epidemic Curve {cardTitleSubNotesubNote}</h2>
         <svg width={props.width - 5} height={props.graphHeight} ref={node => graphNode = node}/>

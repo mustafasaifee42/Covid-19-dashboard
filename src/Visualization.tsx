@@ -53,9 +53,10 @@ const Visualization: React.FunctionComponent<{width:number,height:number}> = (pr
     Promise.all([
         d3.csv("https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_global.csv"),
         d3.csv("https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_global.csv"),
-        d3.csv("https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_recovered_global.csv")
+        d3.csv("https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_recovered_global.csv"),
+        d3.csv("./data/testingData.csv")
       ])
-      .then(([confirmed,death,recovered]) => {
+      .then(([confirmed,death,recovered,testingData]) => {
         
         let confirmedDataCombined = dataManipulation(confirmed);
         let deathDataCombined = dataManipulation(death);
@@ -143,6 +144,11 @@ const Visualization: React.FunctionComponent<{width:number,height:number}> = (pr
             let rate = (Math.pow(confirmedDataFiltered[confirmedDataFiltered.length - 1].value / confirmedDataFiltered[0].value , 1 / (confirmedDataFiltered.length - 1)) - 1) * 100
             doublingTime = parseFloat((69 / rate).toFixed(1))
           }
+          let indx = testingData.findIndex((obj:any) => obj.Country === country)
+          let testingDataByCountry = indx === -1 ? 0 : testingData[indx]['No. of Tests'] 
+          let testDataUpdtDate = indx === -1 ? 'NA' : testingData[indx]['Date Updated'] 
+          let testingDataByCountryPer100K =   parseFloat((testingDataByCountry * 100000 / combinedDataObj[country]['Population']).toFixed(1))
+          let testPositivePercent = parseFloat((combinedDataObj[country]['confirmedData'][combinedDataObj[country]['confirmedData'].length - 1]['value'] * 100 / testingDataByCountry).toFixed(1))
           let date = [...combinedDataObj[country]['confirmedData']].filter((d:any, i:number) => d.value >= 1)[0].date
           combinedDataObj[country]['latestData'] = {
             'Confirmed Cases':combinedDataObj[country]['confirmedData'][combinedDataObj[country]['confirmedData'].length - 1]['value'],
@@ -157,6 +163,10 @@ const Visualization: React.FunctionComponent<{width:number,height:number}> = (pr
             'Recovered Cases':combinedDataObj[country]['recoveryData'][combinedDataObj[country]['recoveryData'].length - 1]['value'],
             'Recovery Per 100K':combinedDataObj[country]['recoveryData'][combinedDataObj[country]['recoveryData'].length - 1]['valuePer100K'],
             'Recovery Rate':parseFloat((combinedDataObj[country]['recoveryData'][combinedDataObj[country]['recoveryData'].length - 1]['value'] * 100 / combinedDataObj[country]['confirmedData'][combinedDataObj[country]['confirmedData'].length - 1]['value']).toFixed(1)),
+            "Testing Data":testingDataByCountry,
+            "Testing Data Per 100K":testingDataByCountryPer100K,
+            "Positive Tests":testPositivePercent,
+            "Test Data Last Update":testDataUpdtDate,
             'Doubling Time':doublingTime,
             'Date when it started':date,
           }
@@ -168,7 +178,6 @@ const Visualization: React.FunctionComponent<{width:number,height:number}> = (pr
         })
         dataArr.sort((x:any, y:any) => d3.descending(x['confirmed'], y['confirmed']))
         setDataArr(dataArr.filter((d:any) => Object.keys(centroid).indexOf(d.countryName) !== -1))
-        console.log(combinedDataObj)
         setData(combinedDataObj)
       })
   },[])
@@ -281,7 +290,7 @@ const Visualization: React.FunctionComponent<{width:number,height:number}> = (pr
                     onClick={() => { 
                         if(visualizationType !== 'table'){
                           setCountry('World')
-                          setCountry('World')
+                          setSelectedCountry('World')
                           setVisualizationType('table')
                         }
                       }
