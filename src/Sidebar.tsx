@@ -84,6 +84,15 @@ const Sidebar: React.FunctionComponent<{width:number , height:number, graphHeigh
           .y1((d:any) =>  y(d.value))
           )
       g.append("path")
+        .datum(props.data[props.country].recoveryData)
+        .attr("fill", "#42c068")
+        .attr("stroke-width", 1)
+        .attr("d", d3.area()
+          .x((d:any,i:number) => x(d.date))
+          .y0(y(0))
+          .y1((d:any,i:number) =>  y(d.value + props.data[props.country].deathData[i]['value']))
+          )
+      g.append("path")
         .datum(props.data[props.country].deathData)
         .attr("fill", "#414141")
         .attr("stroke-width", 1)
@@ -341,6 +350,7 @@ const Sidebar: React.FunctionComponent<{width:number , height:number, graphHeigh
         title="Total Confirmed"
         data={props.data[props.country] ? props.data[props.country]['confirmedData'][props.data[props.country]['confirmedData'].length - 1].value : 0}
         subNote={props.data[props.country] ? `${props.data[props.country]['confirmedData'][props.data[props.country]['confirmedData'].length - 1].new}` : undefined}
+        percentInc = {props.data[props.country] ? `${props.data[props.country]['latestData']['Confirmed Cases Percent Change']}` : undefined}
         color='#e01a25' 
         outof100K= {props.data[props.country] ? props.data[props.country]['confirmedData'][props.data[props.country]['confirmedData'].length - 1]['valuePer100K'] : undefined}
       />
@@ -355,7 +365,14 @@ const Sidebar: React.FunctionComponent<{width:number , height:number, graphHeigh
         data={props.data[props.country] ? props.data[props.country]['deathData'][props.data[props.country]['deathData'].length - 1].value : 0}
         percent={props.data[props.country] ? `${(props.data[props.country]['deathData'][props.data[props.country]['deathData'].length - 1].value * 100 / props.data[props.country]['confirmedData'][props.data[props.country]['confirmedData'].length - 1].value).toFixed(1)}% Case Fatality Rt.` : '0%'}
         subNote={props.data[props.country] ? `${props.data[props.country]['deathData'][props.data[props.country]['deathData'].length - 1].new }`: undefined}
+        percentInc = {props.data[props.country] ? `${props.data[props.country]['latestData']['Deaths Percent Change']}` : undefined}
         color='#414141' 
+      />
+      <DataCards
+        title="Recovery"
+        data={props.data[props.country] ? props.data[props.country]['latestData']['Recovered Cases'] : 0}
+        percent={props.data[props.country] ? `${(props.data[props.country]['latestData']['Recovery Rate'])}% Recovery Rt.` : '0%'}
+        color='#42c068' 
       />
       <div className="graphContainer">
         <div className='cardTitle'>Total Cases</div>
