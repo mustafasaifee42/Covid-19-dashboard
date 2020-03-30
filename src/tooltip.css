@@ -8,6 +8,16 @@
     display:none;
 }
 
+.testingTooltip {	
+    position: absolute;
+    font-size: 14px;
+    border: 1px solid #f1f1f1;
+    background-color: #fafafa;
+    opacity: 0.9;
+    border-radius: 4px;
+    display:none;
+}
+
 .barGraphtooltip {	
     position: absolute;
     font-size: 14px;
@@ -21,11 +31,11 @@
 .tooltipCountryContainer{
     background-color: #eaeaea;
     padding:10px
-
 }
 .tooltipCountry{
     font-weight: bold;
 }
+
 
 .tooltipConfirmedTitle{
     padding:10px;

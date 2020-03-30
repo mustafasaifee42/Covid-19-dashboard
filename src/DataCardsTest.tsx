@@ -3,7 +3,6 @@ import './dataCard.css';
 import {formatNumber} from './utils';
 
 const Sidebar: React.FunctionComponent<{title:string , outof100K?:number , note?:string, lastUpdate?:string, data:any, subNote?:string, color:string , percent?:string, percentInc?:string}> = (props) => {
-   console.log(props.lastUpdate)
   return ( 
     <div className="dataCard">
       <h3 className='cardTitle'>

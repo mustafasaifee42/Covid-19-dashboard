@@ -7,6 +7,7 @@ import './tooltip.css';
 import Sidebar from './Sidebar';
 import SidebarRight from './SidebarRight';
 import TableView from './TableView';
+import TestingViz from './TestingViz';
 import Button from "./Button";
 const populationData:any = require('./population.json');
 const centroid:any = require('./centroidData.json');
@@ -163,7 +164,7 @@ const Visualization: React.FunctionComponent<{width:number,height:number}> = (pr
             'Recovered Cases':combinedDataObj[country]['recoveryData'][combinedDataObj[country]['recoveryData'].length - 1]['value'],
             'Recovery Per 100K':combinedDataObj[country]['recoveryData'][combinedDataObj[country]['recoveryData'].length - 1]['valuePer100K'],
             'Recovery Rate':parseFloat((combinedDataObj[country]['recoveryData'][combinedDataObj[country]['recoveryData'].length - 1]['value'] * 100 / combinedDataObj[country]['confirmedData'][combinedDataObj[country]['confirmedData'].length - 1]['value']).toFixed(1)),
-            "Testing Data":testingDataByCountry,
+            "Testing Data": +testingDataByCountry,
             "Testing Data Per 100K":testingDataByCountryPer100K,
             "Positive Tests":testPositivePercent,
             "Test Data Last Update":testDataUpdtDate,
@@ -197,6 +198,12 @@ const Visualization: React.FunctionComponent<{width:number,height:number}> = (pr
           <div className='tooltipDeathTitle'>Deaths: <span className='tooltipDeath'>0</span></div>
           <div className='tooltipActiveTitle'>Active Cases: <span className='tooltipActive red bold'>0</span></div>
           <div className='tooltipLast24Hrs'>Last 24 Hrs.: <span className='tooltipcases24 red bold'>0</span> new cases and <span className='tooltipdeaths24 bold'>0</span> deaths</div>
+        </div>
+        <div className='testingTooltip'>
+          <div className='tooltipCountryContainer'><span className='tooltipCountryTesting bold'>Country</span></div>
+          <div className='tooltipConfirmedTitle'>No. of Tests: <span className='tooltipNoOfTest bold'>0</span> <span className='italics'>(<span className='testingPer100K'>0</span> per 100 000)</span></div>
+          <div className='tooltipDeathTitle'>% of Positive Tests: <span className='tooltipPositivePercent bold'>0%</span></div>
+          <div className='tooltipActiveTitle'>Last Updated: <span className='tooltipUpdate italics'>0</span></div>
         </div>
         <div className='barGraphtooltip'>
           <span className='tooltipDate'>Country</span>: <span className='tooltipCases bold'>0</span>
@@ -253,7 +260,7 @@ const Visualization: React.FunctionComponent<{width:number,height:number}> = (pr
                     clearInterval(replay)
                   }
                 }}
-              /> : 
+              /> : visualizationType === 'table' ?
                 <TableView 
                   width={props.width - 360 - sidebarRightWidth}
                   click={(country) => {
@@ -267,6 +274,12 @@ const Visualization: React.FunctionComponent<{width:number,height:number}> = (pr
                   sorted={sortedBigTable}
                   selectedCountry={selectedCountry}
                   sortClick={ (d) => {setSortedBigTable(d)} }
+                />
+                :
+                <TestingViz 
+                  width={props.width - 360 - sidebarRightWidth}
+                  data={data}
+                  setCountry={(e) => { setCountry(e) }}
                 />
               }
                 <div className='tabs'> 
@@ -283,6 +296,20 @@ const Visualization: React.FunctionComponent<{width:number,height:number}> = (pr
                     }
                   >
                     Map
+                  </Button>
+                  <Button 
+                    aria-pressed={visualizationType === 'testing data' ?  true : false}
+                    className={visualizationType === 'testing data' ? "vizSelectionButtonSelected bottomTab" : "bottomTab"}
+                    onClick={() => { 
+                        if(visualizationType !== 'testing data'){
+                          setCountry('World');
+                          setSelectedCountry('World');
+                          setVisualizationType('testing data')
+                        }
+                      }
+                    }
+                  >
+                    Testing Data
                   </Button>
                   <Button 
                     aria-pressed={visualizationType === 'table' ?  true : false}
@@ -371,22 +398,27 @@ const Visualization: React.FunctionComponent<{width:number,height:number}> = (pr
                       clearInterval(replay)
                     }
                   }}
-                /> :
-                
-                <TableView 
-                  click={(country) => {
-                    setSelectedCountry(country)
-                    setCountry(country)            
-                  }}
-                  data={data}
-                  hover={(country) => {
-                    setCountry(country)            
-                  }}
-                  sorted={sortedBigTable}
-                  selectedCountry={selectedCountry}
-                  sortClick={ (d) => {setSortedBigTable(d)} }
-                />
-              }
+                /> : visualizationType === 'table' ?
+                  <TableView 
+                    click={(country) => {
+                      setSelectedCountry(country)
+                      setCountry(country)            
+                    }}
+                    data={data}
+                    hover={(country) => {
+                      setCountry(country)            
+                    }}
+                    sorted={sortedBigTable}
+                    selectedCountry={selectedCountry}
+                    sortClick={ (d) => {setSortedBigTable(d)} }
+                  />
+                  :
+                  <TestingViz 
+                    width={props.width - sidebarLeftWidth - 30}
+                    data={data}
+                    setCountry={(e) => { setCountry(e) }}
+                  />
+                }
                 <div className='tabs'> 
                   <Button 
                     aria-pressed={visualizationType === 'map' ?  true : false}
@@ -394,6 +426,8 @@ const Visualization: React.FunctionComponent<{width:number,height:number}> = (pr
                     onClick={() => { 
                         if(visualizationType !== 'map'){
                           setCountry('World')
+                          setSelectedCountry('World');
+                          setVisualizationType('map')
                         }
                       }
                     }
@@ -401,11 +435,27 @@ const Visualization: React.FunctionComponent<{width:number,height:number}> = (pr
                     Map
                   </Button>
                   <Button 
+                    aria-pressed={visualizationType === 'testing data' ?  true : false}
+                    className={visualizationType === 'testing data' ? "vizSelectionButtonSelected bottomTab" : "bottomTab"}
+                    onClick={() => { 
+                        if(visualizationType !== 'testing data'){
+                          setCountry('World');
+                          setSelectedCountry('World');
+                          setVisualizationType('testing data')
+                        }
+                      }
+                    }
+                  >
+                    Testing Data
+                  </Button>
+                  <Button 
                     aria-pressed={visualizationType === 'table' ?  true : false}
                     className={visualizationType === 'table' ? "vizSelectionButtonSelected bottomTab" : "bottomTab"}
                     onClick={() => { 
                         if(visualizationType !== 'table'){
                           setCountry('World')
+                          setSelectedCountry('World');
+                          setVisualizationType('table')
                         }
                       }
                     }

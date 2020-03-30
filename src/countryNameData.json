@@ -3836,7 +3836,7 @@
         ]
     },
     {
-        "countryName": "Czech Republic",
+        "countryName": "Czechia",
         "countryShortCode": "CZ",
         "regions": [{
                 "name": "Hlavní město Praha",
@@ -15241,7 +15241,7 @@
         ]
     },
     {
-        "countryName": "Taiwan",
+        "countryName": "Taiwan*",
         "countryShortCode": "TW",
         "regions": [{
                 "name": "Chang-hua",

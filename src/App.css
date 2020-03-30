@@ -112,10 +112,16 @@ a{
     background-color: #f1f1f1;
     font-size: 12px;
     text-transform: uppercase;
+    border-left:1px solid #aaa;
+    border-right:1px solid #aaa;
+}
+.bottomTab:first-of-type{  
+  border-left:1px solid #aaa;
+  border-right:0;
 }
 .bottomTab:last-of-type{  
-  border-left:1px solid #aaa;
   border-right:1px solid #aaa;
+  border-left:0;
 }
 
 .vizSelectionButtonSelected{
