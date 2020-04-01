@@ -147,9 +147,10 @@ const Visualization: React.FunctionComponent<{width:number,height:number}> = (pr
           }
           let indx = testingData.findIndex((obj:any) => obj.Country === country)
           let testingDataByCountry = indx === -1 ? 0 : testingData[indx]['No. of Tests'] 
+          let testingPositiveByCountry = indx === -1 ? 0 : testingData[indx]['Postive'] 
           let testDataUpdtDate = indx === -1 ? 'NA' : testingData[indx]['Date Updated'] 
           let testingDataByCountryPer100K =   parseFloat((testingDataByCountry * 100000 / combinedDataObj[country]['Population']).toFixed(1))
-          let testPositivePercent = parseFloat((combinedDataObj[country]['confirmedData'][combinedDataObj[country]['confirmedData'].length - 1]['value'] * 100 / testingDataByCountry).toFixed(1))
+          let testPositivePercent = parseFloat((testingPositiveByCountry * 100 / testingDataByCountry).toFixed(1))
           let date = [...combinedDataObj[country]['confirmedData']].filter((d:any, i:number) => d.value >= 1)[0].date
           combinedDataObj[country]['latestData'] = {
             'Confirmed Cases':combinedDataObj[country]['confirmedData'][combinedDataObj[country]['confirmedData'].length - 1]['value'],

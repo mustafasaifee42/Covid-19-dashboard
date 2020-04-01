@@ -15,7 +15,7 @@ const Sidebar: React.FunctionComponent<{ width:number , height:number,class:stri
       .attr('class','bg')
       .attr("transform",`translate(${margin.left},${margin.top})`);
     let scale = [0.01,1,10,100,1000,1000]
-    let xscale = [1,10,100,1000,10000]
+    let xscale = [0.1,1,10,100,1000,10000]
     let yScale = d3.scaleLog()
         .domain(props.yDomain)
         .range([ height, 0 ])

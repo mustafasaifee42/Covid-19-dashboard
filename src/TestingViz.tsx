@@ -32,7 +32,7 @@ const Sidebar: React.FunctionComponent<{width:number, data:any, setCountry:(e:st
             <ScatterPlot1
               width={props.width / 2 - 40}
               height={(props.width / 2 - 40)*0.75}
-              xDomain={[10,1000000]}
+              xDomain={[10,1500000]}
               yDomain={[1,500000]}
               xAxis={'Testing Data'}
               yAxis={'Confirmed Cases'}
@@ -53,7 +53,7 @@ const Sidebar: React.FunctionComponent<{width:number, data:any, setCountry:(e:st
             <ScatterPlot
               width={props.width / 2 - 40}
               height={(props.width / 2 - 40)*0.75}
-              xDomain={[1,10000]}
+              xDomain={[0.1,10000]}
               yDomain={[0.01,1000]}
               xAxis={'Testing Data Per 100K'}
               yAxis={'Confirmed Cases Per 100K'}
@@ -76,7 +76,7 @@ const Sidebar: React.FunctionComponent<{width:number, data:any, setCountry:(e:st
             <BarChart
               width={props.width / 2 - 40}
               height={data.length * 14 + 30 }
-              xDomain={[0,900000]}
+              xDomain={[0,1200000]}
               xAxis={'Testing Data'}
               country={country}
               setCountry={(e) => { setCountry(e) ; props.setCountry(e)  }}
@@ -92,7 +92,7 @@ const Sidebar: React.FunctionComponent<{width:number, data:any, setCountry:(e:st
             <BarChart1
               width={props.width / 2 - 40}
               height={data.length * 14 + 30}
-              xDomain={[0,5000]}
+              xDomain={[0,5500]}
               xAxis={'Testing Data Per 100K'}
               country={country}
               setCountry={(e) => { setCountry(e) ; props.setCountry(e)  }}

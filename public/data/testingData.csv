@@ -1,72 +1,80 @@
-Country,No. of Tests,Date Updated
-Argentina,2847,27-Mar
-Armenia,1580,25-Mar
-Australia,229401,29-Mar
-Austria,42750,28-Mar
-Bahrain,30506,27-Mar
-Belarus,24000,27-Mar
-Belgium,18360,18-Mar
-Bolivia,191,19-Mar
-Bosnia and Herzegovina,2220,29-Mar
-Brazil,45708,18-Mar
-Canada,184201,27-Mar
-Chile,23105,27-Mar
-Colombia,8908,27-Mar
-Costa Rica,3046,27-Mar
-Croatia,5215,28-Mar
-Czechia,40700,28-Mar
-Denmark,24179,29-Mar
-Ecuador,6615,29-Mar
-Estonia,10396,29-Mar
-Finland,18000,28-Mar
-France,101046,24-Mar
-Germany,483295,26-Mar
-Grenada,18,19-Mar
-Hungary,6817,25-Mar
-Iceland,14635,28-Mar
-India,34931,29-Mar
-Indonesia,6396,29-Mar
-Iran,80000,22-Mar
-Ireland,17992,24-Mar
-Israel,37586,25-Mar
-Italy,429526,28-Mar
-Jamaica,250,27-Mar
-Japan,28464,28-Mar
-Kazakhstan,5093,13-Mar
-Latvia,12748,28-Mar
-Lithuania,8424,29-Mar
-Malaysia,24168,27-Mar
-Malta,4462,27-Mar
-Mexico,4259,28-Mar
-Nepal,917,29-Mar
-Netherlands,46810,26-Mar
-New Zealand,12683,26-Mar
-Norway,82584,27-Mar
-Pakistan,13231,28-Mar
-Palestine,2519,16-Mar
-Panama,4856,27-Mar
-Peru,10065,27-Mar
-Philippines,2347,29-Mar
-Poland,42783,29-Mar
-Portugal,32754,28-Mar
-Romania,21460,29-Mar
-Russia,243377,28-Mar
-Serbia,2086,27-Mar
-Singapore,39000,25-Mar
-Slovakia,6411,27-Mar
-Slovenia,19756,27-Mar
-South Africa,7425,21-Mar
-"Korea, South",394141,29-Mar
-Spain,355000,21-Mar
-Sweden,24500,25-Mar
-Switzerland,111000,29-Mar
-Taiwan*,29389,28-Mar
-Thailand,17175,29-Mar
-Trinidad and Tobago,453,27-Mar
-Turkey,55464,28-Mar
-Ukraine,1966,29-Mar
-United Arab Emirates,125000,16-Mar
-United Kingdom,127737,29-Mar
-US,832330,29-Mar
-Uruguay,1538,24-Mar
-Vietnam,35808,28-Mar
+Country,No. of Tests,Postive,Date Updated
+Argentina,4843,966,31-Mar
+Armenia,3275,571,01-Apr
+Australia,245623,4559,31-Mar
+Austria,52344,9974,31-Mar
+Azerbaijan,30000,273,30-Mar
+Bahrain,33852,268,31-Mar
+Bangladesh,1076,48,29-Mar
+Belarus,30000,152,30-Mar
+Belgium,18360,1486,18-Mar
+Bolivia,591,97,19-Mar
+Bosnia and Herzegovina,3068,420,31-Mar
+Brazil,45708,428,18-Mar
+Canada,244421,8591,31-Mar
+Chile,35142,2738,31-Mar
+Colombia,17580,906,31-Mar
+Costa Rica,3046,263,27-Mar
+Croatia,6404,860,30-Mar
+Czechia,48811,3001,31-Mar
+Denmark,28642,3039,31-Mar
+Ecuador,7982,2240,31-Mar
+Estonia,12401,745,31-Mar
+Finland,18000,1163,28-Mar
+France,101046,20068,24-Mar
+Germany,483295,36508,22-Mar
+Greece,15961,1212,30-Mar
+Grenada,18,0,19-Mar
+Hong Kong,90000,682,30-Mar
+Hungary,15208,525,01-Apr
+Iceland,17904,1135,31-Mar
+India,42788,1251,31-Mar
+Indonesia,6663,1528,31-Mar
+Iran,80000,21638,22-Mar
+Ireland,30213,3235,30-Mar
+Israel,66461,4372,30-Mar
+Italy,506968,105792,31-Mar
+Jamaica,250,30,27-Mar
+Japan,32497,1953,31-Mar
+Kazakhstan,5093,,13-Mar
+Kosovo,1267,112,31-Mar
+Kyrgyzstan,8186,107,31-Mar
+Latvia,14313,376,30-Mar
+Lithuania,12574,581,01-Apr
+Malaysia,24168,2161,27-Mar
+Malta,4462,139,27-Mar
+Mexico,9481,1049,28-Mar
+Montenegro,834,105,30-Mar
+Nepal,1060,5,31-Mar
+Netherlands,46810,7705,26-Mar
+New Zealand,23481,647,01-Apr
+North Macedonia,3518,329,30-Mar
+Norway,90242,4447,30-Mar
+Pakistan,14748,1625,30-Mar
+Palestine,2519,,16-Mar
+Panama,4856,674,27-Mar
+Peru,12669,852,27-Mar
+Philippines,3938,2084,31-Mar
+Poland,51419,2132,31-Mar
+Portugal,52086,7443,31-Mar
+Romania,24654,2245,31-Mar
+Russia,536669,1836,30-Mar
+Serbia,3084,785,30-Mar
+Singapore,39000,558,25-Mar
+Slovakia,8220,363,30-Mar
+Slovenia,22474,814,30-Mar
+South Africa,35593,1280,29-Mar
+"Korea, South",410564,9786,31-Mar
+Spain,355000,24926,21-Mar
+Sweden,24500,2510,25-Mar
+Switzerland,111000,14336,29-Mar
+Taiwan,31800,322,31-Mar
+Thailand,17829,1524,30-Mar
+Trinidad and Tobago,453,66,27-Mar
+Turkey,92403,13531,31-Mar
+Ukraine,2642,549,31-Mar
+United Arab Emirates,220000,570,29-Mar
+United Kingdom,143186,25150,31-Mar
+US,1108500,184770,31-Mar
+Uruguay,1538,189,24-Mar
+Vietnam,35808,212,01-Apr

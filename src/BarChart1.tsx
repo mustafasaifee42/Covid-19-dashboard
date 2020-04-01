@@ -17,7 +17,7 @@ const Sidebar: React.FunctionComponent<{ width:number , height:number,country:st
       .append('g')
       .attr('class','bg')
       .attr("transform",`translate(${margin.left},${margin.top})`);
-    let xscale = [0,500,1000,1500,2000,2500,3000,3500,4000,4500]
+    let xscale = [0,500,1000,1500,2000,2500,3000,3500,4000,4500,5000]
 
     let xScale = d3.scaleLinear()
       .domain(props.xDomain)
