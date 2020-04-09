@@ -7,7 +7,7 @@ import './sidebarRight.css'
 let graphNode!: SVGSVGElement | null;
 let deathGraphNode!: SVGSVGElement | null;
 const Sidebar: React.FunctionComponent<{ width:number , height:number, bigScreen:boolean,  graphHeight:number, data:any ,country:string }> = (props) => {
-  let maxDeath = 50000, maxConfirmed = 1000000;
+  let maxDeath = 200000, maxConfirmed = 10000000;
 
   useEffect(() => {
     d3.select(graphNode).selectAll('g').remove()  
@@ -19,9 +19,8 @@ const Sidebar: React.FunctionComponent<{ width:number , height:number, bigScreen
       .attr('class','bg')
       .attr("transform",`translate(${margin.left},${margin.top})`);
       let doublingValue = 1 + Math.log2((maxConfirmed/100) + 1)
-      //let doublingValue = 12.28;
       let days = [1,2,3,4]
-      let scale = [100, 1000, 100000, maxConfirmed]
+      let scale = [100, 10000, 100000, 1000000, maxConfirmed]
       let x = d3.scaleLinear()
         .domain([0 , props.data['World'].confirmedData.length + 3])
         .range([ 0, width ]);
@@ -158,12 +157,11 @@ const Sidebar: React.FunctionComponent<{ width:number , height:number, bigScreen
       .attr('class','bg')
       .attr("transform",`translate(${margin.left},${margin.top})`);
       let doublingValue = 1 + Math.log2(maxDeath  / 10)
-      //let doublingValue = 11.97;
       let days = [1,2,3,4]
       let logScale = d3.scaleLog()
           .domain([10, maxDeath])
           .range([ height, 0 ])
-      let scale = [10, 500 , 1000, 5000, 20000, maxDeath]
+      let scale = [10, 200, 2000, 20000, maxDeath]
       let x = d3.scaleLinear()
         .domain([0 , props.data['World'].confirmedData.length + 3])
         .range([ 0, width ]);
