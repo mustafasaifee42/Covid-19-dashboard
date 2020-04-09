@@ -19,7 +19,6 @@ const Sidebar: React.FunctionComponent<{ width:number , height:number, bigScreen
       .attr('class','bg')
       .attr("transform",`translate(${margin.left},${margin.top})`);
       let doublingValue = 1 + Math.log2((maxConfirmed/100) + 1)
-      //let doublingValue = 12.28;
       let days = [1,2,3,4]
       let scale = [100, 10000, 100000, 1000000, maxConfirmed]
       let x = d3.scaleLinear()
@@ -158,7 +157,6 @@ const Sidebar: React.FunctionComponent<{ width:number , height:number, bigScreen
       .attr('class','bg')
       .attr("transform",`translate(${margin.left},${margin.top})`);
       let doublingValue = 1 + Math.log2(maxDeath  / 10)
-      //let doublingValue = 11.97;
       let days = [1,2,3,4]
       let logScale = d3.scaleLog()
           .domain([10, maxDeath])
