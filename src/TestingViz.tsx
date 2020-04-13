@@ -1,4 +1,5 @@
 import React, {useState} from 'react';
+import * as d3 from 'd3';
 import ScatterPlot from './ScatterPlot';
 import ScatterPlot1 from './ScatterPlot1';
 import BarChart from './BarChart';
@@ -20,7 +21,10 @@ const Sidebar: React.FunctionComponent<{width:number, data:any, setCountry:(e:st
   })
 
   data = data.filter((d:any,i:any) => d["Testing Data"] !== 0)
-
+  let maxTesting = Math.ceil(d3.max(data,(d:any) => d['Testing Data']) / 1000000) * 1000000
+  let maxTestingPer100K = Math.ceil(d3.max(data,(d:any) => d['Testing Data Per 100K']) / 1000 ) * 1000
+  let maxConfirmed = Math.ceil(d3.max(data,(d:any) => d['Confirmed Cases']) / 1000000) * 1000000
+  let maxConfirmedPer100K = Math.ceil(d3.max(data,(d:any) => d['Confirmed Cases Per 100K']) / 10000) * 10000
   return ( 
     <div style={{ width: `${props.width}px`, height:`calc(100vh - ${130}px`, overflow:'auto', overflowX:'hidden' }}>
       <div style={{ width: `${props.width}px`, display:'flex' }}>
@@ -32,8 +36,8 @@ const Sidebar: React.FunctionComponent<{width:number, data:any, setCountry:(e:st
             <ScatterPlot1
               width={props.width / 2 - 40}
               height={(props.width / 2 - 40)*0.75}
-              xDomain={[10,1500000]}
-              yDomain={[1,500000]}
+              xDomain={[10,maxTesting]}
+              yDomain={[1,maxConfirmed]}
               xAxis={'Testing Data'}
               yAxis={'Confirmed Cases'}
               xAxisLabel={'No. of Tests'}
@@ -53,8 +57,8 @@ const Sidebar: React.FunctionComponent<{width:number, data:any, setCountry:(e:st
             <ScatterPlot
               width={props.width / 2 - 40}
               height={(props.width / 2 - 40)*0.75}
-              xDomain={[0.1,10000]}
-              yDomain={[0.01,1000]}
+              xDomain={[0.1,maxTestingPer100K]}
+              yDomain={[0.01,maxConfirmedPer100K]}
               xAxis={'Testing Data Per 100K'}
               yAxis={'Confirmed Cases Per 100K'}
               xAxisLabel={'No. of Tests Per 100K'}
@@ -76,7 +80,7 @@ const Sidebar: React.FunctionComponent<{width:number, data:any, setCountry:(e:st
             <BarChart
               width={props.width / 2 - 40}
               height={data.length * 14 + 30 }
-              xDomain={[0,1200000]}
+              xDomain={[0,maxTesting]}
               xAxis={'Testing Data'}
               country={country}
               setCountry={(e) => { setCountry(e) ; props.setCountry(e)  }}
@@ -92,7 +96,7 @@ const Sidebar: React.FunctionComponent<{width:number, data:any, setCountry:(e:st
             <BarChart1
               width={props.width / 2 - 40}
               height={data.length * 14 + 30}
-              xDomain={[0,5500]}
+              xDomain={[0,maxTestingPer100K]}
               xAxis={'Testing Data Per 100K'}
               country={country}
               setCountry={(e) => { setCountry(e) ; props.setCountry(e)  }}

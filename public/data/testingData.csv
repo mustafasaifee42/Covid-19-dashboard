@@ -1,80 +1,86 @@
 Country,No. of Tests,Postive,Date Updated
-Argentina,4843,966,31-Mar
-Armenia,3275,571,01-Apr
-Australia,245623,4559,31-Mar
-Austria,52344,9974,31-Mar
-Azerbaijan,30000,273,30-Mar
-Bahrain,33852,268,31-Mar
-Bangladesh,1076,48,29-Mar
-Belarus,30000,152,30-Mar
-Belgium,18360,1486,18-Mar
-Bolivia,591,97,19-Mar
-Bosnia and Herzegovina,3068,420,31-Mar
-Brazil,45708,428,18-Mar
-Canada,244421,8591,31-Mar
-Chile,35142,2738,31-Mar
-Colombia,17580,906,31-Mar
-Costa Rica,3046,263,27-Mar
-Croatia,6404,860,30-Mar
-Czechia,48811,3001,31-Mar
-Denmark,28642,3039,31-Mar
-Ecuador,7982,2240,31-Mar
-Estonia,12401,745,31-Mar
-Finland,18000,1163,28-Mar
-France,101046,20068,24-Mar
-Germany,483295,36508,22-Mar
-Greece,15961,1212,30-Mar
-Grenada,18,0,19-Mar
-Hong Kong,90000,682,30-Mar
-Hungary,15208,525,01-Apr
-Iceland,17904,1135,31-Mar
-India,42788,1251,31-Mar
-Indonesia,6663,1528,31-Mar
-Iran,80000,21638,22-Mar
-Ireland,30213,3235,30-Mar
-Israel,66461,4372,30-Mar
-Italy,506968,105792,31-Mar
-Jamaica,250,30,27-Mar
-Japan,32497,1953,31-Mar
-Kazakhstan,5093,,13-Mar
-Kosovo,1267,112,31-Mar
-Kyrgyzstan,8186,107,31-Mar
-Latvia,14313,376,30-Mar
-Lithuania,12574,581,01-Apr
-Malaysia,24168,2161,27-Mar
-Malta,4462,139,27-Mar
-Mexico,9481,1049,28-Mar
-Montenegro,834,105,30-Mar
-Nepal,1060,5,31-Mar
-Netherlands,46810,7705,26-Mar
-New Zealand,23481,647,01-Apr
-North Macedonia,3518,329,30-Mar
-Norway,90242,4447,30-Mar
-Pakistan,14748,1625,30-Mar
-Palestine,2519,,16-Mar
-Panama,4856,674,27-Mar
-Peru,12669,852,27-Mar
-Philippines,3938,2084,31-Mar
-Poland,51419,2132,31-Mar
-Portugal,52086,7443,31-Mar
-Romania,24654,2245,31-Mar
-Russia,536669,1836,30-Mar
-Serbia,3084,785,30-Mar
-Singapore,39000,558,25-Mar
-Slovakia,8220,363,30-Mar
-Slovenia,22474,814,30-Mar
-South Africa,35593,1280,29-Mar
-"Korea, South",410564,9786,31-Mar
+Albania,4070,467,13-Apr
+Argentina,18027,2142,11-Apr
+Armenia,6484,967,11-Apr
+Australia,362249,6366,13-Apr
+Austria,148412,13962,13-Apr
+Azerbaijan,57371,926,01-Apr
+Bahrain,57681,925,10-Apr
+Bangladesh,11223,803,13-Apr
+Barbados,382,45,01-Apr
+Belarus,60000,2226,11-Apr
+Belgium,112613,30589,13-Apr
+Bolivia,2185,275,11-Apr
+Bosnia and Herzegovina,9189,998,10-Apr
+Brazil,54824,7910,02-Apr
+Bulgaria,15899,522,05-Apr
+Canada,425129,24302,12-Apr
+Chile,82271,7213,12-Apr
+Hong Kong,96709,714,31-Mar
+Colombia,41765,2776,12-Apr
+Costa Rica,3845,347,31-Mar
+Croatia,12322,1282,07-Apr
+Czechia,128359,5991,12-Apr
+Denmark,76540,6191,12-Apr
+Ecuador,23635,7466,12-Apr
+Egypt,25000,865,25-Mar
+Estonia,30349,1309,12-Apr
+Finland,44354,2905,10-Apr
+France,333807,87024,07-Apr
+Germany,1317887,100901,08-Apr
+Greece,28584,1832,07-Apr
+Grenada,37,10,01-Apr
+Hungary,33532,1410,13-Apr
+Iceland,35253,1701,12-Apr
+India,195748,8312,12-Apr
+Indonesia,27391,4557,13-Apr
+Iran,275427,73303,13-Apr
+Ireland,42484,5593,06-Apr
+Israel,168075,11290,13-Apr
+Italy,1046910,159516,13-Apr
+Jamaica,442,44,01-Apr
+Japan,78702,7255,13-Apr
+Kazakhstan,32416,897,12-Apr
+Kosovo,3256,362,12-Apr
+Kyrgyzstan,24901,419,13-Apr
+Latvia,25458,589,09-Apr
+Lithuania,41503,1062,13-Apr
+Malaysia,81730,4817,13-Apr
+Malta,16016,370,11-Apr
+Mexico,36594,4661,12-Apr
+Montenegro,3174,273,13-Apr
+Nepal,5691,14,13-Apr
+Netherlands,101534,21699,08-Apr
+New Zealand,61167,1049,11-Apr
+North Korea,709,0,02-Apr
+North Macedonia,8057,828,11-Apr
+Norway,124279,6320,10-Apr
+Pakistan,65114,5374,12-Apr
+Palestine,16992,268,11-Apr
+Panama,15147,3400,12-Apr
+Peru,76506,7519,12-Apr
+Philippines,38640,4428,11-Apr
+Poland,118295,5742,10-Apr
+Portugal,163616,16934,13-Apr
+Romania,67204,6633,13-Apr
+Russia,1359993,18328,13-Apr
+Serbia,20958,4054,13-Apr
+Singapore,72680,1481,07-Apr
+Slovakia,23672,715,09-Apr
+Slovenia,30669,1103,07-Apr
+South Africa,75053,2028,11-Apr
+"Korea, South",510479,10480,11-Apr
 Spain,355000,24926,21-Mar
-Sweden,24500,2510,25-Mar
-Switzerland,111000,14336,29-Mar
-Taiwan,31800,322,31-Mar
-Thailand,17829,1524,30-Mar
-Trinidad and Tobago,453,66,27-Mar
-Turkey,92403,13531,31-Mar
-Ukraine,2642,549,31-Mar
-United Arab Emirates,220000,570,29-Mar
-United Kingdom,143186,25150,31-Mar
-US,1108500,184770,31-Mar
+Sweden,54700,7206,07-Apr
+Switzerland,193800,25300,12-Apr
+Taiwan,47215,393,13-Apr
+Thailand,23669,1978,03-Apr
+Trinidad and Tobago,595,90,01-Apr
+Turkey,410556,61049,13-Apr
+Ukraine,32496,3102,13-Apr
+United Arab Emirates,593095,2659,08-Apr
+United Kingdom,290720,88621,13-Apr
+US,2833051,553602,12-Apr
 Uruguay,1538,189,24-Mar
-Vietnam,35808,212,01-Apr
+Venezuela,1779,143,31-Mar
+Vietnam,121821,265,13-Apr

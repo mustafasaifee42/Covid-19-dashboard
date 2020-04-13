@@ -13199,6 +13199,10 @@
         ]
     },
     {
+        "countryName": "Kosovo",
+        "countryShortCode": "KS"
+    },
+    {
         "countryName": "Serbia",
         "countryShortCode": "RS",
         "regions": [{
@@ -18271,7 +18275,7 @@
         ]
     },
     {
-        "countryName": "Venezuela, Bolivarian Republic of",
+        "countryName": "Venezuela",
         "countryShortCode": "VE",
         "regions": [{
                 "name": "Dependencias Federales",

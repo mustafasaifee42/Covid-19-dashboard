@@ -8,7 +8,6 @@ const Sidebar: React.FunctionComponent<{ width:number , height:number,country:st
   useEffect(() => {
     let data = [...props.data]
     data = data.sort((x:any, y:any) => d3.descending(x[props.xAxis], y[props.xAxis]))
-    console.log(data)
     d3.select(graphNode).selectAll('g').remove()  
     let margin = {top: 30, right:0, bottom: 0, left: 20},
     width = props.width- margin.left - margin.right,
@@ -17,8 +16,11 @@ const Sidebar: React.FunctionComponent<{ width:number , height:number,country:st
       .append('g')
       .attr('class','bg')
       .attr("transform",`translate(${margin.left},${margin.top})`);
-    let xscale = [0,100000,500000,1000000,1200000]
-
+    let tickNo = Math.floor(props.xDomain[1] / 500000)
+    let xscale:any = []
+    for(let i = 0; i <= tickNo ;i ++) {
+      xscale.push(i*500000)
+    }
     let xScale = d3.scaleLinear()
       .domain(props.xDomain)
       .range([0,width ])

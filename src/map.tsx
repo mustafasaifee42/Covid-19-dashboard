@@ -169,12 +169,18 @@ const Map: React.FunctionComponent<{width:number , countryClicked:string, height
   },[height, width , props.data, windowWidth])
   useEffect(() => {
     let maxRadius = (windowWidth < 800) ? 30 : 50
-    let rad = props.value === 'valuePer100K' ? 1000 : 100000
+    let maxValues:any = [];
+    Object.keys(props.data).forEach((d:string) => {
+      if(d !== "World")
+        maxValues.push([props.data[d]['latestData']['Confirmed Cases'],props.data[d]['latestData']['Confirmed Cases Per 100K']])
+    })
+    let rad = props.value === 'valuePer100K' ? d3.max(maxValues,(d:any) => d[1]) : d3.max(maxValues,(d:any) => d[0])
     const rScale = d3.scaleSqrt()
       .domain([0,rad])
       .range([0,maxRadius])
-    let keyVal = props.value === 'valuePer100K' ? (windowWidth < 800) ? [100,500] : [10,100,500] : (windowWidth < 800) ? [10000,50000] : [1000,10000,50000]
+    let keyVal = props.value === 'valuePer100K' ? (windowWidth < 800) ? [1000,5000] : [10,1000,5000] : (windowWidth < 800) ? [100000,500000] : [10000,100000,500000]
     d3.selectAll('.keyCircle').remove();
+    d3.selectAll('.keyLabel').remove();
 
     let keyG = d3.select('.mapKey')
       .selectAll('.keyCircle')
@@ -185,6 +191,7 @@ const Map: React.FunctionComponent<{width:number , countryClicked:string, height
       .attr('transform',(d:number) => `translate(0,${rScale(keyVal[keyVal.length - 1]) - rScale(d)})`)
     d3.select('.mapKey')
       .append('text')
+      .attr('class','keyLabel')
       .attr('x',0)
       .attr('y',(d:number) => rScale(keyVal[keyVal.length - 1]) + 15)
       .attr('fill','#ccc')
@@ -209,11 +216,17 @@ const Map: React.FunctionComponent<{width:number , countryClicked:string, height
       .attr('font-family','IBM Plex Sans')
       .attr('text-anchor','middle')
       .text((d:number) => d)
+    // eslint-disable-next-line
   },[windowWidth,props.value])
 
   useEffect(() => {
     let maxRadius = (windowWidth < 800) ? 30 : 50
-    let rad = props.value === 'valuePer100K' ? 1000 : 100000
+    let maxValues:any = [];
+    Object.keys(props.data).forEach((d:string) => {
+      if(d !== "World")
+        maxValues.push([props.data[d]['latestData']['Confirmed Cases'],props.data[d]['latestData']['Confirmed Cases Per 100K']])
+    })
+    let rad = props.value === 'valuePer100K' ? d3.max(maxValues,(d:any) => d[1]) : d3.max(maxValues,(d:any) => d[0])
     const rScale = d3.scaleSqrt()
       .domain([0,rad])
       .range([0,maxRadius])
